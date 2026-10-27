@@ -27,11 +27,27 @@ import {
   User,
   Quote,
   Twitter,
-  Linkedin
+  Linkedin,
+  Radar,
+  Gauge,
+  Workflow,
+  ShieldCheck,
+  Waves
 } from 'lucide-react';
 import { PageTransition, Heading, Reveal, WaterButton, Magnetic, Eyebrow, Counter, Marquee } from '../components/ui.jsx';
 import { PageHero, SectionHead, StatsBand, FAQ, PricingCards, CTABand, Testimonials, Newsletter } from '../components/sections.jsx';
 import { AnalyticsGrid } from '../components/charts.jsx';
+
+const PRODUCT_CAPABILITIES = [
+  { i: Radar, t: 'Live spatial twin', d: 'Every sensor, door and HVAC zone mirrored in a real-time 3D model that updates in milliseconds.' },
+  { i: Sparkles, t: 'Generative layouts', d: 'Describe a goal. Aura proposes, scores and refines layouts for flow, comfort and cost.' },
+  { i: Gauge, t: 'Predictive automation', d: 'Models learn how people actually use space, then adjust light, air and access before anyone asks.' },
+  { i: Workflow, t: 'No-code workflows', d: 'Compose rules visually or ship them through our typed API.' },
+  { i: ShieldCheck, t: 'Enterprise-grade trust', d: 'SOC 2 Type II, SSO, per-zone permissions and full audit trails.' },
+  { i: Cpu, t: 'Edge Compute Engine', d: 'Local neural inference with zero dependency on external cloud connectivity.' },
+  { i: Waves, t: 'Micro-climate Solver', d: 'Continuous thermodynamic simulation balancing airflow and thermal comfort.' },
+  { i: Check, t: '99.99% SLA', d: 'Multi-region active-active redundancy with automatic instantaneous failover.' },
+];
 
 /* ============================ PRODUCT ============================ */
 export function ProductPage() {
@@ -58,7 +74,7 @@ export function ProductPage() {
       </PageHero>
 
       {/* Modules */}
-      <section className="relative z-10 gutter py-24 bg-ink">
+      <section className="relative z-10 gutter py-24 bg-ink/40 backdrop-blur-[2px]">
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {modules.map((m, idx) => (
             <article
@@ -84,7 +100,7 @@ export function ProductPage() {
       </section>
 
       {/* Real Interactive Analytics Section */}
-      <section className="relative z-10 gutter py-28 bg-ink2 border-y border-white/10">
+      <section className="relative z-10 gutter py-28 bg-ink/30 backdrop-blur-[2px] border-y border-white/10">
         <SectionHead
           eyebrow="Live Analytics Engine"
           lines={['Real telemetry.', 'Interactive insights.']}
@@ -97,7 +113,7 @@ export function ProductPage() {
       <section className="relative z-10 gutter py-28 bg-sand text-ink">
         <SectionHead light eyebrow="Capabilities" lines={['Built for', 'serious scale.']} />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-ink/10 border border-ink/10 rounded-[2rem] overflow-hidden">
-          {FEATURES.concat([{ i: Check, t: '99.99% SLA', d: 'Multi-region redundancy with automatic failover.' }]).map((f) => (
+          {PRODUCT_CAPABILITIES.map((f) => (
             <div key={f.t} className="bg-sand p-8 min-h-[240px] hover:bg-lime transition-colors duration-700 cursor-pointer" data-hot>
               <f.i size={24} className="mb-10 text-ink" />
               <h3 className="font-display font-extrabold text-2xl mb-2">{f.t}</h3>

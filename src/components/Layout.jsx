@@ -5,22 +5,22 @@ import { Menu, X, ArrowUpRight, Github, Twitter, Linkedin, Youtube } from 'lucid
 import { WaterButton, Heading, Reveal } from './ui.jsx';
 
 export const NAV = [
-  { to: '/product', label: 'Product' },
-  { to: '/solutions', label: 'Solutions' },
-  { to: '/customers', label: 'Customers' },
-  { to: '/pricing', label: 'Pricing' },
-  { to: '/about', label: 'About' },
-  { to: '/journal', label: 'Journal' },
+  { to: '/product', label: 'Services' },
+  { to: '/solutions', label: 'Expertise' },
+  { to: '/customers', label: 'Work' },
+  { to: '/pricing', label: 'Engagements' },
+  { to: '/about', label: 'Studio' },
+  { to: '/journal', label: 'Perspectives' },
 ];
 
 export function Logo({ className = '' }) {
   return (
-    <Link to="/" className={`flex items-center gap-2.5 ${className}`} aria-label="Aura home">
+    <Link to="/" className={`flex items-center gap-2.5 ${className}`} aria-label="Aura Agency home">
       <span className="relative w-8 h-8 rounded-xl bg-lime flex items-center justify-center overflow-hidden">
         <span className="absolute w-5 h-5 rounded-full border-[3px] border-ink" />
         <span className="absolute w-1.5 h-1.5 rounded-full bg-ink" />
       </span>
-      <span className="font-display font-extrabold text-xl tracking-tight text-sand">aura</span>
+      <span className="font-display font-extrabold text-xl tracking-tight text-sand">aura<span className="text-lime text-xs font-mono ml-1 font-normal tracking-normal uppercase">studio</span></span>
     </Link>
   );
 }
@@ -76,7 +76,7 @@ export function Navbar() {
           </ul>
           <div className="ml-auto lg:ml-0 flex items-center gap-2">
             <WaterButton to="/contact" variant="light" className="!py-2.5 !px-5 hidden sm:inline-flex">
-              Get started <ArrowUpRight size={15} />
+              Start a project <ArrowUpRight size={15} />
             </WaterButton>
             <button
               id="menu-toggle"
@@ -98,7 +98,7 @@ export function Navbar() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[70] bg-ink/90 backdrop-blur-2xl lg:hidden flex flex-col justify-center gutter"
           >
-            {[...NAV, { to: '/contact', label: 'Contact' }].map((n, i) => (
+            {[...NAV, { to: '/contact', label: 'Contact Studio' }].map((n, i) => (
               <motion.div key={n.to} initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.08 * i, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
                 <Link to={n.to} className="block font-display font-extrabold text-5xl py-2 text-sand hover:text-lime transition-colors">
                   {n.label}
@@ -114,17 +114,17 @@ export function Navbar() {
 
 export function Footer() {
   const cols = [
-    { h: 'Product', l: [['Platform', '/product'], ['Solutions', '/solutions'], ['Pricing', '/pricing'], ['Customers', '/customers']] },
-    { h: 'Company', l: [['About', '/about'], ['Journal', '/journal'], ['Contact', '/contact'], ['Careers', '/about']] },
-    { h: 'Resources', l: [['Docs', '/product'], ['API reference', '/product'], ['Status', '/contact'], ['Security', '/about']] },
+    { h: 'Capabilities', l: [['Digital Flagships', '/product'], ['Spatial Experiences', '/product'], ['Brand Architecture', '/solutions'], ['Creative Engineering', '/product']] },
+    { h: 'Studio', l: [['About Aura', '/about'], ['Selected Work', '/customers'], ['Perspectives', '/journal'], ['Partnership Models', '/pricing']] },
+    { h: 'Collaborate', l: [['Start a Project', '/contact'], ['New Business RFP', '/contact'], ['Executive Inquiries', '/contact'], ['Careers & Fellows', '/about']] },
   ];
   return (
-    <footer className="relative z-10 bg-ink2 border-t border-white/10 gutter pt-20 pb-8 overflow-hidden">
+    <footer className="relative z-10 bg-ink/70 backdrop-blur-md border-t border-white/10 gutter pt-20 pb-8 overflow-hidden">
       <div className="grid grid-cols-2 md:grid-cols-12 gap-10">
         <div className="col-span-2 md:col-span-5">
           <Logo />
           <p className="mt-5 text-sand/60 max-w-sm leading-relaxed">
-            The spatial intelligence platform for teams who design, simulate and run the places people love.
+            Aura is a digital craft & creative engineering agency. We architect boundary-pushing web flagships, immersive spatial computing, and transformative brand identities.
           </p>
           <div className="flex gap-3 mt-6">
             {[Twitter, Linkedin, Github, Youtube].map((I, i) => (
@@ -153,8 +153,8 @@ export function Footer() {
         </p>
       </div>
       <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-sand/50 font-mono">
-        <span>© 2026 Aura Technologies, Inc.</span>
-        <span>Privacy · Terms · Cookies</span>
+        <span>© 2026 Aura Creative Engineering & Spatial Studio Ltd.</span>
+        <span>Tokyo · Zurich · London · New York</span>
       </div>
     </footer>
   );

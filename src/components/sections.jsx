@@ -57,15 +57,15 @@ export function DashboardMock() {
       <div className="hidden md:flex absolute -left-6 -bottom-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/10 shadow-xl backdrop-blur-xl">
         <span className="w-10 h-10 rounded-xl bg-lime/20 text-lime flex items-center justify-center font-bold">✓</span>
         <div>
-          <p className="text-sm font-bold text-sand">Dynamic Airflow Optimized</p>
-          <p className="text-xs text-sand/50">Saved 42% HVAC peak load</p>
+          <p className="text-sm font-bold text-sand">Interactive 3D Engine Active</p>
+          <p className="text-xs text-sand/50">Rendered at 120 FPS // Zero latency</p>
         </div>
       </div>
       <div className="hidden md:flex absolute -right-6 -top-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/10 shadow-xl backdrop-blur-xl" style={{ animationDelay: '-3.5s' }}>
         <span className="w-10 h-10 rounded-xl bg-aqua/20 text-aqua flex items-center justify-center"><Check size={18} /></span>
         <div>
-          <p className="text-sm font-bold text-sand">Live NeRF Twin Active</p>
-          <p className="text-xs text-sand/50">12,400 sensor data points</p>
+          <p className="text-sm font-bold text-sand">Aura Creative Lab Shipped</p>
+          <p className="text-xs text-sand/50">FWA of the Month & Site of the Day</p>
         </div>
       </div>
     </div>
@@ -73,11 +73,11 @@ export function DashboardMock() {
 }
 
 /* ---------------- Logo cloud ---------------- */
-const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO/LAB', 'Meridian', 'ORBITAL', 'Foundry+', 'Lumière', 'TERRAFORM', 'Atlas&Co', 'Nimbus'];
+const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO/LAB', 'Meridian', 'ORBITAL', 'Foundry+', 'Lumière', 'TERRAFORM', 'Atlas&Co', 'Balenciaga Studio', 'Monolith'];
 export function LogoCloud() {
   return (
-    <section className="relative py-14 border-y border-white/10 bg-ink/50 backdrop-blur-sm">
-      <p className="text-center font-mono text-[11px] tracking-[0.2em] uppercase text-sand/40 mb-8">Trusted by 1,800+ teams across 40 countries</p>
+    <section className="relative py-14 border-y border-white/10 bg-ink/40 backdrop-blur-sm">
+      <p className="text-center font-mono text-[11px] tracking-[0.2em] uppercase text-sand/40 mb-8">Trusted by industry pioneers & category-defining global brands</p>
       <Marquee items={LOGOS} itemClass="font-display font-extrabold text-3xl text-sand/35 hover:text-lime transition-colors" />
     </section>
   );
@@ -86,15 +86,15 @@ export function LogoCloud() {
 /* ---------------- Stats ---------------- */
 export function StatsBand({ light = false }) {
   const stats = [
-    { to: 1800, s: '+', l: 'Teams on Aura' },
-    { to: 42, s: '%', l: 'Avg. energy reduction' },
-    { to: 12, s: 'M', l: 'Sensors orchestrated' },
-    { to: 99.99, s: '%', l: 'Platform uptime', d: 2 },
+    { to: 140, s: '+', l: 'Global Design & FWA Awards' },
+    { to: 98, s: '%', l: 'Client Partnership Retention' },
+    { to: 450, s: 'M', l: 'Global Audiences Engaged' },
+    { to: 4.9, s: '/5', l: 'Client Satisfaction Rating', d: 1 },
   ];
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-current/10">
       {stats.map((s) => (
-        <div key={s.l} className={`p-8 sm:p-12 ${light ? 'bg-sand text-ink border border-ink/10' : 'bg-ink2/80 border border-white/5'}`}>
+        <div key={s.l} className={`p-8 sm:p-12 ${light ? 'bg-sand text-ink border border-ink/10' : 'bg-ink/80 backdrop-blur-sm border border-white/5'}`}>
           <Counter to={s.to} suffix={s.s} decimals={s.d || 0} className="font-display font-extrabold text-[clamp(2.6rem,6vw,6rem)] leading-none" />
           <p className={`mt-4 text-sm ${light ? 'text-ink/60' : 'text-sand/55'}`}>{s.l}</p>
         </div>
@@ -105,9 +105,9 @@ export function StatsBand({ light = false }) {
 
 /* ---------------- Testimonials ---------------- */
 const QUOTES = [
-  { q: 'Aura replaced four tools and cut our commissioning time from months to days. The simulation engine is genuinely uncanny.', n: 'Mira Okafor', r: 'VP Facilities, Northwind', c: 'bg-lime text-ink' },
-  { q: 'We run 14 venues on a single live model. When a crowd surges, the space already knows what to do.', n: 'Daichi Mori', r: 'Head of Ops, Kyoto Lab', c: 'bg-ink3 text-sand' },
-  { q: 'Beautiful, fast, and the API is a joy. Our engineers shipped a custom twin in a single sprint.', n: 'Elena Voss', r: 'CTO, Meridian', c: 'bg-sand text-ink' },
+  { q: 'Aura transformed our digital presence into an intoxicating, award-winning digital flagship. Our inbound enterprise pipeline tripled within 60 days of launch.', n: 'Julian Sterling', r: 'Chief Brand Officer, Kinetix Luxury', c: 'bg-lime text-ink' },
+  { q: 'The creative engineering mastery here is unmatched. They delivered real-time WebGL spatial shaders and a fluid design system on schedule with zero compromises.', n: 'Aya Takahashi', r: 'Global Head of Design, Kyoto Interactive', c: 'bg-ink3 text-sand' },
+  { q: 'Working with Aura felt like collaborating with the world’s most visionary minds. They push the boundaries of what is possible on the web while obsessing over every pixel.', n: 'Marc Vance', r: 'Founder & CEO, Horizon Spatial', c: 'bg-sand text-ink' },
 ];
 export function Testimonials() {
   return (
@@ -154,11 +154,11 @@ export function FAQ({ items }) {
   );
 }
 
-/* ---------------- Pricing ---------------- */
+/* ---------------- Partnership Models / Pricing ---------------- */
 export const PLANS = [
-  { name: 'Starter', m: 0, y: 0, d: 'For small teams exploring spatial intelligence.', f: ['1 building model', '50 connected sensors', 'Core simulation', 'Community support'], cta: 'Start free' },
-  { name: 'Growth', m: 149, y: 119, d: 'For teams running multiple spaces in production.', f: ['Unlimited models', '5,000 sensors', 'Predictive automation', 'API & webhooks', 'Priority support'], cta: 'Start 14-day trial', hot: true },
-  { name: 'Enterprise', m: null, y: null, d: 'For portfolios needing scale, security and SLAs.', f: ['Unlimited everything', 'SSO, SCIM & audit logs', 'On-prem / private cloud', 'Dedicated success team', '99.99% uptime SLA'], cta: 'Talk to sales' },
+  { name: 'Flagship Sprint', m: 18500, y: 16000, d: 'For ambitious brands launching a category-defining web experience or campaign.', f: ['4-week high-velocity sprint', 'Dedicated Art Director & Creative Engineer', 'Bespoke 3D WebGL & micro-interactions', 'Performance optimization (<0.8s LCP)', 'Complete design tokens & source code'], cta: 'Inquire for Sprint' },
+  { name: 'Studio Pod', m: 32000, y: 28000, d: 'Our flagship embedded agency partnership for high-growth tech & enterprise leaders.', f: ['Full multidisciplinary pod (Design + Tech)', 'Continuous sprint delivery & roadmap execution', 'Generative AI & spatial computing systems', 'Private Slack war-room & daily syncs', 'Unlimited high-craft iterations'], cta: 'Book Studio Pod', hot: true },
+  { name: 'Venture Transformation', m: null, y: null, d: 'For global enterprises undergoing full-scale brand & digital metamorphosis.', f: ['Comprehensive multi-quarter engagement', 'End-to-end brand architecture & design system', 'Proprietary custom 3D / spatial software', 'Global rollout & engineering team onboarding', 'Executive creative directorship'], cta: 'Request Executive Briefing' },
 ];
 export function PricingCards({ yearly }) {
   return (
@@ -167,16 +167,16 @@ export function PricingCards({ yearly }) {
         <div key={p.name} className={`rounded-[2rem] p-8 sm:p-10 flex flex-col ${p.hot ? 'bg-lime text-ink' : 'panel'}`}>
           <div className="flex items-center justify-between">
             <h3 className="font-display font-extrabold text-3xl">{p.name}</h3>
-            {p.hot && <span className="px-3 py-1 rounded-full bg-ink text-lime font-mono text-[10px] tracking-widest">POPULAR</span>}
+            {p.hot && <span className="px-3 py-1 rounded-full bg-ink text-lime font-mono text-[10px] tracking-widest uppercase">MOST REQUESTED</span>}
           </div>
           <p className={`mt-3 ${p.hot ? 'text-ink/70' : 'text-sand/55'}`}>{p.d}</p>
           <div className="mt-8 flex items-end gap-2">
             {p.m === null ? (
-              <span className="font-display font-extrabold text-6xl">Custom</span>
+              <span className="font-display font-extrabold text-6xl">Bespoke</span>
             ) : (
               <>
-                <span className="font-display font-extrabold text-7xl leading-none">${yearly ? p.y : p.m}</span>
-                <span className={`pb-2 ${p.hot ? 'text-ink/60' : 'text-sand/50'}`}>/ month</span>
+                <span className="font-display font-extrabold text-6xl leading-none">${(yearly ? p.y : p.m).toLocaleString()}</span>
+                <span className={`pb-2 ${p.hot ? 'text-ink/60' : 'text-sand/50'}`}>/ {p.name.includes('Sprint') ? 'sprint' : 'month'}</span>
               </>
             )}
           </div>
@@ -201,15 +201,15 @@ export function Newsletter() {
   return (
     <div className="panel rounded-[2rem] p-8 sm:p-12 flex flex-col lg:flex-row gap-8 lg:items-center justify-between">
       <div className="max-w-xl">
-        <h3 className="font-display font-extrabold text-3xl sm:text-4xl">The Aura Dispatch</h3>
-        <p className="text-sand/60 mt-3">One thoughtful email a month on spatial computing, smart buildings and the people shaping them.</p>
+        <h3 className="font-display font-extrabold text-3xl sm:text-4xl">The Aura Perspective</h3>
+        <p className="text-sand/60 mt-3">Monthly curated essays on spatial computing, avant-garde web engineering, generative aesthetics, and the future of brand craft.</p>
       </div>
       {done ? (
-        <p className="text-lime font-bold flex items-center gap-2"><Check size={18} /> You’re on the list.</p>
+        <p className="text-lime font-bold flex items-center gap-2"><Check size={18} /> Welcome to the inner circle.</p>
       ) : (
         <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} className="flex flex-col sm:flex-row gap-3 w-full lg:w-[480px]">
-          <input id="newsletter-email" required type="email" placeholder="you@company.com" className="field" />
-          <WaterButton type="submit" variant="solid">Subscribe</WaterButton>
+          <input id="newsletter-email" required type="email" placeholder="you@luxurybrand.com" className="field" />
+          <WaterButton type="submit" variant="solid">Join dispatch</WaterButton>
         </form>
       )}
     </div>
@@ -222,11 +222,11 @@ export function CTABand() {
     <section className="relative z-10 bg-lime text-ink gutter py-28 sm:py-40 overflow-hidden">
       <div className="absolute -right-32 -top-32 w-[40rem] h-[40rem] rounded-full border-[3rem] border-ink/5" />
       <div className="absolute -right-10 -bottom-48 w-[30rem] h-[30rem] rounded-full border-[2rem] border-ink/5" />
-      <Eyebrow className="text-ink/70 mb-8">Ready when you are</Eyebrow>
-      <Heading as="h2" lines={['Build spaces that', 'think for themselves.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
+      <Eyebrow className="text-ink/70 mb-8">Ready to define what comes next?</Eyebrow>
+      <Heading as="h2" lines={['Let’s create something', 'unforgettable together.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
       <Reveal delay={0.2} className="mt-12 flex flex-wrap gap-4">
-        <Magnetic><WaterButton to="/contact" variant="dark" className="!px-10 !py-5 text-base">Start for free <ArrowUpRight size={18} /></WaterButton></Magnetic>
-        <WaterButton to="/pricing" variant="light" className="!px-10 !py-5 text-base border border-ink/20">See pricing</WaterButton>
+        <Magnetic><WaterButton to="/contact" variant="dark" className="!px-10 !py-5 text-base">Start a project <ArrowUpRight size={18} /></WaterButton></Magnetic>
+        <WaterButton to="/pricing" variant="light" className="!px-10 !py-5 text-base border border-ink/20">View engagements</WaterButton>
       </Reveal>
     </section>
   );

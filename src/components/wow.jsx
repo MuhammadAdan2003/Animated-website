@@ -414,33 +414,33 @@ export function NeuralSpatialCore() {
           {[
             {
               id: 'twin',
-              title: 'Live Digital Twin Sync',
-              desc: 'Every sensor, damper and access turnstile mirrored in real time with 14ms compute latency.',
-              stat: '99.98% Fidelity',
+              title: 'Flagship WebGL & 3D Shaders',
+              desc: 'Every particle, lighting reflection, and fluid easing curve rendered at 120 FPS with sub-millisecond compute latency.',
+              stat: '120 FPS WebGL',
               icon: Cpu,
               accent: 'border-lime/30 group-hover:border-lime',
             },
             {
               id: 'predict',
-              title: 'Predictive HVAC Autopilot',
-              desc: 'Deep models forecast crowd surges 90 minutes ahead, pre-cooling zones to slash peak kWh tariffs.',
-              stat: '-34% Energy Load',
+              title: 'Kinetic Design Languages',
+              desc: 'Bespoke design tokens, typography scales, and visceral micro-interactions calibrated to elevate brand prestige.',
+              stat: 'Visceral Craft',
               icon: Zap,
               accent: 'border-aqua/30 group-hover:border-aqua',
             },
             {
               id: 'generative',
-              title: 'Generative Spatial Layouts',
-              desc: 'Input headcount and focus requirements. Aura calculates, scores and verifies 120+ variations.',
-              stat: 'Instant Solver',
+              title: 'Generative AI & Spatial Lab',
+              desc: 'Custom proprietary generative pipelines, procedural 3D environments, and intelligent automated layout engines.',
+              stat: 'Creative AI Lab',
               icon: Sparkles,
               accent: 'border-lime/30 group-hover:border-lime',
             },
             {
               id: 'trust',
-              title: 'Zero-Trust Physical Enclave',
-              desc: 'SOC 2 Type II certified. Per-zone cryptographic access credentials with continuous audit playback.',
-              stat: 'Enterprise Trust',
+              title: 'Global Performance & SLA',
+              desc: 'Headless cloud infrastructure, zero-jank cross-device optimization, and enterprise launch assurance.',
+              stat: 'Enterprise Scale',
               icon: ShieldCheck,
               accent: 'border-white/20 group-hover:border-white/40',
             },
@@ -481,78 +481,78 @@ export function NeuralSpatialCore() {
 
 
 /* ==================================================================
- * 2. SPACE EXPLORER — Holographic 3D Isometric Facility Twin
+ * 2. SPACE EXPLORER — Interactive 3D Spatial Computing Deck
  * Replaces the flat 2D brown/olive room boxes with a 3D command deck
  * ================================================================== */
 const FACILITY_ZONES = [
   {
     id: 'ai-cluster',
-    name: 'Quantum AI Computing Cluster',
-    type: 'Critical Infrastructure',
+    name: 'Spatial Creative Lab',
+    type: 'Interactive R&D',
     iso: { x: 50, y: 50, w: 180, h: 140, z: 24 },
     temp: 18.2,
     targetTemp: 18.0,
     cap: 20,
-    occ: 6,
+    occ: 8,
     co2: 395,
-    noise: 48,
-    status: 'Optimal Cryo-Balance',
+    noise: 42,
+    status: '120 FPS Shaders Active',
     color: '#38e0cc', // cyan/aqua
   },
   {
     id: 'biophilic-atrium',
-    name: 'Biophilic Sky Atrium',
-    type: 'Circadian Commons',
+    name: 'Experience Pavilion',
+    type: 'Digital Flagship Showroom',
     iso: { x: 250, y: 50, w: 260, h: 150, z: 32 },
     temp: 22.4,
     targetTemp: 22.0,
     cap: 180,
-    occ: 124,
+    occ: 142,
     co2: 440,
-    noise: 41,
-    status: 'Daylight Harvest 94%',
+    noise: 38,
+    status: 'Spatial Presence 98%',
     color: '#c8ff4d', // lime
   },
   {
     id: 'studio-wing',
-    name: 'Precision Engineering Wing',
-    type: 'Collaborative Studio',
+    name: 'Brand Architecture Studio',
+    type: 'Creative Craft Hub',
     iso: { x: 50, y: 220, w: 240, h: 160, z: 20 },
     temp: 24.8, // hot zone
     targetTemp: 22.2,
     cap: 120,
-    occ: 98,
-    co2: 580,
-    noise: 54,
-    status: 'High Density Alert',
+    occ: 96,
+    co2: 560,
+    noise: 52,
+    status: 'Active Sprint In Progress',
     color: '#ff6b4a', // amber/coral
   },
   {
     id: 'acoustic-pods',
-    name: 'Acoustic Deep Work Pods',
-    type: 'Focus Enclave',
+    name: 'Generative AI Foundry',
+    type: 'Neural Systems Pod',
     iso: { x: 310, y: 230, w: 150, h: 150, z: 28 },
     temp: 21.6,
     targetTemp: 21.5,
     cap: 30,
-    occ: 14,
+    occ: 12,
     co2: 410,
-    noise: 28,
-    status: 'Active Sound-Masking',
+    noise: 26,
+    status: 'Algorithmic Solver Live',
     color: '#38e0cc',
   },
   {
     id: 'executive-deck',
-    name: 'Executive Hologram Deck',
-    type: 'Confidential Zone',
+    name: 'Executive Partner Suite',
+    type: 'Strategic War Room',
     iso: { x: 480, y: 230, w: 160, h: 150, z: 26 },
     temp: 22.0,
     targetTemp: 22.0,
     cap: 24,
-    occ: 16,
+    occ: 18,
     co2: 420,
-    noise: 32,
-    status: 'Smart Glass 85% Opacity',
+    noise: 30,
+    status: 'Direct Client Collaboration',
     color: '#c8ff4d',
   },
 ];
@@ -884,46 +884,46 @@ export function SpaceExplorer() {
               <div className="grid grid-cols-2 gap-3 mb-6">
                 <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
                   <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Thermometer size={14} className={isHot ? 'text-coral' : 'text-lime'} />
-                    <span>Temperature</span>
+                    <Zap size={14} className={isHot ? 'text-coral' : 'text-lime'} />
+                    <span>Render Rate</span>
                   </div>
                   <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    {activeZone.temp}°C
+                    120 <span className="text-xs font-normal">FPS</span>
                   </p>
-                  <p className="font-mono text-[10px] text-sand/40">Target {activeZone.targetTemp}°C</p>
+                  <p className="font-mono text-[10px] text-sand/40">Zero Frame Drops</p>
                 </div>
 
                 <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
                   <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Users size={14} className="text-aqua" />
-                    <span>Occupancy</span>
+                    <Activity size={14} className="text-aqua" />
+                    <span>Interactive Nodes</span>
                   </div>
                   <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    {activeZone.occ}
+                    {activeZone.occ * 8}
                   </p>
-                  <p className="font-mono text-[10px] text-sand/40">Capacity {activeZone.cap}</p>
+                  <p className="font-mono text-[10px] text-sand/40">Active GLSL Particles</p>
                 </div>
 
                 <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
                   <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Wind size={14} className="text-sand/70" />
-                    <span>Indoor CO₂</span>
+                    <Cpu size={14} className="text-sand/70" />
+                    <span>Shader Compute</span>
                   </div>
                   <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    {activeZone.co2} <span className="text-xs font-normal">ppm</span>
+                    0.8 <span className="text-xs font-normal">ms</span>
                   </p>
-                  <p className="font-mono text-[10px] text-sand/40">Threshold 800ppm</p>
+                  <p className="font-mono text-[10px] text-sand/40">Sub-millisecond Latency</p>
                 </div>
 
                 <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
                   <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Volume2 size={14} className="text-sand/70" />
-                    <span>Acoustic Floor</span>
+                    <Sparkles size={14} className="text-sand/70" />
+                    <span>Craft Index</span>
                   </div>
                   <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    {activeZone.noise} <span className="text-xs font-normal">dB</span>
+                    99.8<span className="text-xs font-normal">%</span>
                   </p>
-                  <p className="font-mono text-[10px] text-sand/40">Target &lt; 45dB</p>
+                  <p className="font-mono text-[10px] text-sand/40">Aura Precision Standard</p>
                 </div>
               </div>
 
@@ -932,10 +932,10 @@ export function SpaceExplorer() {
                 <Sparkles size={16} className="text-lime shrink-0 mt-0.5" />
                 <span>
                   {isBalanced
-                    ? 'Aura adjusted airflow diffusers & solar blinds. Micro-climate stabilized within target comfort envelope.'
+                    ? 'Aura Studio dynamic shaders and lighting models optimized. Real-time render pipeline operates at peak fluid craft.'
                     : isHot
-                    ? 'Thermal load is elevated due to occupancy density. Autonomous cooling sequence ready.'
-                    : 'Facility conditions are operating within optimal environmental parameters.'}
+                    ? 'Sprint delivery velocity elevated. Creative engineering squad engaged on interactive physics.'
+                    : 'Studio discipline operating within target aesthetic and performance parameters.'}
                 </span>
               </div>
             </div>
@@ -949,11 +949,11 @@ export function SpaceExplorer() {
               >
                 {isBalanced ? (
                   <>
-                    <Check size={16} className="text-lime" /> Zone Stabilized
+                    <Check size={16} className="text-lime" /> Pipeline Optimized
                   </>
                 ) : (
                   <>
-                    <Zap size={16} /> Auto-Balance Zone
+                    <Zap size={16} /> Trigger Interactive Pulse
                   </>
                 )}
               </WaterButton>

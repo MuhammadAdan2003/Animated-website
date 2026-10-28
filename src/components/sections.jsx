@@ -40,56 +40,14 @@ export function SectionHead({ eyebrow, lines, text, light = false, className = '
   );
 }
 
-import { LiveDashboard } from './charts.jsx';
+import { ProductionVitalsConsole } from './charts.jsx';
 
-/* ---------------- Dashboard mock (real interactive product visual) ---------------- */
+/* ---------------- Production Telemetry & Vitals Console ---------------- */
 export function DashboardMock() {
   return (
     <div className="relative">
-      <div className="absolute -inset-10 bg-gradient-to-r from-lime/15 via-aqua/10 to-transparent blur-3xl rounded-full pointer-events-none" />
-      <div className="relative glass rounded-[2.5rem] p-3 sm:p-5 border border-white/10 shadow-2xl">
-        <div className="flex items-center justify-between px-3 py-2.5 border-b border-white/10 mb-2">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-coral/80" />
-            <span className="w-3 h-3 rounded-full bg-lime/80" />
-            <span className="w-3 h-3 rounded-full bg-aqua/80" />
-            <span className="ml-3 font-mono text-[11px] text-sand/60">
-              aura.engine // telemetry // live-stream
-            </span>
-          </div>
-          <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] text-lime uppercase tracking-wider">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-lime" />
-            </span>
-            <span>140 EDGE POPS ACTIVE · P99: 8.4ms</span>
-          </div>
-        </div>
-
-        {/* Real Interactive Live Chart Engine */}
-        <LiveDashboard />
-      </div>
-
-      <div className="hidden md:flex absolute -left-6 -bottom-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/15 shadow-2xl backdrop-blur-xl">
-        <div className="relative w-10 h-10 rounded-xl bg-lime/20 text-lime flex items-center justify-center font-bold">
-          <div className="absolute inset-0 rounded-xl border border-lime/30 pulse-ring" />
-          <span className="text-lime text-base font-bold">✓</span>
-        </div>
-        <div>
-          <p className="text-sm font-bold text-sand">Next.js 15 Web Platform Active</p>
-          <p className="text-xs text-sand/50 font-mono">0.3s LCP · 100/100 Lighthouse Vitals</p>
-        </div>
-      </div>
-      <div className="hidden md:flex absolute -right-6 -top-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/15 shadow-2xl backdrop-blur-xl" style={{ animationDelay: '-3.5s' }}>
-        <div className="relative w-10 h-10 rounded-xl bg-aqua/20 text-aqua flex items-center justify-center">
-          <div className="absolute inset-0 rounded-xl border border-aqua/30 pulse-ring" style={{ animationDelay: '1s' }} />
-          <Check size={18} className="text-aqua" />
-        </div>
-        <div>
-          <p className="text-sm font-bold text-sand">Multi-Region Cloud Mesh</p>
-          <p className="text-xs text-sand/50 font-mono">99.999% SLA Uptime Assured</p>
-        </div>
-      </div>
+      <div className="absolute -inset-10 bg-lime/5 blur-3xl rounded-full pointer-events-none" />
+      <ProductionVitalsConsole />
     </div>
   );
 }

@@ -52,7 +52,7 @@ export function DashboardMock() {
 const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO/LAB', 'Meridian', 'ORBITAL', 'Foundry+', 'Lumière', 'TERRAFORM', 'Atlas&Co', 'Balenciaga Studio', 'Monolith'];
 export function LogoCloud() {
   return (
-    <section className="relative py-14 border-y border-white/10 bg-ink/45">
+    <section className="relative py-14 border-y border-white/10 bg-transparent">
       <p className="text-center font-mono text-[11px] tracking-[0.2em] uppercase text-sand/40 mb-8">Trusted by visionary tech founders, enterprise leaders & scaling startups</p>
       <Marquee items={LOGOS} itemClass="font-display font-extrabold text-3xl text-sand/35 hover:text-lime transition-colors" />
     </section>
@@ -151,14 +151,13 @@ export function PricingCards({ yearly }) {
         <div
           key={p.name}
           data-hot
-          className={`rounded-[2.2rem] p-8 sm:p-10 flex flex-col shadow-xl hover:-translate-y-2 transition-all duration-500 ${
-            p.hot ? 'bg-lime text-ink card-smoke-light' : 'panel card-smoke'
-          }`}
+          className={`rounded-[2.2rem] p-8 sm:p-10 flex flex-col shadow-xl hover:-translate-y-2 transition-all duration-500 ${p.hot ? 'bg-lime text-ink card-smoke-light' : 'panel card-smoke'
+            }`}
         >
           <CardSmoke tone={p.hot ? 'light' : 'dark'} />
           <div className="relative z-10 flex items-center justify-between">
             <h3 className="font-display font-extrabold text-3xl">{p.name}</h3>
-            {p.hot && <span className="px-3 py-1 rounded-full bg-ink text-lime font-mono text-[10px] tracking-widest uppercase">MOST REQUESTED</span>}
+            {p.hot && <span className="px-3 py-1 rounded-full bg-transparent text-lime font-mono text-[10px] tracking-widest uppercase">MOST REQUESTED</span>}
           </div>
           <p className={`relative z-10 mt-3 ${p.hot ? 'text-ink/70' : 'text-sand/55'}`}>{p.d}</p>
           <div className="relative z-10 mt-8 flex items-end gap-2">
@@ -174,7 +173,7 @@ export function PricingCards({ yearly }) {
           <ul className="relative z-10 mt-8 space-y-3 flex-1">
             {p.f.map((f) => (
               <li key={f} className="flex items-center gap-3">
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${p.hot ? 'bg-ink text-lime' : 'bg-lime/15 text-lime'}`}><Check size={12} /></span>
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${p.hot ? 'bg-transparent text-lime' : 'bg-lime/15 text-lime'}`}><Check size={12} /></span>
                 {f}
               </li>
             ))}

@@ -86,7 +86,7 @@ export function ProductPage() {
       </PageHero>
 
       {/* Services Grid */}
-      <section className="relative z-10 gutter py-24 bg-ink/60">
+      <section className="relative z-10 gutter py-24 bg-transparent">
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {modules.map((m, idx) => (
             <article
@@ -130,7 +130,7 @@ export function ProductPage() {
       </section>
 
       {/* FAQ */}
-      <section className="relative z-10 gutter py-28 sm:py-40 bg-ink/70">
+      <section className="relative z-10 gutter py-28 sm:py-40 bg-transparent">
         <SectionHead eyebrow="Inquiries FAQ" lines={['Questions,', 'answered.']} />
         <FAQ items={faq} />
       </section>
@@ -159,7 +159,7 @@ export function SolutionsPage() {
         lines={['Software solutions.', { t: 'Across leading', c: 'text-aqua' }, 'industries.']}
         text="From high-growth SaaS and luxury e-commerce to fintech and autonomous AI ventures, we build software solutions that empower category leaders."
       />
-      <section className="relative z-10 gutter pb-28 bg-ink/70 pt-10">
+      <section className="relative z-10 gutter pb-28 bg-transparent pt-10">
         <div className="divide-y divide-white/10 border-y border-white/10">
           {items.map((s, i) => (
             <Reveal key={s.t} y={30}>
@@ -218,7 +218,7 @@ export function CustomersPage() {
   return (
     <PageTransition>
       <PageHero eyebrow="Selected Work" lines={['Software proof,', { t: 'not promises.', c: 'text-lime' }]} text="A curated selection of production web applications, scalable cloud platforms, and transformative enterprise software engineered by Aura." />
-      <section className="relative z-10 gutter pb-28 bg-ink/70 pt-10">
+      <section className="relative z-10 gutter pb-28 bg-transparent pt-10">
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {CASES.map((c, i) => (
             <article key={c.n} data-hot className={`group relative rounded-[2rem] overflow-hidden min-h-[480px] p-8 sm:p-10 flex flex-col justify-between panel card-smoke cursor-pointer hover:-translate-y-2 transition-all duration-700 ${i % 2 ? 'md:mt-20' : ''}`}>
@@ -265,8 +265,8 @@ export function PricingPage() {
           ))}
         </div>
       </PageHero>
-      <section className="relative z-10 gutter py-16 bg-ink/70"><PricingCards yearly={yearly} /></section>
-      <section className="relative z-10 gutter py-28 bg-ink/60">
+      <section className="relative z-10 gutter py-16 bg-transparent"><PricingCards yearly={yearly} /></section>
+      <section className="relative z-10 gutter py-28 bg-transparent">
         <SectionHead eyebrow="Partnership FAQ" lines={['Collaboration', 'clarity.']} />
         <FAQ items={faq} />
       </section>
@@ -348,7 +348,7 @@ export function AboutPage() {
       />
 
       {/* Values */}
-      <section className="relative z-10 gutter py-28 sm:py-36 bg-ink/70">
+      <section className="relative z-10 gutter py-28 sm:py-36 bg-transparent">
         <StatsBand />
         <SectionHead eyebrow="Engineering Pillars" lines={['What guides', 'our code.']} />
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -521,7 +521,7 @@ export function JournalPage() {
         text="Technical deep-dives, architectural manifestos, and engineering essays from the developers and systems architects at Aura."
       />
 
-      <section className="relative z-10 gutter py-16 bg-ink/70">
+      <section className="relative z-10 gutter py-16 bg-transparent">
         <Reveal stagger={0.1} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-14">
           {POSTS.map((p) => (
             <article
@@ -678,7 +678,7 @@ export function ContactPage() {
   return (
     <PageTransition>
       <PageHero eyebrow="Start a Collaboration" lines={['Let’s build something', { t: 'extraordinary.', c: 'text-aqua' }]} text="Tell us about your product vision, tech stack requirements, and target launch timeline. Our engineering leads review every inquiry and reply within 24 hours." />
-      <section className="relative z-10 gutter py-16 pb-32 bg-ink/70 grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <section className="relative z-10 gutter py-16 pb-32 bg-transparent grid grid-cols-1 lg:grid-cols-12 gap-10">
         <Reveal className="lg:col-span-7 panel card-smoke rounded-[2rem] p-8 sm:p-12">
           <CardSmoke tone="dark" />
           {sent ? (

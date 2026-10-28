@@ -75,7 +75,7 @@ export default function HomePage() {
       <LogoCloud />
 
       {/* 1. AWWWARDS STICKY SCROLL-OVERLAP DECK */}
-      <section className="relative z-10 gutter py-24 sm:py-32 bg-ink/45 border-t border-white/5">
+      <section className="relative z-10 gutter py-24 sm:py-32 bg-transparent border-t border-white/5">
         <SectionHead
           eyebrow="Core Software & Web Disciplines"
           lines={['Engineered for speed.', 'Built to scale.']}
@@ -85,7 +85,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. FULL-WIDTH UNBOXED STICKY HORIZONTAL SCROLL REEL & KINETIC CAPABILITIES */}
-      <section className="relative z-10 py-24 sm:py-32 bg-ink/35 border-t border-white/5">
+      <section className="relative z-10 py-24 sm:py-32 bg-transparent border-t border-white/5">
         <div className="gutter">
           <SectionHead
             eyebrow="Selected Flagships & Architecture"
@@ -253,13 +253,13 @@ export default function HomePage() {
       </section>
 
       {/* STATS & TESTIMONIALS IN THE SAME SECTION */}
-      <section className="relative z-10 gutter py-28 sm:py-40 bg-ink/50">
+      <section className="relative z-10 gutter py-28 sm:py-40 bg-transparent">
         <StatsBand />
         <SectionHead eyebrow="Client Recognition" lines={['Loved by founders', 'and engineering leaders.']} />
         <Testimonials />
       </section>
 
-      <section className="relative z-10 gutter pb-28 bg-ink/50"><Newsletter /></section>
+      <section className="relative z-10 gutter pb-28 bg-transparent"><Newsletter /></section>
       <CTABand />
     </PageTransition>
   );

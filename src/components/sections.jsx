@@ -1,28 +1,31 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, Check, Quote, ArrowUpRight, Star } from 'lucide-react';
-import { Heading, Reveal, WaterButton, Marquee, Magnetic, Eyebrow, Counter } from './ui.jsx';
+import { Heading, Reveal, WaterButton, Marquee, Magnetic, Eyebrow, Counter, CardSmoke } from './ui.jsx';
 
 /* ---------------- Page hero (inner pages) ---------------- */
 export function PageHero({ eyebrow, lines, text, children, className = '' }) {
   return (
     <section className={`relative gutter pt-36 sm:pt-48 pb-18 sm:pb-24 overflow-hidden ${className}`}>
-      {/* Background Subtle Ambient Aura Glow */}
-      <div className="pointer-events-none absolute top-20 left-1/4 w-[34rem] h-[22rem] bg-lime/10 blur-[130px] rounded-full" />
+      {/* Background Subtle Ambient Aura Glow (Zero-Cost Radial Gradient) */}
+      <div
+        className="pointer-events-none absolute top-16 left-1/4 w-[38rem] h-[24rem] rounded-full"
+        style={{ background: 'radial-gradient(circle, rgba(200,255,77,0.11) 0%, transparent 70%)' }}
+      />
 
-      <Reveal y={15} delay={0.1}>
+      <Reveal y={15} delay={0.08}>
         <Eyebrow className="text-lime mb-6">{eyebrow}</Eyebrow>
       </Reveal>
       <Heading
         as="h1"
         lines={lines}
-        className="font-display font-extrabold text-[clamp(3.2rem,8.4vw,9.2rem)] leading-[0.93] tracking-[-0.04em] text-sand"
+        className="font-display font-extrabold text-[clamp(3.2rem,8.4vw,9.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
       />
       <div className="mt-10 sm:mt-12 flex flex-col lg:flex-row gap-8 lg:items-end justify-between">
-        <Reveal delay={0.25} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
+        <Reveal delay={0.2} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
           {text}
         </Reveal>
-        {children && <Reveal delay={0.35} className="shrink-0">{children}</Reveal>}
+        {children && <Reveal delay={0.28} className="shrink-0">{children}</Reveal>}
       </div>
     </section>
   );
@@ -40,23 +43,16 @@ export function SectionHead({ eyebrow, lines, text, light = false, className = '
   );
 }
 
-import { ProductionVitalsConsole } from './charts.jsx';
-
-/* ---------------- Production Telemetry & Vitals Console ---------------- */
+/* ---------------- Dashboard mock (removed per user request) ---------------- */
 export function DashboardMock() {
-  return (
-    <div className="relative">
-      <div className="absolute -inset-10 bg-lime/5 blur-3xl rounded-full pointer-events-none" />
-      <ProductionVitalsConsole />
-    </div>
-  );
+  return null;
 }
 
 /* ---------------- Logo cloud ---------------- */
 const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO/LAB', 'Meridian', 'ORBITAL', 'Foundry+', 'Lumière', 'TERRAFORM', 'Atlas&Co', 'Balenciaga Studio', 'Monolith'];
 export function LogoCloud() {
   return (
-    <section className="relative py-14 border-y border-white/10 bg-ink/40 backdrop-blur-sm">
+    <section className="relative py-14 border-y border-white/10 bg-ink/45">
       <p className="text-center font-mono text-[11px] tracking-[0.2em] uppercase text-sand/40 mb-8">Trusted by visionary tech founders, enterprise leaders & scaling startups</p>
       <Marquee items={LOGOS} itemClass="font-display font-extrabold text-3xl text-sand/35 hover:text-lime transition-colors" />
     </section>
@@ -72,10 +68,13 @@ export function StatsBand({ light = false }) {
     { to: 4.9, s: '/5', l: 'Client Satisfaction Rating', d: 1 },
   ];
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-current/10">
+    <div
+      className="grid grid-cols-2 lg:grid-cols-4 gap-8 bg-transparent text-sand p-5"
+      style={{ backgroundColor: 'rgb(5 10 10 / 0.5)' }}
+    >
       {stats.map((s) => (
-        <div key={s.l} className={`p-8 sm:p-12 ${light ? 'bg-sand text-ink border border-ink/10' : 'bg-ink/80 backdrop-blur-sm border border-white/5'}`}>
-          <Counter to={s.to} suffix={s.s} decimals={s.d || 0} className="font-display font-extrabold text-[clamp(2.6rem,6vw,6rem)] leading-none" />
+        <div key={s.l} className="bg-transparent">
+          <Counter to={s.to} suffix={s.s} decimals={s.d || 0} className="font-display font-extrabold text-[clamp(2.6rem,6vw,6rem)] leading-none bg-transparent" />
           <p className={`mt-4 text-sm ${light ? 'text-ink/60' : 'text-sand/55'}`}>{s.l}</p>
         </div>
       ))}
@@ -85,20 +84,25 @@ export function StatsBand({ light = false }) {
 
 /* ---------------- Testimonials ---------------- */
 const QUOTES = [
-  { q: 'Aura completely modernized our customer platform into a blistering, high-converting digital web flagship. Page load dropped to 0.4s and enterprise conversions tripled within 60 days of launch.', n: 'Julian Sterling', r: 'Chief Technology Officer, Kinetix Luxury', c: 'bg-lime text-ink' },
-  { q: 'The full-stack engineering rigor here is unmatched. They delivered distributed microservices, a custom React 19 design system, and sub-second APIs with zero technical compromises.', n: 'Aya Takahashi', r: 'VP of Engineering, Kyoto Systems', c: 'bg-ink3 text-sand' },
-  { q: 'Collaborating with Aura felt like having the world’s elite software engineering minds in our corner. They push the boundaries of modern web applications while obsessing over clean architecture.', n: 'Marc Vance', r: 'Founder & CEO, Horizon Cloud', c: 'bg-sand text-ink' },
+  { q: 'Aura completely modernized our customer platform into a blistering, high-converting digital web flagship. Page load dropped to 0.4s and enterprise conversions tripled within 60 days of launch.', n: 'Julian Sterling', r: 'Chief Technology Officer, Kinetix Luxury', c: 'bg-lime text-ink card-smoke-light', tone: 'light' },
+  { q: 'The full-stack engineering rigor here is unmatched. They delivered distributed microservices, a custom React 19 design system, and sub-second APIs with zero technical compromises.', n: 'Aya Takahashi', r: 'VP of Engineering, Kyoto Systems', c: 'bg-[#091514] text-sand border border-white/10 card-smoke', tone: 'dark' },
+  { q: 'Collaborating with Aura felt like having the world’s elite software engineering minds in our corner. They push the boundaries of modern web applications while obsessing over clean architecture.', n: 'Marc Vance', r: 'Founder & CEO, Horizon Cloud', c: 'bg-sand text-ink card-smoke-light', tone: 'light' },
 ];
 export function Testimonials() {
   return (
-    <Reveal stagger={0.15} className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+    <Reveal stagger={0.12} className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
       {QUOTES.map((t) => (
-        <figure key={t.n} className={`rounded-[2rem] p-8 sm:p-10 flex flex-col justify-between min-h-[380px] ${t.c}`}>
-          <div>
+        <figure
+          key={t.n}
+          data-hot
+          className={`group rounded-[2.2rem] p-8 sm:p-10 flex flex-col justify-between min-h-[380px] shadow-xl hover:-translate-y-2 transition-all duration-500 cursor-pointer ${t.c}`}
+        >
+          <CardSmoke tone={t.tone} />
+          <div className="relative z-10">
             <Quote size={34} className="opacity-60 mb-6" />
             <blockquote className="font-display font-bold text-2xl leading-snug tracking-tight">“{t.q}”</blockquote>
           </div>
-          <figcaption className="mt-8 flex items-center gap-3">
+          <figcaption className="relative z-10 mt-8 flex items-center gap-3">
             <span className="w-11 h-11 rounded-full bg-current/20 flex items-center justify-center font-bold border border-current/20">{t.n[0]}</span>
             <span><span className="block font-bold">{t.n}</span><span className="text-sm opacity-60">{t.r}</span></span>
           </figcaption>
@@ -123,7 +127,7 @@ export function FAQ({ items }) {
           </button>
           <AnimatePresence initial={false}>
             {open === i && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} className="overflow-hidden">
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="overflow-hidden">
                 <p className="pb-8 max-w-3xl text-sand/60 text-lg leading-relaxed">{it.a}</p>
               </motion.div>
             )}
@@ -142,15 +146,22 @@ export const PLANS = [
 ];
 export function PricingCards({ yearly }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 items-stretch">
       {PLANS.map((p) => (
-        <div key={p.name} className={`rounded-[2rem] p-8 sm:p-10 flex flex-col ${p.hot ? 'bg-lime text-ink' : 'panel'}`}>
-          <div className="flex items-center justify-between">
+        <div
+          key={p.name}
+          data-hot
+          className={`rounded-[2.2rem] p-8 sm:p-10 flex flex-col shadow-xl hover:-translate-y-2 transition-all duration-500 ${
+            p.hot ? 'bg-lime text-ink card-smoke-light' : 'panel card-smoke'
+          }`}
+        >
+          <CardSmoke tone={p.hot ? 'light' : 'dark'} />
+          <div className="relative z-10 flex items-center justify-between">
             <h3 className="font-display font-extrabold text-3xl">{p.name}</h3>
             {p.hot && <span className="px-3 py-1 rounded-full bg-ink text-lime font-mono text-[10px] tracking-widest uppercase">MOST REQUESTED</span>}
           </div>
-          <p className={`mt-3 ${p.hot ? 'text-ink/70' : 'text-sand/55'}`}>{p.d}</p>
-          <div className="mt-8 flex items-end gap-2">
+          <p className={`relative z-10 mt-3 ${p.hot ? 'text-ink/70' : 'text-sand/55'}`}>{p.d}</p>
+          <div className="relative z-10 mt-8 flex items-end gap-2">
             {p.m === null ? (
               <span className="font-display font-extrabold text-6xl">Bespoke</span>
             ) : (
@@ -160,15 +171,17 @@ export function PricingCards({ yearly }) {
               </>
             )}
           </div>
-          <ul className="mt-8 space-y-3 flex-1">
+          <ul className="relative z-10 mt-8 space-y-3 flex-1">
             {p.f.map((f) => (
               <li key={f} className="flex items-center gap-3">
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center ${p.hot ? 'bg-ink text-lime' : 'bg-lime/15 text-lime'}`}><Check size={12} /></span>
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${p.hot ? 'bg-ink text-lime' : 'bg-lime/15 text-lime'}`}><Check size={12} /></span>
                 {f}
               </li>
             ))}
           </ul>
-          <WaterButton to="/contact" variant={p.hot ? 'dark' : 'ghost'} className="mt-10 w-full">{p.cta} <ArrowUpRight size={16} /></WaterButton>
+          <div className="relative z-10 mt-10">
+            <WaterButton to="/contact" variant={p.hot ? 'dark' : 'ghost'} className="w-full">{p.cta} <ArrowUpRight size={16} /></WaterButton>
+          </div>
         </div>
       ))}
     </div>
@@ -179,17 +192,18 @@ export function PricingCards({ yearly }) {
 export function Newsletter() {
   const [done, setDone] = useState(false);
   return (
-    <div className="panel rounded-[2rem] p-8 sm:p-12 flex flex-col lg:flex-row gap-8 lg:items-center justify-between">
-      <div className="max-w-xl">
+    <div className="panel card-smoke rounded-[2.2rem] p-8 sm:p-12 flex flex-col lg:flex-row gap-8 lg:items-center justify-between shadow-xl">
+      <CardSmoke tone="dark" />
+      <div className="relative z-10 max-w-xl">
         <h3 className="font-display font-extrabold text-3xl sm:text-4xl">The Engineering Perspective</h3>
         <p className="text-sand/60 mt-3">Monthly curated essays on modern web architecture, Next.js / React 19, distributed cloud infrastructure, and generative AI engineering.</p>
       </div>
       {done ? (
-        <p className="text-lime font-bold flex items-center gap-2"><Check size={18} /> Welcome to the developer circle.</p>
+        <p className="relative z-10 text-lime font-bold flex items-center gap-2"><Check size={18} /> Welcome to the developer circle.</p>
       ) : (
-        <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} className="flex flex-col sm:flex-row gap-3 w-full lg:w-[480px]">
-          <input id="newsletter-email" required type="email" placeholder="you@techcompany.com" className="field" />
-          <WaterButton type="submit" variant="solid">Join dispatch</WaterButton>
+        <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} className="relative z-10 flex flex-col sm:flex-row gap-3 w-full lg:w-[500px]">
+          <input id="newsletter-email" required type="email" placeholder="you@techcompany.com" className="field h-14" />
+          <WaterButton type="submit" variant="solid" className="shrink-0">Join dispatch <ArrowUpRight size={16} /></WaterButton>
         </form>
       )}
     </div>
@@ -200,14 +214,24 @@ export function Newsletter() {
 export function CTABand() {
   return (
     <section className="relative z-10 bg-lime text-ink gutter py-28 sm:py-40 overflow-hidden">
-      <div className="absolute -right-32 -top-32 w-[40rem] h-[40rem] rounded-full border-[3rem] border-ink/5" />
-      <div className="absolute -right-10 -bottom-48 w-[30rem] h-[30rem] rounded-full border-[2rem] border-ink/5" />
-      <Eyebrow className="text-ink/70 mb-8">Ready to engineer what comes next?</Eyebrow>
-      <Heading as="h2" lines={['Let’s build something', 'extraordinary together.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
-      <Reveal delay={0.2} className="mt-12 flex flex-wrap gap-4">
-        <Magnetic><WaterButton to="/contact" variant="dark" className="!px-10 !py-5 text-base">Start a project <ArrowUpRight size={18} /></WaterButton></Magnetic>
-        <WaterButton to="/pricing" variant="light" className="!px-10 !py-5 text-base border border-ink/20">View engineering models</WaterButton>
-      </Reveal>
+      <div className="pointer-events-none absolute -right-32 -top-32 w-[40rem] h-[40rem] rounded-full border-[3rem] border-ink/5" />
+      <div className="pointer-events-none absolute -right-10 -bottom-48 w-[30rem] h-[30rem] rounded-full border-[2rem] border-ink/5" />
+      <div className="relative z-10">
+        <Eyebrow className="text-ink/70 mb-8">Ready to engineer what comes next?</Eyebrow>
+        <Heading as="h2" lines={['Let’s build something', 'extraordinary together.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
+        <Reveal delay={0.2} className="mt-12 flex flex-wrap items-center gap-4">
+          <Magnetic>
+            <WaterButton to="/contact" variant="dark">
+              Start a project <ArrowUpRight size={17} />
+            </WaterButton>
+          </Magnetic>
+          <Magnetic>
+            <WaterButton to="/pricing" variant="light">
+              View engineering models <ArrowUpRight size={17} />
+            </WaterButton>
+          </Magnetic>
+        </Reveal>
+      </div>
     </section>
   );
 }

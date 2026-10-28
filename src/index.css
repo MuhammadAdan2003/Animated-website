@@ -30,6 +30,7 @@
   }
 
 
+  html,
   body {
     background-color: #050a0a;
     color: #f3eee3;
@@ -61,9 +62,9 @@
 
 /* Masked heading reveal */
 .hw {
-  transform: translateY(112%) rotate(3deg);
+  transform: translateY(125%) rotate(3deg);
   transform-origin: left bottom;
-  transition: transform 1.2s cubic-bezier(.16, 1, .3, 1);
+  transition: transform 1.15s cubic-bezier(.16, 1, .3, 1);
   will-change: transform;
 }
 
@@ -119,7 +120,7 @@
   background-size: 26px 26px;
 }
 
-/* ---------- WATER BUTTON ---------- */
+/* ---------- WATER BUTTON (UNIFORM SIZING ACROSS ALL VARIANTS) ---------- */
 .water-btn {
   --wx: 50%;
   --wy: 50%;
@@ -133,13 +134,23 @@
   align-items: center;
   justify-content: center;
   gap: .65rem;
-  padding: 1rem 1.75rem;
+  height: 3.5rem;
+  min-width: 13.75rem;
+  padding: 0 2rem;
+  border: 1px solid transparent;
   border-radius: 999px;
   font-weight: 700;
-  font-size: .875rem;
+  font-size: .9375rem;
   letter-spacing: .01em;
   white-space: nowrap;
-  transition: color .6s cubic-bezier(.22, 1, .36, 1) .05s, border-color .6s, box-shadow .8s cubic-bezier(.22, 1, .36, 1), translate .7s cubic-bezier(.22, 1, .36, 1), scale .5s cubic-bezier(.22, 1, .36, 1);
+  transition: color .55s cubic-bezier(.22, 1, .36, 1) .03s, border-color .55s, box-shadow .7s cubic-bezier(.22, 1, .36, 1), translate .55s cubic-bezier(.22, 1, .36, 1), scale .45s cubic-bezier(.22, 1, .36, 1);
+}
+
+.water-btn.water-sm {
+  height: 2.65rem;
+  min-width: auto;
+  padding: 0 1.35rem;
+  font-size: .85rem;
 }
 
 .water-btn:hover {
@@ -155,11 +166,12 @@
   z-index: 2;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: .6rem;
 }
 
 .water-btn .water-label svg {
-  transition: translate .7s cubic-bezier(.22, 1, .36, 1), rotate .7s cubic-bezier(.22, 1, .36, 1);
+  transition: translate .6s cubic-bezier(.22, 1, .36, 1), rotate .6s cubic-bezier(.22, 1, .36, 1);
 }
 
 .water-btn:hover .water-label svg {
@@ -269,6 +281,7 @@
 .water-solid {
   background: #c8ff4d;
   color: #06100d;
+  border-color: #c8ff4d;
   --water: #f3eee3;
   --water2: #4de8cf;
   --water3: #9ff3e2;
@@ -276,12 +289,14 @@
 
 .water-solid:hover {
   color: #06100d;
+  border-color: transparent;
   box-shadow: 0 10px 40px -8px rgba(200, 255, 77, .5);
 }
 
 .water-light {
   background: #f3eee3;
   color: #06100d;
+  border-color: rgba(6, 16, 13, .15);
   --water: #c8ff4d;
   --water2: #4de8cf;
   --water3: #a8f5e7;
@@ -304,6 +319,7 @@
 .water-dark {
   background: #06100d;
   color: #f3eee3;
+  border-color: #06100d;
   --water: #f3eee3;
   --water2: #4de8cf;
   --water3: #c8ff4d;
@@ -311,6 +327,7 @@
 
 .water-dark:hover {
   color: #06100d;
+  border-color: transparent;
 }
 
 /* Marquee fade edges */
@@ -340,28 +357,166 @@
   color: rgba(243, 238, 227, .35);
 }
 
-/* Spotlight that follows the cursor on cards */
-.panel,
-.spot {
+/* ---------- SUBTLE VOLUMETRIC SMOKE & CURSOR SPOTLIGHT ON ALL CARDS ONLY ---------- */
+:where(.panel, .spot, .card-smoke, .card-smoke-light) {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
+/* Cursor-reactive soft smoke spotlight */
 .panel::before,
-.spot::before {
+.spot::before,
+.card-smoke::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(200, 255, 77, .10), transparent 60%);
-  transition: opacity .6s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(200, 255, 77, .09), rgba(77, 232, 207, .04) 42%, transparent 68%);
+  transition: opacity .5s ease;
+}
+
+.card-smoke-light::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .42), rgba(77, 232, 207, .14) 45%, transparent 70%);
+  transition: opacity .5s ease;
 }
 
 .panel:hover::before,
-.spot:hover::before {
+.spot:hover::before,
+.card-smoke:hover::before,
+.card-smoke-light:hover::before {
   opacity: 1;
+}
+
+/* Ambient drifting light smoke mist inside cards (GPU transform-only, subtle) */
+.panel::after,
+.spot::after,
+.card-smoke::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .42;
+  background:
+    radial-gradient(ellipse 44% 36% at 22% 28%, rgba(200, 255, 77, .065), rgba(77, 232, 207, .03) 52%, transparent 74%),
+    radial-gradient(ellipse 42% 38% at 78% 74%, rgba(77, 232, 207, .055), rgba(243, 238, 227, .025) 50%, transparent 74%);
+  animation: card-smoke-drift 15s ease-in-out infinite alternate;
+  will-change: transform;
+  transition: opacity .5s ease;
+}
+
+.card-smoke-light::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .55;
+  background:
+    radial-gradient(ellipse 46% 38% at 22% 28%, rgba(255, 255, 255, .34), rgba(77, 232, 207, .12) 52%, transparent 75%),
+    radial-gradient(ellipse 42% 36% at 78% 74%, rgba(6, 16, 13, .05), rgba(77, 232, 207, .10) 50%, transparent 74%);
+  animation: card-smoke-drift 15s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.panel:hover::after,
+.spot:hover::after,
+.card-smoke:hover::after {
+  opacity: .68;
+}
+
+/* ---------- SUPAH 3D FANNED DRAG & WHEEL CAROUSEL (codepen.io/supah/pen/xxJMbbg) ---------- */
+.supah-carousel {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0%;
+  min-height: 340px;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: auto;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.supah-carousel-item {
+  --items: 8;
+  --width: clamp(250px, 26vw, 390px);
+  --height: clamp(330px, 34vw, 490px);
+  --x: calc(var(--active) * 760%);
+  --y: calc(var(--active) * 180%);
+  --rot: calc(var(--active) * 115deg);
+  --opacity: calc(var(--zIndex) / var(--items) * 3 - 1.6);
+  overflow: hidden;
+  position: absolute;
+  z-index: var(--zIndex);
+  width: var(--width);
+  height: var(--height);
+  margin: calc(var(--height) * -0.5) 0 0 calc(var(--width) * -0.5);
+  border-radius: 2rem;
+  top: 50%;
+  left: 50%;
+  user-select: none;
+  transform-origin: 0% 100%;
+  box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.85);
+  background: #071211;
+  pointer-events: all;
+  transform: translate3d(var(--x), var(--y), 0) rotate(var(--rot));
+  transition: transform 0.8s cubic-bezier(0, 0.02, 0, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+  will-change: transform;
+}
+
+.supah-carousel-item:hover {
+  box-shadow: 0 35px 90px -10px rgba(200, 255, 77, 0.25);
+}
+
+.supah-carousel-box {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.8s cubic-bezier(0, 0.02, 0, 1);
+  opacity: var(--opacity);
+}
+
+.supah-carousel-box::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(4, 10, 9, 0.45),
+    rgba(4, 10, 9, 0.05) 32%,
+    rgba(4, 10, 9, 0.65) 75%,
+    rgba(4, 10, 9, 0.94)
+  );
+  pointer-events: none;
+}
+
+@keyframes card-smoke-drift {
+  0% {
+    transform: translate3d(-4%, -3%, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(4%, 3%, 0) scale(1.07) rotate(5deg);
+  }
+  100% {
+    transform: translate3d(-2%, 5%, 0) scale(1.12) rotate(-5deg);
+  }
 }
 
 /* Image reveal */

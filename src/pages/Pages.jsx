@@ -45,9 +45,8 @@ import {
   Monitor,
   Rocket
 } from 'lucide-react';
-import { PageTransition, Heading, Reveal, WaterButton, Magnetic, Eyebrow, Counter, Marquee } from '../components/ui.jsx';
+import { PageTransition, Heading, Reveal, WaterButton, Magnetic, Eyebrow, Counter, Marquee, CardSmoke } from '../components/ui.jsx';
 import { PageHero, SectionHead, StatsBand, FAQ, PricingCards, CTABand, Testimonials, Newsletter } from '../components/sections.jsx';
-import { AnalyticsGrid } from '../components/charts.jsx';
 
 const PRODUCT_CAPABILITIES = [
   { i: Monitor, t: 'Full-Stack Web Apps', d: 'High-performance Next.js 15, React 19, and progressive web apps engineered for sub-second LCP and high conversion.' },
@@ -87,22 +86,23 @@ export function ProductPage() {
       </PageHero>
 
       {/* Services Grid */}
-      <section className="relative z-10 gutter py-24 bg-ink/40 backdrop-blur-[2px]">
+      <section className="relative z-10 gutter py-24 bg-ink/60">
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {modules.map((m, idx) => (
             <article
               key={m.t}
               data-hot
-              className={`rounded-[2rem] p-8 sm:p-12 min-h-[400px] flex flex-col justify-between cursor-pointer spot group hover:-translate-y-1.5 transition-all duration-500 ${idx === 0 ? 'bg-lime text-ink' : idx === 3 ? 'bg-aqua text-ink' : 'panel'
+              className={`rounded-[2rem] p-8 sm:p-12 min-h-[400px] flex flex-col justify-between cursor-pointer spot group hover:-translate-y-1.5 transition-all duration-500 ${idx === 0 ? 'bg-lime text-ink card-smoke-light' : idx === 3 ? 'bg-aqua text-ink card-smoke-light' : 'panel card-smoke'
                 }`}
             >
-              <div className="flex justify-between items-center">
+              <CardSmoke tone={idx === 0 || idx === 3 ? 'light' : 'dark'} />
+              <div className="relative z-10 flex justify-between items-center">
                 <m.i size={34} className="group-hover:scale-110 transition-transform duration-300" />
                 <span className="font-mono text-[11px] uppercase tracking-widest px-3 py-1 rounded-full border border-current/20">
                   {m.tag}
                 </span>
               </div>
-              <div>
+              <div className="relative z-10">
                 <span className="font-mono text-xs opacity-60 block mb-2">{m.stat}</span>
                 <h3 className="font-display font-extrabold text-5xl sm:text-6xl mb-4 group-hover:translate-x-2 transition-transform duration-300">{m.t}</h3>
                 <p className="text-lg leading-relaxed max-w-md opacity-80">{m.d}</p>
@@ -112,32 +112,25 @@ export function ProductPage() {
         </Reveal>
       </section>
 
-      {/* Real Interactive Analytics Section */}
-      <section className="relative z-10 gutter py-28 bg-ink/30 backdrop-blur-[2px] border-y border-white/10">
-        <SectionHead
-          eyebrow="Quantified Performance Engine"
-          lines={['Real performance.', 'Measurable scale.']}
-          text="We validate engineering excellence through hard metrics: sub-second time to interactive, 100/100 Lighthouse performance, and 99.999% production SLA uptime."
-        />
-        <AnalyticsGrid />
-      </section>
-
       {/* Capabilities */}
       <section className="relative z-10 gutter py-28 bg-sand text-ink">
         <SectionHead light eyebrow="Agency Capabilities" lines={['Engineered for', 'global category leaders.']} />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-ink/10 border border-ink/10 rounded-[2rem] overflow-hidden">
           {PRODUCT_CAPABILITIES.map((f) => (
-            <div key={f.t} className="bg-sand p-8 min-h-[240px] hover:bg-lime transition-colors duration-700 cursor-pointer" data-hot>
-              <f.i size={24} className="mb-10 text-ink" />
-              <h3 className="font-display font-extrabold text-2xl mb-2">{f.t}</h3>
-              <p className="text-ink/65 text-sm leading-relaxed">{f.d}</p>
+            <div key={f.t} className="relative overflow-hidden bg-sand p-8 min-h-[240px] hover:bg-lime transition-colors duration-700 cursor-pointer card-smoke-light" data-hot>
+              <CardSmoke tone="light" />
+              <div className="relative z-10">
+                <f.i size={24} className="mb-10 text-ink" />
+                <h3 className="font-display font-extrabold text-2xl mb-2">{f.t}</h3>
+                <p className="text-ink/65 text-sm leading-relaxed">{f.d}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="relative z-10 gutter py-28 sm:py-40 bg-ink/50 backdrop-blur-[2px]">
+      <section className="relative z-10 gutter py-28 sm:py-40 bg-ink/70">
         <SectionHead eyebrow="Inquiries FAQ" lines={['Questions,', 'answered.']} />
         <FAQ items={faq} />
       </section>
@@ -166,7 +159,7 @@ export function SolutionsPage() {
         lines={['Software solutions.', { t: 'Across leading', c: 'text-aqua' }, 'industries.']}
         text="From high-growth SaaS and luxury e-commerce to fintech and autonomous AI ventures, we build software solutions that empower category leaders."
       />
-      <section className="relative z-10 gutter pb-28 bg-ink/50 backdrop-blur-[2px] pt-10">
+      <section className="relative z-10 gutter pb-28 bg-ink/70 pt-10">
         <div className="divide-y divide-white/10 border-y border-white/10">
           {items.map((s, i) => (
             <Reveal key={s.t} y={30}>
@@ -225,17 +218,18 @@ export function CustomersPage() {
   return (
     <PageTransition>
       <PageHero eyebrow="Selected Work" lines={['Software proof,', { t: 'not promises.', c: 'text-lime' }]} text="A curated selection of production web applications, scalable cloud platforms, and transformative enterprise software engineered by Aura." />
-      <section className="relative z-10 gutter pb-28 bg-ink/50 backdrop-blur-[2px] pt-10">
+      <section className="relative z-10 gutter pb-28 bg-ink/70 pt-10">
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {CASES.map((c, i) => (
-            <article key={c.n} data-hot className={`group relative rounded-[2rem] overflow-hidden min-h-[480px] p-8 sm:p-10 flex flex-col justify-between panel cursor-pointer hover:-translate-y-2 transition-all duration-700 ${i % 2 ? 'md:mt-20' : ''}`}>
+            <article key={c.n} data-hot className={`group relative rounded-[2rem] overflow-hidden min-h-[480px] p-8 sm:p-10 flex flex-col justify-between panel card-smoke cursor-pointer hover:-translate-y-2 transition-all duration-700 ${i % 2 ? 'md:mt-20' : ''}`}>
+              <CardSmoke tone="dark" />
               <div className={`absolute inset-0 bg-gradient-to-br ${c.c} opacity-30 group-hover:opacity-70 transition-opacity duration-1000`} />
               <div className="absolute inset-0 dots opacity-60" />
-              <div className="relative flex justify-between">
+              <div className="relative z-10 flex justify-between">
                 <span className="glass rounded-full px-4 py-1.5 font-mono text-xs">{c.k}</span>
                 <span className="w-12 h-12 rounded-full bg-sand text-ink flex items-center justify-center group-hover:rotate-45 transition-transform duration-700"><ArrowUpRight size={20} /></span>
               </div>
-              <div className="relative">
+              <div className="relative z-10">
                 <p className="font-display font-extrabold text-5xl sm:text-6xl text-lime mb-4">{c.s}</p>
                 <h3 className="font-display font-extrabold text-3xl mb-2">{c.n}</h3>
                 <p className="text-sand/70 max-w-sm">{c.d}</p>
@@ -244,8 +238,8 @@ export function CustomersPage() {
           ))}
         </Reveal>
       </section>
-      <section className="relative z-10 bg-ink/60 backdrop-blur-[2px]"><StatsBand /></section>
-      <section className="relative z-10 gutter py-28 sm:py-40 bg-ink/50 backdrop-blur-[2px]">
+      <section className="relative z-10 gutter py-28 sm:py-40 bg-ink/70">
+        <StatsBand />
         <SectionHead eyebrow="In Their Words" lines={['Voices from', 'the partners.']} />
         <Testimonials />
       </section>
@@ -271,8 +265,8 @@ export function PricingPage() {
           ))}
         </div>
       </PageHero>
-      <section className="relative z-10 gutter py-16 bg-ink/50 backdrop-blur-[2px]"><PricingCards yearly={yearly} /></section>
-      <section className="relative z-10 gutter py-28 bg-ink/40 backdrop-blur-[2px]">
+      <section className="relative z-10 gutter py-16 bg-ink/70"><PricingCards yearly={yearly} /></section>
+      <section className="relative z-10 gutter py-28 bg-ink/60">
         <SectionHead eyebrow="Partnership FAQ" lines={['Collaboration', 'clarity.']} />
         <FAQ items={faq} />
       </section>
@@ -353,19 +347,19 @@ export function AboutPage() {
         text="Aura is an independent software development and modern web development agency founded by elite engineers, systems architects, and product designers who refuse mediocrity."
       />
 
-      <section className="relative z-10 bg-ink/60 backdrop-blur-[2px]"><StatsBand /></section>
-
       {/* Values */}
-      <section className="relative z-10 gutter py-28 sm:py-36 bg-ink/50 backdrop-blur-[2px]">
+      <section className="relative z-10 gutter py-28 sm:py-36 bg-ink/70">
+        <StatsBand />
         <SectionHead eyebrow="Engineering Pillars" lines={['What guides', 'our code.']} />
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {values.map((v, i) => (
             <div
               key={v.t}
               data-hot
-              className="group relative rounded-[2.5rem] overflow-hidden panel border border-white/10 hover:border-lime/40 flex flex-col justify-between min-h-[480px] cursor-pointer hover:-translate-y-2 transition-all duration-700 shadow-2xl"
+              className="group relative rounded-[2.5rem] overflow-hidden panel card-smoke border border-white/10 hover:border-lime/40 flex flex-col justify-between min-h-[480px] cursor-pointer hover:-translate-y-2 transition-all duration-700 shadow-2xl"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-ink3">
+              <CardSmoke tone="dark" />
+              <div className="relative z-10 aspect-[16/10] overflow-hidden bg-ink3">
                 <img
                   src={v.img}
                   alt={v.t}
@@ -408,9 +402,10 @@ export function AboutPage() {
             <div
               key={m.n}
               data-hot
-              className="group rounded-[2.2rem] bg-white p-4 pb-6 shadow-xl border border-ink/10 cursor-pointer hover:-translate-y-3 transition-all duration-500"
+              className="group relative overflow-hidden rounded-[2.2rem] bg-white p-4 pb-6 shadow-xl border border-ink/10 cursor-pointer hover:-translate-y-3 transition-all duration-500 card-smoke-light"
             >
-              <div className="aspect-[4/5] rounded-[1.8rem] overflow-hidden relative bg-ink">
+              <CardSmoke tone="light" />
+              <div className="aspect-[4/5] rounded-[1.8rem] overflow-hidden relative z-10 bg-ink">
                 <img
                   src={m.img}
                   alt={m.n}
@@ -434,7 +429,7 @@ export function AboutPage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 px-2">
+              <div className="relative z-10 mt-4 px-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-display font-extrabold text-xl text-ink group-hover:text-lime-700 transition-colors">
                     {m.n}
@@ -526,39 +521,40 @@ export function JournalPage() {
         text="Technical deep-dives, architectural manifestos, and engineering essays from the developers and systems architects at Aura."
       />
 
-      <section className="relative z-10 gutter py-16 bg-ink/50 backdrop-blur-[2px]">
+      <section className="relative z-10 gutter py-16 bg-ink/70">
         <Reveal stagger={0.1} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-14">
           {POSTS.map((p) => (
             <article
               key={p.id}
               data-hot
               onClick={() => setActiveArticle(p)}
-              className="group cursor-pointer spot panel p-6 rounded-[2.5rem] border border-white/10 hover:-translate-y-2.5 transition-all duration-500 shadow-xl"
+              className="group cursor-pointer spot panel card-smoke p-6 rounded-[2.5rem] border border-white/10 hover:-translate-y-2.5 transition-all duration-500 shadow-xl"
             >
-              <div className={`aspect-[16/10] rounded-[2rem] bg-gradient-to-br ${p.g} relative overflow-hidden`}>
+              <CardSmoke tone="dark" />
+              <div className={`aspect-[16/10] rounded-[2rem] bg-gradient-to-br ${p.g} relative z-10 overflow-hidden`}>
                 <div className="absolute inset-0 dots opacity-40" />
                 <div className="absolute -right-10 -bottom-10 w-52 h-52 rounded-full border-[28px] border-ink/10 group-hover:scale-125 transition-transform duration-1000" />
-                <span className="absolute top-4 left-4 bg-ink/80 text-sand backdrop-blur-md rounded-full px-4 py-1.5 font-mono text-xs font-bold border border-white/10">
+                <span className="absolute top-4 left-4 bg-ink/85 text-sand rounded-full px-4 py-1.5 font-mono text-xs font-bold border border-white/10">
                   {p.c}
                 </span>
-                <span className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-ink/80 text-sand flex items-center justify-center group-hover:rotate-45 group-hover:bg-lime group-hover:text-black transition-all duration-500">
+                <span className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-ink/85 text-sand flex items-center justify-center group-hover:rotate-45 group-hover:bg-lime group-hover:text-black transition-all duration-500">
                   <ArrowUpRight size={18} />
                 </span>
               </div>
-              <div className="flex items-center gap-3 font-mono text-xs text-sand/45 mt-5">
+              <div className="relative z-10 flex items-center gap-3 font-mono text-xs text-sand/45 mt-5">
                 <span>{p.d}</span>
                 <span>·</span>
                 <span>{p.r} read</span>
                 <span>·</span>
                 <span className="text-lime">{p.author}</span>
               </div>
-              <h3 className="mt-3 font-display font-extrabold text-2xl sm:text-3xl leading-tight text-sand group-hover:text-lime transition-colors duration-500">
+              <h3 className="relative z-10 mt-3 font-display font-extrabold text-2xl sm:text-3xl leading-tight text-sand group-hover:text-lime transition-colors duration-500">
                 {p.t}
               </h3>
-              <p className="mt-3 text-sand/60 text-sm line-clamp-2 leading-relaxed">
+              <p className="relative z-10 mt-3 text-sand/60 text-sm line-clamp-2 leading-relaxed">
                 {p.lead}
               </p>
-              <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-lime group-hover:translate-x-1 transition-transform">
+              <span className="relative z-10 mt-5 inline-flex items-center gap-2 text-sm font-bold text-lime group-hover:translate-x-1 transition-transform">
                 Read engineering essay <ArrowRight size={16} />
               </span>
             </article>
@@ -572,7 +568,7 @@ export function JournalPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/80 backdrop-blur-2xl"
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/85"
               onClick={() => setActiveArticle(null)}
             >
               <motion.div
@@ -659,7 +655,7 @@ export function JournalPage() {
                       <span>Save for later</span>
                     </button>
                   </div>
-                  <WaterButton onClick={() => setActiveArticle(null)} variant="solid" className="!py-2.5 !px-6">
+                  <WaterButton onClick={() => setActiveArticle(null)} variant="solid">
                     Close Essay
                   </WaterButton>
                 </div>
@@ -682,16 +678,17 @@ export function ContactPage() {
   return (
     <PageTransition>
       <PageHero eyebrow="Start a Collaboration" lines={['Let’s build something', { t: 'extraordinary.', c: 'text-aqua' }]} text="Tell us about your product vision, tech stack requirements, and target launch timeline. Our engineering leads review every inquiry and reply within 24 hours." />
-      <section className="relative z-10 gutter py-16 pb-32 bg-ink/50 backdrop-blur-[2px] grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <Reveal className="lg:col-span-7 panel rounded-[2rem] p-8 sm:p-12">
+      <section className="relative z-10 gutter py-16 pb-32 bg-ink/70 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <Reveal className="lg:col-span-7 panel card-smoke rounded-[2rem] p-8 sm:p-12">
+          <CardSmoke tone="dark" />
           {sent ? (
-            <div className="min-h-[420px] flex flex-col items-center justify-center text-center">
+            <div className="relative z-10 min-h-[420px] flex flex-col items-center justify-center text-center">
               <span className="w-20 h-20 rounded-full bg-lime text-ink flex items-center justify-center mb-6"><Check size={36} /></span>
               <h3 className="font-display font-extrabold text-4xl mb-2">Inquiry Received.</h3>
               <p className="text-sand/60">A lead software architect will review your technical requirements and schedule a discovery session within 24 hours.</p>
             </div>
           ) : (
-            <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-5">
+            <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="relative z-10 space-y-5">
               <div>
                 <p className="font-mono text-xs uppercase tracking-widest text-sand/50 mb-3">Project Type</p>
                 <div className="flex flex-wrap gap-2">
@@ -706,21 +703,25 @@ export function ContactPage() {
               </div>
               <input id="contact-company" placeholder="Company / Organization name" className="field" />
               <textarea id="contact-message" required rows={6} placeholder="Tell us about your software vision, desired tech stack, and target launch date..." className="field resize-none" />
-              <WaterButton type="submit" variant="solid" className="!px-10 !py-5">Submit Project Brief <ArrowUpRight size={18} /></WaterButton>
+              <WaterButton type="submit" variant="solid">Submit Project Brief <ArrowUpRight size={18} /></WaterButton>
             </form>
           )}
         </Reveal>
         <Reveal delay={0.15} className="lg:col-span-5 space-y-4">
           {[[Mail, 'Direct Inquiries', 'engineering@aura.dev'], [Phone, 'Engineering Desk', '+1 (415) 890-2287'], [MapPin, 'Global Hubs', 'San Francisco · London · Zurich · Tokyo']].map(([I, l, v]) => (
-            <div key={l} className="panel rounded-3xl p-6 flex items-center gap-5 hover:border-lime/50 transition-colors duration-500">
-              <span className="w-14 h-14 rounded-2xl bg-lime/15 text-lime flex items-center justify-center"><I size={22} /></span>
-              <div><p className="font-mono text-[11px] uppercase tracking-widest text-sand/45">{l}</p><p className="font-display font-bold text-xl">{v}</p></div>
+            <div key={l} className="panel card-smoke rounded-3xl p-6 flex items-center gap-5 hover:border-lime/50 transition-colors duration-500">
+              <CardSmoke tone="dark" />
+              <span className="relative z-10 w-14 h-14 rounded-2xl bg-lime/15 text-lime flex items-center justify-center"><I size={22} /></span>
+              <div className="relative z-10"><p className="font-mono text-[11px] uppercase tracking-widest text-sand/45">{l}</p><p className="font-display font-bold text-xl">{v}</p></div>
             </div>
           ))}
-          <div className="rounded-3xl bg-aqua text-ink p-8">
-            <p className="font-display font-extrabold text-3xl leading-tight">Need a direct technical consultation?</p>
-            <p className="mt-2 opacity-70">Schedule a 30-minute system architecture review with our Lead Software Architect.</p>
-            <WaterButton variant="dark" className="mt-6">Schedule Consultation <ArrowUpRight size={16} /></WaterButton>
+          <div className="relative overflow-hidden rounded-3xl bg-aqua text-ink p-8 card-smoke-light">
+            <CardSmoke tone="light" />
+            <div className="relative z-10">
+              <p className="font-display font-extrabold text-3xl leading-tight">Need a direct technical consultation?</p>
+              <p className="mt-2 opacity-70">Schedule a 30-minute system architecture review with our Lead Software Architect.</p>
+              <WaterButton variant="dark" className="mt-6">Schedule Consultation <ArrowUpRight size={16} /></WaterButton>
+            </div>
           </div>
         </Reveal>
       </section>

@@ -40,14 +40,19 @@ export function Heading({ as: Tag = 'h2', lines, children, className = '', delay
   return (
     <Tag ref={ref} className={`${className} ${on ? 'hw-in' : ''}`}>
       {ls.map((l, i) => {
-        const t = typeof l === 'string' ? l : l.t;
+        if (!l) return null;
+        const t = typeof l === 'string' ? l : (l.t || '');
         const c = typeof l === 'string' ? '' : l.c || '';
+        const words = String(t).split(' ');
         return (
           <span key={i} className="block">
-            {t.split(' ').map((w, j) => (
-              <span key={j} className="inline-block overflow-hidden align-top pb-[0.16em] -mb-[0.16em] mr-[0.24em]">
-                <span className={`hw inline-block ${c}`} style={{ transitionDelay: `${delay + extra + n++ * stagger}s` }}>{w}</span>
-              </span>
+            {words.map((w, j) => (
+              <React.Fragment key={j}>
+                <span className="inline-block overflow-hidden align-top pt-[0.22em] -mt-[0.22em] pb-[0.24em] -mb-[0.24em] px-[0.14em] -mx-[0.14em] mr-[0.12em]">
+                  <span className={`hw inline-block ${c}`} style={{ transitionDelay: `${delay + extra + n++ * stagger}s` }}>{w}</span>
+                </span>
+                {j < words.length - 1 ? ' ' : null}
+              </React.Fragment>
             ))}
           </span>
         );
@@ -130,18 +135,19 @@ export function Magnetic({ children, strength = 0.3, className = '' }) {
 }
 
 /* Animated counter */
-export function Counter({ to, suffix = '', prefix = '', decimals = 0, className = '' }) {
+export function Counter({ to = 0, suffix = '', prefix = '', decimals = 0, className = '' }) {
   const [ref, on] = useInView();
+  const safeTo = Number.isFinite(Number(to)) ? Number(to) : 0;
   useEffect(() => {
     const el = ref.current;
     if (!on || !el) return;
-    const fmt = (v) => `${prefix}${v.toFixed(decimals)}${suffix}`;
+    const fmt = (v) => `${prefix}${(Number(v) || 0).toFixed(decimals)}${suffix}`;
     const obj = { v: 0 };
-    const tween = gsap.to(obj, { v: to, duration: 2.4, ease: 'power3.out', onUpdate: () => { el.textContent = fmt(obj.v); } });
-    const fallback = setTimeout(() => { el.textContent = fmt(to); }, 3500);
-    return () => { tween.kill(); clearTimeout(fallback); el.textContent = fmt(to); };
-  }, [on, to]);
-  return <span ref={ref} className={className}>{prefix}{to.toFixed(decimals)}{suffix}</span>;
+    const tween = gsap.to(obj, { v: safeTo, duration: 2.4, ease: 'power3.out', onUpdate: () => { if (ref.current) ref.current.textContent = fmt(obj.v); } });
+    const fallback = setTimeout(() => { if (ref.current) ref.current.textContent = fmt(safeTo); }, 3500);
+    return () => { tween.kill(); clearTimeout(fallback); if (ref.current) ref.current.textContent = fmt(safeTo); };
+  }, [on, safeTo, prefix, suffix, decimals]);
+  return <span ref={ref} className={className}>{prefix}{safeTo.toFixed(decimals)}{suffix}</span>;
 }
 
 
@@ -170,6 +176,26 @@ export function SmokeBlast() {
   return null;
 }
 
+/* Lightweight GPU-accelerated subtle ambient smoke inside every card component */
+export function CardSmoke({ tone = 'dark' }) {
+  const isLight = tone === 'light';
+  const isAqua = tone === 'aqua';
+  return (
+    <div className="pointer-events-none select-none absolute inset-0 overflow-hidden rounded-[inherit] z-0" aria-hidden="true">
+      <div
+        className="absolute -inset-1/4 opacity-55 animate-[card-smoke-drift_15s_ease-in-out_infinite_alternate] will-change-transform"
+        style={{
+          background: isLight
+            ? 'radial-gradient(ellipse 46% 38% at 24% 26%, rgba(255,255,255,0.38), rgba(77,232,207,0.14) 52%, transparent 74%), radial-gradient(ellipse 42% 36% at 78% 72%, rgba(6,16,13,0.06), rgba(200,255,77,0.15) 50%, transparent 74%)'
+            : isAqua
+            ? 'radial-gradient(ellipse 46% 38% at 22% 28%, rgba(77,232,207,0.13), rgba(200,255,77,0.05) 52%, transparent 74%), radial-gradient(ellipse 42% 38% at 78% 74%, rgba(200,255,77,0.08), transparent 72%)'
+            : 'radial-gradient(ellipse 46% 38% at 22% 28%, rgba(200,255,77,0.10), rgba(77,232,207,0.05) 52%, transparent 74%), radial-gradient(ellipse 42% 38% at 78% 74%, rgba(77,232,207,0.08), transparent 72%)',
+        }}
+      />
+    </div>
+  );
+}
+
 /* Page transition container */
 export function PageTransition({ children, className = '' }) {
   return (
@@ -179,17 +205,18 @@ export function PageTransition({ children, className = '' }) {
   );
 }
 
-/* Modern Luxury Fluid Cursor — NO harsh difference inversion, pristine visibility on all sections */
+/* Crisp Precision Cursor — Zero blur filter, razor-sharp ring and core dot */
 export function CustomCursor() {
   const dot = useRef(null);
   const ring = useRef(null);
 
   useEffect(() => {
+    if (!dot.current || !ring.current) return;
     gsap.set([dot.current, ring.current], { xPercent: -50, yPercent: -50 });
-    const dx = gsap.quickTo(dot.current, 'x', { duration: 0.08, ease: 'power3.out' });
-    const dy = gsap.quickTo(dot.current, 'y', { duration: 0.08, ease: 'power3.out' });
-    const rx = gsap.quickTo(ring.current, 'x', { duration: 0.38, ease: 'power3.out' });
-    const ry = gsap.quickTo(ring.current, 'y', { duration: 0.38, ease: 'power3.out' });
+    const dx = gsap.quickTo(dot.current, 'x', { duration: 0.06, ease: 'power3.out' });
+    const dy = gsap.quickTo(dot.current, 'y', { duration: 0.06, ease: 'power3.out' });
+    const rx = gsap.quickTo(ring.current, 'x', { duration: 0.28, ease: 'power3.out' });
+    const ry = gsap.quickTo(ring.current, 'y', { duration: 0.28, ease: 'power3.out' });
 
     let isHovering = false;
 
@@ -199,7 +226,7 @@ export function CustomCursor() {
       rx(e.clientX);
       ry(e.clientY);
 
-      const s = e.target.closest && e.target.closest('.panel,.spot');
+      const s = e.target && typeof e.target.closest === 'function' ? e.target.closest('.panel,.spot,.card-smoke,.card-smoke-light') : null;
       if (s) {
         const r = s.getBoundingClientRect();
         s.style.setProperty('--mx', `${e.clientX - r.left}px`);
@@ -208,63 +235,61 @@ export function CustomCursor() {
     };
 
     const over = (e) => {
-      const hot = e.target.closest && e.target.closest('a,button,input,textarea,select,[data-hot]');
-      if (hot) {
+      const hot = e.target && typeof e.target.closest === 'function' ? e.target.closest('a,button,input,textarea,select,[data-hot]') : null;
+      if (hot && ring.current && dot.current) {
         isHovering = true;
         gsap.to(ring.current, {
-          scale: 1.85,
+          scale: 1.65,
           borderColor: '#c8ff4d',
-          backgroundColor: 'rgba(200, 255, 77, 0.16)',
-          boxShadow: '0 0 25px rgba(200, 255, 77, 0.45), 0 4px 16px rgba(0,0,0,0.5)',
-          duration: 0.4,
+          backgroundColor: 'transparent',
+          duration: 0.32,
           ease: 'power3.out',
         });
         gsap.to(dot.current, {
-          scale: 0.35,
-          opacity: 0.6,
-          duration: 0.3,
+          scale: 1.35,
+          backgroundColor: '#4de8cf',
+          duration: 0.25,
           ease: 'power3.out',
         });
       }
     };
 
     const out = (e) => {
-      const hot = e.target.closest && e.target.closest('a,button,input,textarea,select,[data-hot]');
-      if (hot) {
+      const hot = e.target && typeof e.target.closest === 'function' ? e.target.closest('a,button,input,textarea,select,[data-hot]') : null;
+      if (hot && ring.current && dot.current) {
         isHovering = false;
         gsap.to(ring.current, {
           scale: 1,
-          borderColor: 'rgba(200, 255, 77, 0.6)',
-          backgroundColor: 'rgba(200, 255, 77, 0.03)',
-          boxShadow: '0 0 15px rgba(200, 255, 77, 0.2), 0 2px 8px rgba(0,0,0,0.4)',
-          duration: 0.45,
+          borderColor: '#c8ff4d',
+          backgroundColor: 'transparent',
+          duration: 0.35,
           ease: 'power3.out',
         });
         gsap.to(dot.current, {
           scale: 1,
-          opacity: 1,
-          duration: 0.3,
+          backgroundColor: '#c8ff4d',
+          duration: 0.25,
           ease: 'power3.out',
         });
       }
     };
 
     const down = () => {
-      gsap.to(ring.current, { scale: isHovering ? 1.5 : 0.85, duration: 0.2, ease: 'power2.out' });
-      gsap.to(dot.current, { scale: 0.7, duration: 0.2, ease: 'power2.out' });
+      gsap.to(ring.current, { scale: isHovering ? 1.35 : 0.82, duration: 0.18, ease: 'power2.out' });
+      gsap.to(dot.current, { scale: 0.75, duration: 0.18, ease: 'power2.out' });
     };
 
     const up = () => {
-      gsap.to(ring.current, { scale: isHovering ? 1.85 : 1, duration: 0.35, ease: 'elastic.out(1, 0.4)' });
-      gsap.to(dot.current, { scale: isHovering ? 0.35 : 1, duration: 0.3, ease: 'power3.out' });
+      gsap.to(ring.current, { scale: isHovering ? 1.65 : 1, duration: 0.3, ease: 'elastic.out(1, 0.4)' });
+      gsap.to(dot.current, { scale: isHovering ? 1.35 : 1, duration: 0.25, ease: 'power3.out' });
     };
 
     const leave = () => {
-      gsap.to([dot.current, ring.current], { opacity: 0, scale: 0.5, duration: 0.3 });
+      gsap.to([dot.current, ring.current], { opacity: 0, scale: 0.5, duration: 0.25 });
     };
 
     const enter = () => {
-      gsap.to([dot.current, ring.current], { opacity: 1, scale: 1, duration: 0.3 });
+      gsap.to([dot.current, ring.current], { opacity: 1, scale: 1, duration: 0.25 });
     };
 
     window.addEventListener('mousemove', move);
@@ -288,15 +313,15 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Precision Core Dot - Solid crisp lime with dark outline, visible everywhere */}
+      {/* Precision Core Dot — Solid crisp lime, zero blur */}
       <div
         ref={dot}
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-lime border border-black/80 shadow-[0_0_8px_#c8ff4d,0_1px_3px_rgba(0,0,0,0.8)] pointer-events-none z-[9999] hidden md:block"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-lime pointer-events-none z-[9999] hidden md:block"
       />
-      {/* Fluid Trailing Halo - Glowing halo with subtle backdrop blur and dark rim shadow */}
+      {/* Crisp Precision Ring — Solid 1.5px border, zero backdrop-blur, zero fuzzy glow */}
       <div
         ref={ring}
-        className="fixed top-0 left-0 w-9 h-9 rounded-full border border-lime/60 bg-lime/5 shadow-[0_0_18px_rgba(200,255,77,0.22),0_2px_8px_rgba(0,0,0,0.4)] backdrop-blur-[1px] pointer-events-none z-[9998] hidden md:block"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border-[1.5px] border-lime bg-transparent pointer-events-none z-[9998] hidden md:block"
       />
     </>
   );
@@ -367,7 +392,13 @@ export function WebGLBackground() {
 
   useEffect(() => {
     const canvas = ref.current;
-    const gl = canvas.getContext('webgl');
+    if (!canvas) return;
+    let gl;
+    try {
+      gl = canvas.getContext('webgl');
+    } catch {
+      return;
+    }
     if (!gl) return;
     const mk = (t, s) => { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); return sh; };
     const vs = mk(gl.VERTEX_SHADER, VS), fs = mk(gl.FRAGMENT_SHADER, FS);
@@ -382,6 +413,7 @@ export function WebGLBackground() {
     const uT = gl.getUniformLocation(prog, 'u_time'), uR = gl.getUniformLocation(prog, 'u_resolution'), uM = gl.getUniformLocation(prog, 'u_mouse');
     const scale = () => Math.min(window.devicePixelRatio || 1, 1.5) * 0.75;
     const resize = () => {
+      if (!ref.current) return;
       canvas.width = window.innerWidth * scale(); canvas.height = window.innerHeight * scale();
       gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(uR, canvas.width, canvas.height);
     };

@@ -77,7 +77,7 @@ export function Navbar() {
             ))}
           </ul>
           <div className="ml-auto lg:ml-0 flex items-center gap-2">
-            <WaterButton to="/contact" variant="light" className="!py-2.5 !px-5 hidden sm:inline-flex">
+            <WaterButton to="/contact" variant="light" className="water-sm hidden sm:inline-flex">
               Start a project <ArrowUpRight size={15} />
             </WaterButton>
             <button

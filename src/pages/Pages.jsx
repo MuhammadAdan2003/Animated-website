@@ -38,45 +38,50 @@ import {
   Zap,
   Globe2,
   Box,
-  Layers
+  Layers,
+  Server,
+  Database,
+  Terminal,
+  Monitor,
+  Rocket
 } from 'lucide-react';
 import { PageTransition, Heading, Reveal, WaterButton, Magnetic, Eyebrow, Counter, Marquee } from '../components/ui.jsx';
 import { PageHero, SectionHead, StatsBand, FAQ, PricingCards, CTABand, Testimonials, Newsletter } from '../components/sections.jsx';
 import { AnalyticsGrid } from '../components/charts.jsx';
 
 const PRODUCT_CAPABILITIES = [
-  { i: Palette, t: 'Brand Architecture', d: 'Comprehensive visual languages, kinetic typography systems, and luxury art direction that commands attention.' },
-  { i: Layers, t: 'Digital Flagships', d: 'High-performance interactive web flagships with bespoke WebGL shaders, fluid physics, and sub-second load times.' },
-  { i: Compass, t: 'Spatial Computing', d: '3D interactive environments, virtual architectural walkthroughs, and spatial web experiences rendered at 120 FPS.' },
-  { i: Zap, t: 'Creative Technology', d: 'Bespoke GLSL fragment shaders, interactive particle engines, and fluid micro-interactions engineered without compromise.' },
-  { i: Sparkles, t: 'Generative AI Systems', d: 'Custom proprietary AI pipelines, automated design variation engines, and generative spatial asset generators.' },
-  { i: Cpu, t: 'Full-Stack Performance', d: 'Headless cloud architectures, modern React/Vite frameworks, and global edge CDN caching for instant latency.' },
-  { i: Globe2, t: 'Global Launch QA', d: 'Cross-browser, cross-device sensory testing and precision polish before unveiling to the international stage.' },
-  { i: ShieldCheck, t: 'Enterprise SLA & Security', d: 'Bank-grade compliance, SOC 2 assurance, high-availability hosting, and dedicated post-launch support pods.' },
+  { i: Monitor, t: 'Full-Stack Web Apps', d: 'High-performance Next.js 15, React 19, and progressive web apps engineered for sub-second LCP and high conversion.' },
+  { i: Box, t: 'Custom Enterprise Software', d: 'Scalable multi-tenant SaaS platforms, internal ERP/CRM workflow engines, and mission-critical transactional software.' },
+  { i: Server, t: 'Cloud Microservices & APIs', d: 'High-throughput GraphQL, gRPC, and REST API architectures written in Go, Node.js, and Rust with zero bottlenecks.' },
+  { i: Sparkles, t: 'AI Engineering & Agents', d: 'Proprietary LLM integrations, autonomous AI agents, intelligent vector search engines, and automated data pipelines.' },
+  { i: Layers, t: 'Interactive WebGL & 3D Web', d: 'Bespoke 3D WebGL experiences, interactive product customizers, and GPU-accelerated shader engines running at 120 FPS.' },
+  { i: Cpu, t: 'DevOps & Multi-Region Cloud', d: 'Kubernetes orchestration, automated CI/CD canary pipelines, Docker containerization, and automated auto-scaling.' },
+  { i: Database, t: 'Distributed Database Systems', d: 'PostgreSQL sharding, Redis in-memory caching clusters, Vector databases, and sub-millisecond query optimization.' },
+  { i: ShieldCheck, t: 'Enterprise Security & SOC 2', d: 'Bank-grade zero-trust encryption, penetration testing, compliance assurance, and dedicated 99.999% SLA support.' },
 ];
 
 /* ============================ SERVICES (PRODUCT PAGE) ============================ */
 export function ProductPage() {
   const modules = [
-    { i: Layers3, t: 'Brand Architecture', d: 'We forge distinct, magnetic brand systems — from generative logos and dynamic design tokens to high-fashion typographic systems.', tag: 'Brand Craft', stat: 'Identity Systems' },
-    { i: Cpu, t: 'Digital Flagships', d: 'Immersive, boundary-pushing web platforms engineered with custom WebGL shaders, seamless routing, and uncompromising speed.', tag: 'Engineering', stat: '120 FPS WebGL' },
-    { i: Cable, t: 'Spatial Computing', d: 'Interactive 3D digital twins, virtual luxury showrooms, and spatial computing environments tailored for modern browsers & headsets.', tag: 'Spatial Lab', stat: 'Interactive 3D' },
-    { i: Code2, t: 'Creative Intelligence', d: 'Bespoke generative AI models, custom interactive simulation matrixes, and algorithmic content pipelines built for scale.', tag: 'AI & Systems', stat: 'Proprietary Tech' },
+    { i: Monitor, t: 'Full-Stack Web Development', d: 'We build high-performance web applications and digital flagships engineered with Next.js 15, React 19, and headless architectures with sub-second page loads.', tag: 'Frontend & Web', stat: 'Next.js 15 / React 19' },
+    { i: Server, t: 'Custom Enterprise Software', d: 'End-to-end bespoke SaaS platforms, multi-tenant portals, workflow automation engines, and high-throughput transactional backends.', tag: 'SaaS & Enterprise', stat: 'Bespoke Architecture' },
+    { i: Cpu, t: 'Cloud Microservices & DevOps', d: 'Resilient distributed microservices, gRPC & GraphQL meshes, automated CI/CD pipelines, and multi-region Kubernetes cloud infrastructure.', tag: 'Backend & Cloud', stat: '99.999% SLA' },
+    { i: Sparkles, t: 'AI Systems & Intelligent Agents', d: 'Custom proprietary LLM pipelines, autonomous agentic workflows, intelligent semantic search engines, and real-time RAG systems.', tag: 'AI Engineering', stat: 'Proprietary Tech' },
   ];
 
   const faq = [
-    { q: 'What is Aura Studio’s creative philosophy?', a: 'We reject commoditized templates and uninspired conventions. We believe the modern web should evoke the emotional reverence of high architecture, luxury craft, and cutting-edge interactive physics.' },
-    { q: 'How does an agency engagement kick off?', a: 'Every engagement begins with an intensive Strategic Immersion Sprint. We interrogate your brand DNA, map competitive whitespace, and establish an unassailable artistic and technical brief.' },
-    { q: 'Do you collaborate with internal design and engineering teams?', a: 'Yes. We frequently embed as an elite creative acceleration squad, delivering turnkey flagships or comprehensive design token systems that in-house teams can scale effortlessly.' },
-    { q: 'What is your typical project delivery timeline?', a: 'High-velocity bespoke flagships ship within 4–8 weeks; comprehensive corporate brand and multi-platform transformations typically span 8–14 weeks.' },
+    { q: 'What is Aura Studio’s engineering philosophy?', a: 'We reject cookie-cutter templates, sluggish page loads, and fragile monolithic codebases. We believe software and web applications should be blistering fast, visually unforgettable, and architected for enterprise-scale traffic.' },
+    { q: 'How does an agency engagement kick off?', a: 'Every engagement begins with an intensive Architecture & Discovery Sprint. We evaluate your product requirements, design high-concurrency cloud topology, and establish a milestone-driven engineering roadmap.' },
+    { q: 'Do you collaborate with internal engineering teams?', a: 'Yes. We frequently embed alongside in-house tech teams as an elite acceleration pod, delivering turnkey products, complex microservices, or high-performance frontend flagships.' },
+    { q: 'What is your typical project delivery timeline?', a: 'Bespoke web applications and campaign flagships ship within 4–8 weeks; complex enterprise software and multi-region platform transformations typically span 8–14 weeks.' },
   ];
 
   return (
     <PageTransition>
       <PageHero
-        eyebrow="Services & Studio Capabilities"
-        lines={['Bespoke craft.', { t: 'Unrivalled', c: 'text-lime' }, 'engineering.']}
-        text="Four core disciplines cover the entire creative lifecycle — from visionary brand architecture to production-grade interactive spatial flagships."
+        eyebrow="Services & Engineering Capabilities"
+        lines={['Bespoke software.', { t: 'Unrivalled', c: 'text-lime' }, 'web engineering.']}
+        text="Four core disciplines cover the entire software lifecycle — from visionary web applications and SaaS platforms to cloud microservices and autonomous AI systems."
       >
         <WaterButton to="/contact" variant="solid">Start a project <ArrowUpRight size={16} /></WaterButton>
       </PageHero>
@@ -110,9 +115,9 @@ export function ProductPage() {
       {/* Real Interactive Analytics Section */}
       <section className="relative z-10 gutter py-28 bg-ink/30 backdrop-blur-[2px] border-y border-white/10">
         <SectionHead
-          eyebrow="Quantified Impact Engine"
-          lines={['Real performance.', 'Measurable prestige.']}
-          text="We validate creative excellence through hard metrics: sub-second time to interactive, 3.4x average session dwell, and award-winning international recognition."
+          eyebrow="Quantified Performance Engine"
+          lines={['Real performance.', 'Measurable scale.']}
+          text="We validate engineering excellence through hard metrics: sub-second time to interactive, 100/100 Lighthouse performance, and 99.999% production SLA uptime."
         />
         <AnalyticsGrid />
       </section>
@@ -146,20 +151,20 @@ export function SolutionsPage() {
   const [selectedSector, setSelectedSector] = useState(null);
 
   const items = [
-    { i: Building2, t: 'Luxury & Haute Horlogerie', d: 'Digital flagships, interactive 3D product customizers, and sensory brand worlds for world-renowned maisons.', m: '+84% engagement', full: 'Multi-sensory WebGL materials replicate light reflection on platinum and sapphire glass with physical accuracy, boosting client dwell time and VIP appointments.' },
-    { i: Music4, t: 'Spatial Computing & XR', d: 'Interactive 3D environments, virtual architectural walkthroughs, and spatial computing hubs for modern browsers and spatial vision.', m: '3.8× dwell time', full: 'Volumetric real-time rendering lets collectors and patrons explore spatial environments with zero latency, spatial audio, and photorealistic physics.' },
-    { i: Hospital, t: 'Enterprise Deep Tech & AI', d: 'Translating complex neural models, quantum architectures, and telemetry infrastructure into captivating visual narratives.', m: '3.4× pipeline', full: 'We transform abstract technical density into clear, magnetic digital flagships that command respect from sovereign funds and enterprise buyers.' },
-    { i: Factory, t: 'Mobility & Clean Energy', d: 'Next-gen vehicle configurators, interactive battery telemetry twins, and spatial design languages for tomorrow’s transport.', m: '120 FPS render', full: 'Full cinematic real-time 3D vehicle customization with dynamic lighting, material swaps, and seamless mobile-responsive performance.' },
-    { i: GraduationCap, t: 'Culture & Contemporary Art', d: 'Virtual pavilions, digital museum flagships, and kinetic archival platforms for cultural institutions.', m: 'Global Awards', full: 'We craft immersive digital spaces for global biennials and leading galleries that preserve cultural heritage through kinetic interactive craft.' },
-    { i: Plane, t: 'Financial Architecture & Crypto', d: 'Trust-evoking institutional platforms, kinetic market visualization engines, and bank-grade digital identity systems.', m: '99.99% uptime', full: 'Ultra-low latency data feeds combined with high-fashion typography and Swiss-inspired layout design for institutional asset managers.' },
+    { i: Building2, t: 'SaaS & High-Growth Tech', d: 'Multi-tenant cloud architectures, subscription billing, and interactive analytics dashboards for rapid scaling.', m: '+240% Speed Lift', full: 'We architect lightning-fast web applications with Next.js 15, automated tenant isolation, and sub-10ms query caches that reduce churn and boost user retention.' },
+    { i: Box, t: 'E-Commerce & Digital Flagships', d: 'Headless commerce, lightning-fast checkout funnels, and bespoke 3D WebGL product customizers for luxury brands.', m: '0.4s LCP', full: 'By replacing bloated monoliths with headless React and edge-rendered catalogues, we increase conversion rates by up to 84% while delivering unforgettable visual craft.' },
+    { i: Cpu, t: 'FinTech & High-Frequency Systems', d: 'Ultra-low latency transactional feeds, bank-grade encryption, and real-time financial data visualization engines.', m: '99.999% Uptime', full: 'Zero-latency WebSocket streams and Swiss-grade security protocols engineered for institutional trading terminals, crypto protocols, and wealth management platforms.' },
+    { i: Sparkles, t: 'AI & Deep Tech Ventures', d: 'Developer portals, neural model visualization, agentic automation, and real-time vector search integration.', m: '3.4× Pipeline', full: 'We turn abstract algorithms and complex AI models into magnetic, intuitive digital interfaces that developers and enterprise buyers love to use.' },
+    { i: Hospital, t: 'HealthTech & Telemedicine', d: 'HIPAA-compliant patient portals, real-time WebRTC audio/video consultations, and secure EHR synchronization.', m: 'SOC 2 Assured', full: 'Zero-trust architecture, end-to-end encrypted medical data pipelines, and fluid interfaces designed for practitioners and patients.' },
+    { i: Factory, t: 'Enterprise Logistics & IoT', d: 'Real-time telemetry tracking, distributed inventory algorithms, fleet dashboards, and edge sensor analytics.', m: '120 FPS Render', full: 'Real-time interactive maps, event streaming via Kafka, and predictive anomaly detection interfaces built for global operations.' },
   ];
 
   return (
     <PageTransition>
       <PageHero
-        eyebrow="Industry Expertise"
-        lines={['Tailored craft.', { t: 'Across leading', c: 'text-aqua' }, 'sectors.']}
-        text="From haute luxury and spatial computing to autonomous mobility and enterprise tech, we shape how forward-thinking sectors captivate global audiences."
+        eyebrow="Industry Solutions"
+        lines={['Software solutions.', { t: 'Across leading', c: 'text-aqua' }, 'industries.']}
+        text="From high-growth SaaS and luxury e-commerce to fintech and autonomous AI ventures, we build software solutions that empower category leaders."
       />
       <section className="relative z-10 gutter pb-28 bg-ink/50 backdrop-blur-[2px] pt-10">
         <div className="divide-y divide-white/10 border-y border-white/10">
@@ -210,15 +215,16 @@ export function SolutionsPage() {
 
 /* ============================ SELECTED WORK (CUSTOMERS PAGE) ============================ */
 const CASES = [
-  { n: 'Kinetix Spatial Deck', k: 'Luxury Spatial', s: '+184% Engagement', d: 'An interactive 3D digital flagship with real-time physical shaders and bespoke sound design.', c: 'from-lime/60 to-aqua/30' },
-  { n: 'Kyoto Interactive Lab', k: 'Cultural XR', s: '3.2M Global Visitors', d: 'Generative digital twin and virtual exhibition celebrating contemporary kinetic sculpture.', c: 'from-aqua/60 to-lime/20' },
-  { n: 'Horizon Deep Tech', k: 'Enterprise Brand', s: '3.4× Pipeline Lift', d: 'Complete brand architecture, design token system, and interactive developer platform.', c: 'from-coral/60 to-sand/20' },
-  { n: 'Lumière Haute Couture', k: 'Flagship Commerce', s: '+76% AOV Growth', d: 'A high-fashion headless digital commerce experience with sub-second page transitions.', c: 'from-sand/50 to-aqua/30' },
+  { n: 'Kinetix Web Platform', k: 'Headless Web App', s: '+310% Speed Lift', d: 'A high-performance Next.js 15 web application with real-time 3D WebGL product configurators and 0.4s LCP.', c: 'from-lime/60 to-aqua/30' },
+  { n: 'CloudSphere Microservices', k: 'Distributed Cloud', s: '48M Daily Requests', d: 'High-concurrency microservices mesh with automated multi-region Kubernetes routing and sub-10ms latency.', c: 'from-aqua/60 to-lime/20' },
+  { n: 'Apex FinTech Terminal', k: 'Real-Time Trading', s: '4ms Feed Latency', d: 'Ultra-low latency institutional trading web application with real-time WebSocket feeds and Rust WASM compute.', c: 'from-coral/60 to-sand/20' },
+  { n: 'Nexus AI Enterprise Portal', k: 'Agentic SaaS', s: '3.8× Workflow Lift', d: 'Autonomous AI agent orchestration platform with custom vector embeddings and real-time collaborative canvas.', c: 'from-sand/50 to-aqua/30' },
 ];
+
 export function CustomersPage() {
   return (
     <PageTransition>
-      <PageHero eyebrow="Selected Case Studies" lines={['Proof, not', { t: 'promises.', c: 'text-lime' }]} text="A curated selection of digital flagships, spatial environments, and transformative brand platforms architected by Aura Studio." />
+      <PageHero eyebrow="Selected Work" lines={['Software proof,', { t: 'not promises.', c: 'text-lime' }]} text="A curated selection of production web applications, scalable cloud platforms, and transformative enterprise software engineered by Aura." />
       <section className="relative z-10 gutter pb-28 bg-ink/50 backdrop-blur-[2px] pt-10">
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {CASES.map((c, i) => (
@@ -252,13 +258,13 @@ export function CustomersPage() {
 export function PricingPage() {
   const [yearly, setYearly] = useState(true);
   const faq = [
-    { q: 'How do studio partnership payments work?', a: 'Sprint engagements are structured as 50% upon project kickoff and 50% upon final delivery & code handoff. Studio Pod partnerships are billed as a monthly ongoing retainer.' },
-    { q: 'What deliverables are included in a Flagship Sprint?', a: 'You receive complete visual design source files, interactive design token specifications, production-ready React/Vite/WebGL source code, and full launch assurance.' },
-    { q: 'Can we transition from a Sprint to an ongoing Studio Pod?', a: 'Yes. Over 80% of our clients choose to continue with an ongoing Studio Pod retainer to continuously ship new product features, interactive campaigns, and brand expansions.' },
+    { q: 'How do agency engagement payments work?', a: 'Sprint engagements are structured as 50% upon project kickoff and 50% upon final delivery & code handoff. Engineering Pod partnerships are billed as a monthly ongoing retainer.' },
+    { q: 'What deliverables are included in a Web Flagship Sprint?', a: 'You receive complete visual design source files, interactive design token specifications, production-ready Next.js / React / WebGL source code, CI/CD setup, and full launch assurance.' },
+    { q: 'Can we transition from a Sprint to an ongoing Engineering Pod?', a: 'Yes. Over 80% of our clients choose to continue with an ongoing Engineering Pod retainer to continuously ship new product features, interactive campaigns, and platform expansions.' },
   ];
   return (
     <PageTransition>
-      <PageHero eyebrow="Partnership Models" lines={['Bespoke tiers.', { t: 'Transformative', c: 'text-lime' }, 'results.']} text="Collaborate through focused high-velocity sprints, dedicated multidisciplinary studio pods, or enterprise venture transformations.">
+      <PageHero eyebrow="Engagement Models" lines={['Bespoke tiers.', { t: 'Production-grade', c: 'text-lime' }, 'results.']} text="Collaborate through focused high-velocity sprints, dedicated multidisciplinary engineering pods, or enterprise platform transformations.">
         <div className="glass rounded-full p-1.5 flex">
           {[['Quarterly Retainer', false], ['Annual Partnership −20%', true]].map(([l, v]) => (
             <button key={l} id={`billing-${v ? 'yearly' : 'monthly'}`} onClick={() => setYearly(v)} className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-500 cursor-pointer ${yearly === v ? 'bg-lime text-ink' : 'text-sand/70'}`}>{l}</button>
@@ -280,90 +286,108 @@ export function AboutPage() {
   const team = [
     {
       n: 'Amara Lindqvist',
-      r: 'Executive Creative Director',
+      r: 'Chief Technology & Engineering Officer',
       img: '/images/amara.jpg',
-      bio: 'Former Pentagram partner and spatial computing pioneer. Directs visual architecture and luxury brand narratives.',
+      fallback: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+      bio: 'Former Stripe and Vercel engineering lead. Specializes in distributed microservices, edge routing, and resilient cloud architecture.',
       handle: '@amaralind'
     },
     {
       n: 'Rafael Duarte',
-      r: 'Head of Creative Engineering',
+      r: 'Head of Web Architecture & WebGL',
       img: '/images/rafael.jpg',
-      bio: 'Ex-MIT Media Lab fellow. Shipped real-time WebGL engines, spatial physics shaders, and low-latency micro-frontends.',
+      fallback: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+      bio: 'Ex-MIT Media Lab fellow. Shipped real-time 3D web engines, WebGL physics shaders, and low-latency micro-frontends.',
       handle: '@rafaduarte'
     },
     {
       n: 'Yuki Tanaka',
-      r: 'Principal Experience Designer',
+      r: 'Principal Full-Stack Architect',
       img: '/images/yuki.jpg',
-      bio: 'Tokyo Arts alumna specializing in kinetic typography, generative layout morphing, and fluid human interfaces.',
+      fallback: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+      bio: 'Distributed systems veteran specializing in Next.js 15, Go microservices, GraphQL mesh pipelines, and fluid human interfaces.',
       handle: '@yukitanaka'
     },
     {
       n: 'Sam Okoye',
-      r: 'VP of Design Systems',
+      r: 'VP of UI Systems & Performance',
       img: '/images/sam.jpg',
-      bio: 'Ex-Apple Spatial designer. Obsessed with micro-interaction frictionlessness, design tokens, and sensory physics.',
+      fallback: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+      bio: 'Ex-Apple UI systems engineer. Obsessed with Core Web Vitals, sub-millisecond interaction latency, and design tokens.',
       handle: '@samokoye'
     },
   ];
 
   const values = [
     {
-      t: 'Visceral Craft',
-      d: 'Every pixel, easing curve, and shader is obsessively refined. We reject generic templates to build digital work that stirs emotion.',
+      t: 'Clean Architecture',
+      d: 'Every line of code, database query, and API contract is engineered with modular precision. We build software that scales effortlessly without technical debt.',
       img: '/images/human.jpg',
-      badge: 'Uncompromising Art',
-      tone: 'bg-lime text-ink'
+      fallback: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+      badge: 'Zero Technical Debt',
+      tag: 'ARCHITECTURE'
     },
     {
-      t: 'Creative Engineering',
-      d: 'Artistry is hollow without technical mastery. We engineer sub-second web flagships with fluid 120 FPS transitions and zero lag.',
+      t: 'Sub-Second Speed',
+      d: 'Performance is a core feature. We engineer sub-second web flagships with 100/100 Core Web Vitals, instant hydration, and 120 FPS fluid micro-interactions.',
       img: '/images/clarity.jpg',
-      badge: 'Zero Friction',
-      tone: 'panel text-sand'
+      fallback: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+      badge: '100/100 Lighthouse',
+      tag: 'VELOCITY'
     },
     {
-      t: 'Enduring Legacy',
-      d: 'We build digital flagships and brand systems designed to withstand the test of time, outpacing ephemeral hype cycles.',
+      t: 'Scalable Reliability',
+      d: 'We build digital products and cloud systems designed to handle millions of concurrent users with 99.999% uptime assurance.',
       img: '/images/lasting.jpg',
-      badge: 'Timeless Design',
-      tone: 'bg-aqua text-ink'
+      fallback: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
+      badge: '99.999% SLA Uptime',
+      tag: 'RESILIENCE'
     },
   ];
 
   return (
     <PageTransition>
       <PageHero
-        eyebrow="Our Studio Philosophy"
-        lines={['We believe', { t: 'digital craft', c: 'text-aqua' }, 'can move culture.']}
-        text="Aura is an independent digital innovation and creative engineering studio founded by designers, technologists, and architects who refuse mediocrity."
+        eyebrow="Our Engineering Philosophy"
+        lines={['We engineer', { t: 'digital software', c: 'text-aqua' }, 'that scales ventures.']}
+        text="Aura is an independent software development and modern web development agency founded by elite engineers, systems architects, and product designers who refuse mediocrity."
       />
 
       <section className="relative z-10 bg-ink/60 backdrop-blur-[2px]"><StatsBand /></section>
 
       {/* Values */}
       <section className="relative z-10 gutter py-28 sm:py-36 bg-ink/50 backdrop-blur-[2px]">
-        <SectionHead eyebrow="Studio Pillars" lines={['What guides', 'our hands.']} />
+        <SectionHead eyebrow="Engineering Pillars" lines={['What guides', 'our code.']} />
         <Reveal stagger={0.12} className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {values.map((v, i) => (
             <div
               key={v.t}
               data-hot
-              className="group rounded-[2.5rem] overflow-hidden panel border border-white/10 flex flex-col justify-between min-h-[460px] cursor-pointer hover:-translate-y-2 transition-all duration-700 shadow-2xl"
+              className="group relative rounded-[2.5rem] overflow-hidden panel border border-white/10 hover:border-lime/40 flex flex-col justify-between min-h-[480px] cursor-pointer hover:-translate-y-2 transition-all duration-700 shadow-2xl"
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-ink3">
                 <img
                   src={v.img}
                   alt={v.t}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                  loading="lazy"
+                  onError={(e) => {
+                    if (e.currentTarget.src !== v.fallback) {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = v.fallback;
+                    }
+                  }}
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-1000"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent opacity-80" />
-                <span className="absolute top-4 left-4 glass px-3 py-1 rounded-full text-xs font-mono font-bold text-sand">
+                <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent opacity-90" />
+                <span className="absolute top-4 left-4 glass px-3.5 py-1.5 rounded-full text-xs font-mono font-bold text-sand border border-white/15 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
                   0{i + 1} // {v.badge}
                 </span>
               </div>
-              <div className="p-8">
+              <div className="relative z-10 p-8 sm:p-9">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-lime font-bold block mb-2">
+                  // {v.tag}
+                </span>
                 <h3 className="font-display font-extrabold text-3xl sm:text-4xl mb-3 text-sand group-hover:text-lime transition-colors">
                   {v.t}
                 </h3>
@@ -378,7 +402,7 @@ export function AboutPage() {
 
       {/* Leadership Team */}
       <section className="relative z-10 gutter py-28 sm:py-36 bg-sand text-ink">
-        <SectionHead light eyebrow="Studio Leadership" lines={['The minds', 'behind Aura.']} />
+        <SectionHead light eyebrow="Agency Leadership" lines={['The minds', 'behind Aura.']} />
         <Reveal stagger={0.1} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {team.map((m) => (
             <div
@@ -390,22 +414,29 @@ export function AboutPage() {
                 <img
                   src={m.img}
                   alt={m.n}
+                  loading="lazy"
+                  onError={(e) => {
+                    if (e.currentTarget.src !== m.fallback) {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = m.fallback;
+                    }
+                  }}
                   className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
                   <div className="flex gap-2 text-white">
-                    <span className="w-8 h-8 rounded-full bg-white/20 hover:bg-lime hover:text-black flex items-center justify-center transition-colors">
-                      <Twitter size={14} />
+                    <span className="w-9 h-9 rounded-full bg-white/20 hover:bg-lime hover:text-black flex items-center justify-center transition-colors">
+                      <Twitter size={15} />
                     </span>
-                    <span className="w-8 h-8 rounded-full bg-white/20 hover:bg-lime hover:text-black flex items-center justify-center transition-colors">
-                      <Linkedin size={14} />
+                    <span className="w-9 h-9 rounded-full bg-white/20 hover:bg-lime hover:text-black flex items-center justify-center transition-colors">
+                      <Linkedin size={15} />
                     </span>
                   </div>
                 </div>
               </div>
               <div className="mt-4 px-2">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display font-extrabold text-xl text-ink group-hover:text-lime transition-colors">
+                  <h3 className="font-display font-extrabold text-xl text-ink group-hover:text-lime-700 transition-colors">
                     {m.n}
                   </h3>
                   <span className="font-mono text-[10px] text-ink/50 uppercase">{m.handle}</span>
@@ -429,51 +460,51 @@ export function AboutPage() {
 const POSTS = [
   {
     id: 1,
-    t: 'The Death of the Flat Web: Why 2026 Belongs to Spatial Flagships',
-    c: 'Editorial',
+    t: 'The Architecture of Next.js 15 and React 19: Why Sub-Second LCP Defines Conversion',
+    c: 'Web Architecture',
     d: 'Mar 12, 2026',
     r: '7 min',
     g: 'from-lime to-aqua',
     author: 'Amara Lindqvist',
-    lead: 'Modern digital storefronts can no longer afford to feel like flat corporate brochures. The convergence of fluid WebGL shaders, kinetic typography, and real-time spatial physics is turning the web into a multi-sensory art gallery.',
+    lead: 'Modern digital web applications can no longer afford sluggish load times or heavy client-side waterfalls. The convergence of React Server Components, streaming SSR, and edge hydration is setting a new bar for high-converting web engineering.',
     takeaways: [
-      'Commoditized template sites suffer an 80% higher bounce rate than bespoke flagships.',
-      'Web-based 3D spatial environments retain visitors for 3.4× longer on average.',
-      'Bespoke creative engineering drives tangible valuation premiums for enterprise brands.'
+      'Every 100ms improvement in page load increases user conversion by up to 8.4%.',
+      'React Server Components eliminate client JavaScript bundle bloat by over 60%.',
+      'Edge routing ensures sub-50ms response times for users globally.'
     ],
-    quote: 'The web is not paper. It is an infinite canvas of light, kinetic motion, and spatial presence.'
+    quote: 'Speed is not a luxury optimization. Speed is the fundamental foundation of user trust and revenue.'
   },
   {
     id: 2,
-    t: 'Engineering Emotion: The Mathematics of 120 FPS WebGL Shaders',
-    c: 'Craft & Tech',
+    t: 'Building Resilient Cloud Microservices: From Monolith to Distributed Event Mesh',
+    c: 'Backend & Cloud',
     d: 'Feb 27, 2026',
     r: '9 min',
     g: 'from-aqua to-sand',
     author: 'Rafael Duarte',
-    lead: 'How we engineer real-time fractional Brownian motion shaders and volumetric lighting in GLSL to evoke luxury and intrigue without dropping a single frame.',
+    lead: 'How we engineer high-concurrency Go microservices, distributed GraphQL gateways, and Redis caching layers to withstand 100k+ concurrent requests per second with zero downtime.',
     takeaways: [
-      'GPU shader calculations run entirely in parallel with zero main-thread jank.',
-      'Dynamic resolution scaling ensures flawless 60–120 FPS performance across mobile hardware.',
-      'Subtle interactive mouse ripple physics elevate user engagement by 45%.'
+      'Asynchronous event buses decouple critical business logic and prevent cascading failures.',
+      'Distributed caching strategies cut database CPU utilization by over 78%.',
+      'Automated canary rollouts in Kubernetes eliminate production regression risks.'
     ],
-    quote: 'Precision is invisible. When motion feels natural, the viewer forgets the technology and feels the brand.'
+    quote: 'Architecture is about making the critical decisions that prevent systemic failure when traffic surges 100x.'
   },
   {
     id: 3,
-    t: 'Bespoke Brand Architecture: Designing for Category Dominance',
-    c: 'Strategy',
+    t: 'AI Agents in Production: Beyond Chatbots to Autonomous Enterprise Workflows',
+    c: 'AI Engineering',
     d: 'Feb 10, 2026',
     r: '6 min',
     g: 'from-coral to-lime',
     author: 'Yuki Tanaka',
-    lead: 'Why the world’s most valuable companies treat digital presence as their premier flagship gallery rather than a marketing checklist.',
+    lead: 'Why forward-thinking software platforms are embedding autonomous multi-agent pipelines with vector retrieval to automate complex end-to-end business workflows.',
     takeaways: [
-      'Design tokens and kinetic motion identities create immediate brand recognition.',
-      'Fluid transitions keep visitors in an uninterrupted state of cognitive flow.',
-      'A bespoke digital flagship delivers 3× more inbound qualified leads than outbound ads.'
+      'Deterministic verification loops prevent LLM hallucination in mission-critical software.',
+      'Vector databases with hybrid keyword-semantic search provide sub-10ms retrieval.',
+      'Agentic architectures reduce human operational hours by up to 80% across data-heavy processes.'
     ],
-    quote: 'In an era of AI-generated sameness, human craft and taste become the ultimate competitive moat.'
+    quote: 'The future of software is not software you merely operate, but software that collaborates with you.'
   },
 ];
 
@@ -490,9 +521,9 @@ export function JournalPage() {
   return (
     <PageTransition>
       <PageHero
-        eyebrow="Perspectives & Studio Dispatches"
-        lines={['Ideas from', { t: 'the frontier', c: 'text-lime' }, 'of craft.']}
-        text="Essays, technical deep-dives, and creative manifestos from the designers, engineers, and strategists at Aura Studio."
+        eyebrow="Engineering Perspectives"
+        lines={['Ideas from', { t: 'the frontier', c: 'text-lime' }, 'of software.']}
+        text="Technical deep-dives, architectural manifestos, and engineering essays from the developers and systems architects at Aura."
       />
 
       <section className="relative z-10 gutter py-16 bg-ink/50 backdrop-blur-[2px]">
@@ -528,7 +559,7 @@ export function JournalPage() {
                 {p.lead}
               </p>
               <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-lime group-hover:translate-x-1 transition-transform">
-                Read full essay <ArrowRight size={16} />
+                Read engineering essay <ArrowRight size={16} />
               </span>
             </article>
           ))}
@@ -577,7 +608,7 @@ export function JournalPage() {
                 <div className="flex items-center gap-3 mt-4 text-xs font-mono text-sand/60">
                   <User size={14} className="text-lime" />
                   <span>By {activeArticle.author}</span>
-                  <span>// Aura Creative Studio</span>
+                  <span>// Aura Engineering Lab</span>
                 </div>
 
                 {/* Modal Body */}
@@ -587,7 +618,7 @@ export function JournalPage() {
                   </p>
 
                   <div className="my-8 p-6 rounded-2xl bg-white/5 border border-white/10">
-                    <h4 className="font-mono text-xs uppercase tracking-widest text-lime mb-4">Strategic Key Findings</h4>
+                    <h4 className="font-mono text-xs uppercase tracking-widest text-lime mb-4">Architectural Key Takeaways</h4>
                     <ul className="space-y-3">
                       {activeArticle.takeaways.map((point, idx) => (
                         <li key={idx} className="flex items-start gap-3 text-sm sm:text-base text-sand/90">
@@ -607,7 +638,7 @@ export function JournalPage() {
                   </blockquote>
 
                   <p>
-                    Across millions of visitor interactions logged across our shipped flagships, the data confirms that creative boldness combined with technical rigor produces compounding brand equity. When an experience feels alive, audiences don't just browse — they advocate.
+                    Across millions of visitor interactions logged across our shipped software flagships, the data confirms that creative boldness combined with technical rigor produces compounding brand equity. When an application is blisteringly fast and intuitive, users don't just use it — they advocate for it.
                   </p>
                 </div>
 
@@ -629,7 +660,7 @@ export function JournalPage() {
                     </button>
                   </div>
                   <WaterButton onClick={() => setActiveArticle(null)} variant="solid" className="!py-2.5 !px-6">
-                    Close Story
+                    Close Essay
                   </WaterButton>
                 </div>
               </motion.div>
@@ -646,25 +677,25 @@ export function JournalPage() {
 /* ============================ CONTACT (START A PROJECT) ============================ */
 export function ContactPage() {
   const [sent, setSent] = useState(false);
-  const [topic, setTopic] = useState('Digital Flagship');
+  const [topic, setTopic] = useState('Web Flagship');
 
   return (
     <PageTransition>
-      <PageHero eyebrow="Start a Collaboration" lines={['Let’s create something', { t: 'extraordinary.', c: 'text-aqua' }]} text="Tell us about your brand vision, target timeline, and goals. Our studio partners review every inquiry and reply within 24 hours." />
+      <PageHero eyebrow="Start a Collaboration" lines={['Let’s build something', { t: 'extraordinary.', c: 'text-aqua' }]} text="Tell us about your product vision, tech stack requirements, and target launch timeline. Our engineering leads review every inquiry and reply within 24 hours." />
       <section className="relative z-10 gutter py-16 pb-32 bg-ink/50 backdrop-blur-[2px] grid grid-cols-1 lg:grid-cols-12 gap-10">
         <Reveal className="lg:col-span-7 panel rounded-[2rem] p-8 sm:p-12">
           {sent ? (
             <div className="min-h-[420px] flex flex-col items-center justify-center text-center">
               <span className="w-20 h-20 rounded-full bg-lime text-ink flex items-center justify-center mb-6"><Check size={36} /></span>
               <h3 className="font-display font-extrabold text-4xl mb-2">Inquiry Received.</h3>
-              <p className="text-sand/60">A studio director will review your brief and schedule an executive discovery call within 24 hours.</p>
+              <p className="text-sand/60">A lead software architect will review your technical requirements and schedule a discovery session within 24 hours.</p>
             </div>
           ) : (
             <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-5">
               <div>
                 <p className="font-mono text-xs uppercase tracking-widest text-sand/50 mb-3">Project Type</p>
                 <div className="flex flex-wrap gap-2">
-                  {['Digital Flagship', 'Brand Architecture', 'Spatial Computing', 'Studio Pod Retainer'].map((t) => (
+                  {['Web Flagship', 'Custom Software / SaaS', 'Cloud & Microservices', 'Engineering Pod Retainer'].map((t) => (
                     <button type="button" key={t} onClick={() => setTopic(t)} className={`px-5 py-2.5 rounded-full text-sm font-bold border transition-all duration-500 cursor-pointer ${topic === t ? 'bg-lime text-ink border-lime' : 'border-white/15 text-sand/70 hover:border-lime'}`}>{t}</button>
                   ))}
                 </div>
@@ -673,22 +704,22 @@ export function ContactPage() {
                 <input id="contact-name" required placeholder="Your full name" className="field" />
                 <input id="contact-email" required type="email" placeholder="Business email" className="field" />
               </div>
-              <input id="contact-company" placeholder="Brand / Organization name" className="field" />
-              <textarea id="contact-message" required rows={6} placeholder="Tell us about your vision, target launch date, and budget expectations..." className="field resize-none" />
+              <input id="contact-company" placeholder="Company / Organization name" className="field" />
+              <textarea id="contact-message" required rows={6} placeholder="Tell us about your software vision, desired tech stack, and target launch date..." className="field resize-none" />
               <WaterButton type="submit" variant="solid" className="!px-10 !py-5">Submit Project Brief <ArrowUpRight size={18} /></WaterButton>
             </form>
           )}
         </Reveal>
         <Reveal delay={0.15} className="lg:col-span-5 space-y-4">
-          {[[Mail, 'Direct Inquiries', 'partnerships@aura.studio'], [Phone, 'Studio Desk', '+1 (415) 890-2287'], [MapPin, 'Global Studios', 'Tokyo · Zurich · London · San Francisco']].map(([I, l, v]) => (
+          {[[Mail, 'Direct Inquiries', 'engineering@aura.dev'], [Phone, 'Engineering Desk', '+1 (415) 890-2287'], [MapPin, 'Global Hubs', 'San Francisco · London · Zurich · Tokyo']].map(([I, l, v]) => (
             <div key={l} className="panel rounded-3xl p-6 flex items-center gap-5 hover:border-lime/50 transition-colors duration-500">
               <span className="w-14 h-14 rounded-2xl bg-lime/15 text-lime flex items-center justify-center"><I size={22} /></span>
               <div><p className="font-mono text-[11px] uppercase tracking-widest text-sand/45">{l}</p><p className="font-display font-bold text-xl">{v}</p></div>
             </div>
           ))}
           <div className="rounded-3xl bg-aqua text-ink p-8">
-            <p className="font-display font-extrabold text-3xl leading-tight">Prefer a direct design briefing?</p>
-            <p className="mt-2 opacity-70">Schedule a 30-minute vision consultation with our Creative Director.</p>
+            <p className="font-display font-extrabold text-3xl leading-tight">Need a direct technical consultation?</p>
+            <p className="mt-2 opacity-70">Schedule a 30-minute system architecture review with our Lead Software Architect.</p>
             <WaterButton variant="dark" className="mt-6">Schedule Consultation <ArrowUpRight size={16} /></WaterButton>
           </div>
         </Reveal>

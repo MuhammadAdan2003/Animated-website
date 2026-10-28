@@ -15,12 +15,14 @@ export const NAV = [
 
 export function Logo({ className = '' }) {
   return (
-    <Link to="/" className={`flex items-center gap-2.5 ${className}`} aria-label="Aura Agency home">
-      <span className="relative w-8 h-8 rounded-xl bg-lime flex items-center justify-center overflow-hidden">
-        <span className="absolute w-5 h-5 rounded-full border-[3px] border-ink" />
+    <Link to="/" className={`group flex items-center gap-2.5 ${className}`} aria-label="Aura Agency home">
+      <span className="relative w-8 h-8 rounded-xl bg-lime flex items-center justify-center overflow-hidden shadow-[0_0_15px_rgba(200,255,77,0.35)]">
+        <span className="absolute w-5 h-5 rounded-full border-[2.5px] border-dashed border-ink animate-[spin_14s_linear_infinite]" />
         <span className="absolute w-1.5 h-1.5 rounded-full bg-ink" />
       </span>
-      <span className="font-display font-extrabold text-xl tracking-tight text-sand">aura<span className="text-lime text-xs font-mono ml-1 font-normal tracking-normal uppercase">studio</span></span>
+      <span className="font-display font-extrabold text-xl tracking-tight text-sand">
+        aura<span className="text-lime text-xs font-mono ml-1 font-normal tracking-normal uppercase">studio</span>
+      </span>
     </Link>
   );
 }
@@ -114,9 +116,9 @@ export function Navbar() {
 
 export function Footer() {
   const cols = [
-    { h: 'Capabilities', l: [['Digital Flagships', '/product'], ['Spatial Experiences', '/product'], ['Brand Architecture', '/solutions'], ['Creative Engineering', '/product']] },
-    { h: 'Studio', l: [['About Aura', '/about'], ['Selected Work', '/customers'], ['Perspectives', '/journal'], ['Partnership Models', '/pricing']] },
-    { h: 'Collaborate', l: [['Start a Project', '/contact'], ['New Business RFP', '/contact'], ['Executive Inquiries', '/contact'], ['Careers & Fellows', '/about']] },
+    { h: 'Capabilities', l: [['Full-Stack Web Apps', '/product'], ['Enterprise SaaS', '/product'], ['Cloud Microservices', '/solutions'], ['AI Engineering & Agents', '/product']] },
+    { h: 'Studio', l: [['About Aura', '/about'], ['Selected Work', '/customers'], ['Perspectives', '/journal'], ['Engagement Models', '/pricing']] },
+    { h: 'Collaborate', l: [['Start a Project', '/contact'], ['Technical RFP', '/contact'], ['Architecture Inquiries', '/contact'], ['Careers & Fellows', '/about']] },
   ];
   return (
     <footer className="relative z-10 bg-ink/70 backdrop-blur-md border-t border-white/10 gutter pt-20 pb-8 overflow-hidden">
@@ -124,7 +126,7 @@ export function Footer() {
         <div className="col-span-2 md:col-span-5">
           <Logo />
           <p className="mt-5 text-sand/60 max-w-sm leading-relaxed">
-            Aura is a digital craft & creative engineering agency. We architect boundary-pushing web flagships, immersive spatial computing, and transformative brand identities.
+            Aura is an elite software development & modern website development agency. We architect boundary-pushing web applications, scalable cloud backends, and transformative enterprise software.
           </p>
           <div className="flex gap-3 mt-6">
             {[Twitter, Linkedin, Github, Youtube].map((I, i) => (
@@ -153,8 +155,8 @@ export function Footer() {
         </p>
       </div>
       <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-sand/50 font-mono">
-        <span>© 2026 Aura Creative Engineering & Spatial Studio Ltd.</span>
-        <span>Tokyo · Zurich · London · New York</span>
+        <span>© 2026 Aura Software Engineering & Modern Web Agency Ltd.</span>
+        <span>San Francisco · London · Zurich · Tokyo</span>
       </div>
     </footer>
   );

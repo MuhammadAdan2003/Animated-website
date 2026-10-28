@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Thermometer, Users, Wind, Sparkles, Check, Activity, ShieldCheck, 
-  Layers, Sliders, Play, Pause, RefreshCw, Zap, Volume2, Maximize2, 
-  Compass, Eye, ArrowUpRight, Cpu, Radio, ChevronRight
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import {
+  Code2, Globe, Cpu, Sparkles, Check, Activity, ShieldCheck,
+  Layers, Zap, Terminal, ArrowUpRight, Server, Database,
+  Box, Cloud, Workflow, Monitor, Smartphone, Rocket, Lock
 } from 'lucide-react';
 import { useInView, WaterButton } from './ui.jsx';
 
@@ -43,7 +44,9 @@ export function ScrollProgress() {
   useEffect(() => {
     const on = () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      ref.current.style.transform = `scaleX(${h > 0 ? window.scrollY / h : 0})`;
+      if (ref.current) {
+        ref.current.style.transform = `scaleX(${h > 0 ? window.scrollY / h : 0})`;
+      }
     };
     on();
     window.addEventListener('scroll', on, { passive: true });
@@ -57,910 +60,752 @@ export function Smoke() {
   return null;
 }
 
-
-/* ==================================================================
- * 1. NEURAL SPATIAL CORE — Multi-Layer Simulation Engine
- * Replaces the static Bento with a live, interactive spatial matrix
- * ================================================================== */
-export function NeuralSpatialCore() {
-  const [mode, setMode] = useState('flow'); // 'flow' | 'thermal' | 'acoustic' | 'layout'
-  const [timeHour, setTimeHour] = useState(14); // 08:00 to 22:00
-  const [isSimulating, setIsSimulating] = useState(true);
-  const [activeLayer, setActiveLayer] = useState(null);
-  const canvasRef = useRef(null);
-  const [ref, inView] = useInView();
-
-  // Metrics driven by time-of-day slider
-  const metrics = useMemo(() => {
-    const timeRatio = (timeHour - 8) / 14; // 0 to 1
-    const peakCurve = Math.sin(timeRatio * Math.PI); // 0 at morning/night, 1 at midday
-    const occ = Math.round(180 + peakCurve * 340);
-    const hvac = Math.round(38 + peakCurve * 44);
-    const co2 = Math.round(410 + peakCurve * 190);
-    const eff = Math.round(92 + (1 - peakCurve * 0.15) * 6);
-    return { occ, hvac, co2, eff };
-  }, [timeHour]);
-
-  // Live simulation canvas animation
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let raf;
-    let t = 0;
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    // Particle pool for flow dynamics
-    const particles = Array.from({ length: 90 }, () => ({
-      x: Math.random() * 800,
-      y: Math.random() * 420,
-      vx: (Math.random() - 0.5) * 1.5 + 0.8,
-      vy: (Math.random() - 0.5) * 0.8,
-      size: Math.random() * 2.5 + 1.5,
-      alpha: Math.random() * 0.7 + 0.3,
-      corridor: Math.floor(Math.random() * 3),
-    }));
-
-    const corridors = [
-      { y: 110, h: 60, speed: 1.2 },
-      { y: 220, h: 70, speed: 1.6 },
-      { y: 320, h: 55, speed: 1.0 },
-    ];
-
-    const loop = () => {
-      t += 0.018;
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
-      ctx.clearRect(0, 0, w, h);
-
-      // Subtle architectural blueprint grid
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-      ctx.lineWidth = 1;
-      const step = 40;
-      for (let x = 0; x < w; x += step) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-      }
-      for (let y = 0; y < h; y += step) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-      }
-
-      // Draw active mode simulation
-      if (mode === 'flow') {
-        // --- 1. FLOW DYNAMICS: Vector streams & pedestrian particles ---
-        // Corridor velocity bands
-        corridors.forEach((c) => {
-          const grad = ctx.createLinearGradient(0, c.y, 0, c.y + c.h);
-          grad.addColorStop(0, 'rgba(200,255,77,0.03)');
-          grad.addColorStop(0.5, 'rgba(200,255,77,0.09)');
-          grad.addColorStop(1, 'rgba(200,255,77,0.03)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, c.y, w, c.h);
-
-          // Flow stream lines
-          ctx.strokeStyle = 'rgba(200,255,77,0.18)';
-          ctx.setLineDash([12, 18]);
-          ctx.lineDashOffset = -t * 40 * c.speed;
-          ctx.beginPath();
-          ctx.moveTo(0, c.y + c.h / 2);
-          ctx.lineTo(w, c.y + c.h / 2);
-          ctx.stroke();
-          ctx.setLineDash([]);
-        });
-
-        // Moving particles
-        particles.forEach((p) => {
-          if (isSimulating) {
-            const corr = corridors[p.corridor];
-            p.x += p.vx * corr.speed;
-            p.y += p.vy;
-            if (p.y < corr.y + 4) p.vy = Math.abs(p.vy);
-            if (p.y > corr.y + corr.h - 4) p.vy = -Math.abs(p.vy);
-            if (p.x > w + 20) p.x = -20;
-          }
-
-          ctx.fillStyle = `rgba(200,255,77,${p.alpha * 0.9})`;
-          ctx.shadowColor = '#c8ff4d';
-          ctx.shadowBlur = 8;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        });
-
-      } else if (mode === 'thermal') {
-        // --- 2. THERMAL ENVELOPE: Radiant isotherms & air diffusers ---
-        const centers = [
-          { x: w * 0.28, y: h * 0.45, temp: 24.8, type: 'hot' },
-          { x: w * 0.65, y: h * 0.38, temp: 20.4, type: 'cool' },
-          { x: w * 0.50, y: h * 0.75, temp: 22.1, type: 'bal' },
-        ];
-
-        centers.forEach((c, idx) => {
-          const r = 110 + Math.sin(t * 1.5 + idx) * 15;
-          const grad = ctx.createRadialGradient(c.x, c.y, 10, c.x, c.y, r);
-          if (c.type === 'hot') {
-            grad.addColorStop(0, 'rgba(255,107,74,0.35)');
-            grad.addColorStop(0.6, 'rgba(255,107,74,0.12)');
-            grad.addColorStop(1, 'rgba(255,107,74,0)');
-          } else if (c.type === 'cool') {
-            grad.addColorStop(0, 'rgba(56,224,204,0.35)');
-            grad.addColorStop(0.6, 'rgba(56,224,204,0.12)');
-            grad.addColorStop(1, 'rgba(56,224,204,0)');
-          } else {
-            grad.addColorStop(0, 'rgba(200,255,77,0.28)');
-            grad.addColorStop(0.6, 'rgba(200,255,77,0.08)');
-            grad.addColorStop(1, 'rgba(200,255,77,0)');
-          }
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Diffuser badge
-          ctx.strokeStyle = c.type === 'hot' ? '#ff6b4a' : c.type === 'cool' ? '#38e0cc' : '#c8ff4d';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, 8, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.fillStyle = '#f3eee3';
-          ctx.font = '11px JetBrains Mono';
-          ctx.fillText(`${c.temp}°C`, c.x + 14, c.y + 4);
-        });
-
-      } else if (mode === 'acoustic') {
-        // --- 3. ACOUSTIC ZONING: Propagating soundwaves & damping barriers ---
-        const emitters = [
-          { x: w * 0.3, y: h * 0.5, label: 'Collaboration Hub' },
-          { x: w * 0.72, y: h * 0.45, label: 'Acoustic Sound Pod' },
-        ];
-
-        emitters.forEach((em, idx) => {
-          for (let i = 0; i < 4; i++) {
-            const rad = ((t * 45 + i * 40) % 160) + 12;
-            const alpha = Math.max(0, 1 - rad / 160) * 0.45;
-            ctx.strokeStyle = idx === 0 ? `rgba(200,255,77,${alpha})` : `rgba(56,224,204,${alpha})`;
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.arc(em.x, em.y, rad, 0, Math.PI * 2);
-            ctx.stroke();
-          }
-
-          ctx.fillStyle = idx === 0 ? '#c8ff4d' : '#38e0cc';
-          ctx.beginPath();
-          ctx.arc(em.x, em.y, 5, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = '#f3eee3';
-          ctx.font = '11px JetBrains Mono';
-          ctx.fillText(em.label, em.x - 40, em.y - 14);
-        });
-
-        // Acoustic baffle partition wall
-        ctx.strokeStyle = '#c8ff4d';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(w * 0.52, h * 0.2);
-        ctx.lineTo(w * 0.52, h * 0.8);
-        ctx.stroke();
-        ctx.fillStyle = 'rgba(200,255,77,0.7)';
-        ctx.font = '10px JetBrains Mono';
-        ctx.fillText('ACTIVE SOUND-MASKING BAFFLE (98.4% ISOLATION)', w * 0.53, h * 0.5);
-
-      } else if (mode === 'layout') {
-        // --- 4. GENERATIVE LAYOUTS: Morphing modular partition grid ---
-        const morph = Math.sin(t * 0.8) * 0.5 + 0.5;
-        const boxes = [
-          { x: 40 + morph * 30, y: 50, w: 220 - morph * 20, h: 140, name: 'Team Cluster A' },
-          { x: 300 - morph * 20, y: 50, w: 200 + morph * 40, h: 140, name: 'Open Lounge' },
-          { x: 540 + morph * 20, y: 50, w: 200 - morph * 20, h: 140, name: 'Focus Enclave' },
-          { x: 60, y: 230 + morph * 15, w: 320 - morph * 30, h: 130, name: 'Executive Pod' },
-          { x: 420 - morph * 15, y: 230, w: 320 + morph * 30, h: 130, name: 'Townhall Forum' },
-        ];
-
-        boxes.forEach((b) => {
-          ctx.fillStyle = 'rgba(255,255,255,0.03)';
-          ctx.fillRect(b.x, b.y, b.w, b.h);
-          ctx.strokeStyle = 'rgba(200,255,77,0.45)';
-          ctx.lineWidth = 1.5;
-          ctx.strokeRect(b.x, b.y, b.w, b.h);
-
-          ctx.fillStyle = '#c8ff4d';
-          ctx.font = '12px Bricolage Grotesque';
-          ctx.fillText(b.name, b.x + 14, b.y + 28);
-          ctx.fillStyle = 'rgba(243,238,227,0.5)';
-          ctx.font = '10px JetBrains Mono';
-          ctx.fillText(`Efficiency Score: ${(92 + morph * 6).toFixed(1)}%`, b.x + 14, b.y + b.h - 14);
-        });
-      }
-
-      raf = requestAnimationFrame(loop);
-    };
-
-    raf = requestAnimationFrame(loop);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-    };
-  }, [mode, isSimulating]);
-
+/* ----------------------------------------------------------------------------
+ * AnimatedGeometricCircles — Hypnotic, multi-layer orbital rings & pulsing nodes
+ * Smooth GPU-accelerated concentric rotations, glowing satellites & wave pulses
+ * ---------------------------------------------------------------------------- */
+export function AnimatedGeometricCircles({ size = 520, className = '' }) {
   return (
-    <div ref={ref} className="w-full">
-      {/* Top Controller Bar */}
-      <div className="glass rounded-3xl p-4 sm:p-6 mb-6 flex flex-col lg:flex-row items-center justify-between gap-6 border border-white/10 shadow-2xl backdrop-blur-xl">
-        {/* Mode Switcher Tabs */}
-        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-          {[
-            { id: 'flow', label: 'Pedestrian Flow', icon: Activity, metric: '14ms Telemetry' },
-            { id: 'thermal', label: 'Thermal Envelope', icon: Thermometer, metric: '±0.2°C Delta' },
-            { id: 'acoustic', label: 'Acoustic Zoning', icon: Volume2, metric: '38dB Floor' },
-            { id: 'layout', label: 'Generative Layout', icon: Sliders, metric: '120 Permutations' },
-          ].map((m) => {
-            const Icon = m.icon;
-            const active = mode === m.id;
-            return (
-              <button
-                key={m.id}
-                onClick={() => setMode(m.id)}
-                className={`relative px-4 sm:px-5 py-2.5 rounded-2xl flex items-center gap-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                  active 
-                    ? 'bg-lime text-ink font-bold shadow-[0_0_24px_rgba(200,255,77,0.35)]' 
-                    : 'text-sand/70 hover:text-sand hover:bg-white/5'
-                }`}
-              >
-                <Icon size={16} />
-                <span>{m.label}</span>
-                <span className={`hidden sm:inline-block font-mono text-[10px] px-2 py-0.5 rounded-full ${
-                  active ? 'bg-ink/15 text-ink' : 'bg-white/10 text-sand/50'
-                }`}>
-                  {m.metric}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+    <div
+      style={{ width: size, height: size }}
+      className={`relative pointer-events-none select-none flex items-center justify-center ${className}`}
+    >
+      {/* Ambient Radial Core Glow - Solid Lime */}
+      <div className="absolute inset-8 rounded-full bg-lime/10 blur-[85px] animate-pulse" />
 
-        {/* Time-of-Day Interactive Scrubber */}
-        <div className="flex items-center gap-4 w-full lg:w-auto justify-end">
-          <div className="flex items-center gap-2 bg-ink/50 px-4 py-2 rounded-2xl border border-white/10">
-            <Radio size={14} className="text-lime animate-pulse" />
-            <span className="font-mono text-xs text-sand/70">TIME OF DAY:</span>
-            <span className="font-mono text-xs font-bold text-lime tabular-nums">
-              {timeHour.toString().padStart(2, '0')}:00
-            </span>
-            <input
-              type="range"
-              min="8"
-              max="22"
-              value={timeHour}
-              onChange={(e) => setTimeHour(+e.target.value)}
-              className="w-24 sm:w-32 accent-lime cursor-pointer ml-2"
-              aria-label="Time of day scrubber"
-            />
-          </div>
+      {/* Layer 1: Outermost Dashed Ring with Slow Drift */}
+      <div className="absolute inset-0 rounded-full border border-dashed border-white/10 animate-[spin_60s_linear_infinite]" />
 
-          <button
-            onClick={() => setIsSimulating(!isSimulating)}
-            className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-sand border border-white/10 transition-colors"
-            title={isSimulating ? 'Pause simulation' : 'Play simulation'}
-          >
-            {isSimulating ? <Pause size={16} /> : <Play size={16} />}
-          </button>
-        </div>
+      {/* Layer 2: Orbit Ring with 2 Glowing Nodes */}
+      <div className="absolute inset-6 rounded-full border border-lime/20 animate-[spin_36s_linear_infinite]">
+        <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-lime shadow-[0_0_12px_#c8ff4d]" />
+        <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-aqua shadow-[0_0_10px_#4de8cf]" />
       </div>
 
-      {/* Main Interactive Stage & Side Telemetry Matrix */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Canvas Simulation Stage */}
-        <div className="lg:col-span-8 glass rounded-[2.5rem] p-4 sm:p-6 relative overflow-hidden border border-white/10 min-h-[460px] flex flex-col justify-between shadow-2xl">
-          {/* Top Stage Header */}
-          <div className="flex items-center justify-between z-10 px-2 pt-1">
-            <div className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-lime animate-ping" />
-              <span className="font-mono text-xs tracking-widest uppercase text-lime font-bold">
-                SPATIAL KERNEL // {mode.toUpperCase()}
-              </span>
-            </div>
-            <div className="flex items-center gap-3 font-mono text-[11px] text-sand/50">
-              <span>LATENCY: 11.4ms</span>
-              <span>·</span>
-              <span>RESOLUTION: 1440 DPI</span>
-            </div>
-          </div>
+      {/* Layer 3: Counter-Rotating Dashed Aqua Orbit */}
+      <div className="absolute inset-16 rounded-full border border-dashed border-aqua/30 animate-[spin_26s_linear_infinite_reverse]">
+        <span className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-sand shadow-[0_0_8px_#f3eee3]" />
+      </div>
 
-          {/* Canvas Element */}
-          <div className="relative w-full h-[340px] sm:h-[380px] my-2 rounded-2xl overflow-hidden border border-white/5 bg-ink/60">
-            <canvas ref={canvasRef} className="w-full h-full block" />
-            
-            {/* Live Mode Watermark Tag */}
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-ink/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 font-mono text-[10px] text-sand/60">
-              <Layers size={12} className="text-lime" />
-              <span>ACTIVE SIMULATION: {mode === 'flow' ? 'PEDESTRIAN VECTOR CORRIDORS' : mode === 'thermal' ? 'RADIANT ISOTHERM GAIN' : mode === 'acoustic' ? 'SOUND-MASKING DECIBEL ENVELOPE' : 'PARAMETRIC RECONFIGURABLE MODULES'}</span>
-            </div>
-          </div>
+      {/* Layer 4: Fast Orbiting Lime Node */}
+      <div className="absolute inset-28 rounded-full border border-lime/35 animate-[spin_16s_linear_infinite]">
+        <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-lime flex items-center justify-center shadow-[0_0_15px_#c8ff4d]">
+          <span className="w-1.5 h-1.5 rounded-full bg-ink" />
+        </span>
+      </div>
 
-          {/* Bottom Diagnostics HUD */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 z-10 pt-2 font-mono">
-            <div className="bg-white/[0.03] border border-white/5 p-3 rounded-2xl">
-              <p className="text-[10px] uppercase text-sand/50">Occupancy</p>
-              <p className="text-xl font-bold text-sand mt-0.5">{metrics.occ} <span className="text-xs font-normal text-sand/40">pax</span></p>
-            </div>
-            <div className="bg-white/[0.03] border border-white/5 p-3 rounded-2xl">
-              <p className="text-[10px] uppercase text-sand/50">HVAC Load</p>
-              <p className="text-xl font-bold text-aqua mt-0.5">{metrics.hvac}% <span className="text-xs font-normal text-sand/40">cap</span></p>
-            </div>
-            <div className="bg-white/[0.03] border border-white/5 p-3 rounded-2xl">
-              <p className="text-[10px] uppercase text-sand/50">Indoor CO₂</p>
-              <p className="text-xl font-bold text-lime mt-0.5">{metrics.co2} <span className="text-xs font-normal text-sand/40">ppm</span></p>
-            </div>
-            <div className="bg-white/[0.03] border border-white/5 p-3 rounded-2xl">
-              <p className="text-[10px] uppercase text-sand/50">Spatial Eff.</p>
-              <p className="text-xl font-bold text-sand mt-0.5">{metrics.eff}% <span className="text-xs font-normal text-sand/40">opt</span></p>
-            </div>
-          </div>
-        </div>
+      {/* Layer 5: Concentric Pulse Wave Rings */}
+      <div className="absolute w-36 h-36 rounded-full border border-lime/30 pulse-ring" />
+      <div className="absolute w-36 h-36 rounded-full border border-aqua/30 pulse-ring" style={{ animationDelay: '1.2s' }} />
 
-        {/* Side Capability Cards (Interactive Glass Tiles) */}
-        <div className="lg:col-span-4 flex flex-col gap-4">
-          {[
-            {
-              id: 'twin',
-              title: 'Flagship WebGL & 3D Shaders',
-              desc: 'Every particle, lighting reflection, and fluid easing curve rendered at 120 FPS with sub-millisecond compute latency.',
-              stat: '120 FPS WebGL',
-              icon: Cpu,
-              accent: 'border-lime/30 group-hover:border-lime',
-            },
-            {
-              id: 'predict',
-              title: 'Kinetic Design Languages',
-              desc: 'Bespoke design tokens, typography scales, and visceral micro-interactions calibrated to elevate brand prestige.',
-              stat: 'Visceral Craft',
-              icon: Zap,
-              accent: 'border-aqua/30 group-hover:border-aqua',
-            },
-            {
-              id: 'generative',
-              title: 'Generative AI & Spatial Lab',
-              desc: 'Custom proprietary generative pipelines, procedural 3D environments, and intelligent automated layout engines.',
-              stat: 'Creative AI Lab',
-              icon: Sparkles,
-              accent: 'border-lime/30 group-hover:border-lime',
-            },
-            {
-              id: 'trust',
-              title: 'Global Performance & SLA',
-              desc: 'Headless cloud infrastructure, zero-jank cross-device optimization, and enterprise launch assurance.',
-              stat: 'Enterprise Scale',
-              icon: ShieldCheck,
-              accent: 'border-white/20 group-hover:border-white/40',
-            },
-          ].map((c) => {
-            const Icon = c.icon;
-            const active = activeLayer === c.id;
-            return (
-              <div
-                key={c.id}
-                onClick={() => setActiveLayer(active ? null : c.id)}
-                className={`group glass rounded-3xl p-6 border transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                  active ? 'bg-white/10 border-lime shadow-[0_0_24px_rgba(200,255,77,0.2)]' : 'border-white/10 hover:bg-white/[0.04]'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-lime group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Icon size={20} />
-                  </div>
-                  <span className="font-mono text-[10px] font-bold px-3 py-1 rounded-full bg-white/5 text-sand/60 border border-white/10">
-                    {c.stat}
-                  </span>
-                </div>
-                <h4 className="font-display font-bold text-xl text-sand group-hover:text-lime transition-colors flex items-center justify-between">
-                  {c.title}
-                  <ArrowUpRight size={16} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-lime" />
-                </h4>
-                <p className="text-sand/60 text-xs sm:text-sm mt-1.5 leading-relaxed">
-                  {c.desc}
-                </p>
-              </div>
-            );
-          })}
+      {/* Center Glass Core Sphere - Solid Fill */}
+      <div className="relative w-28 h-28 rounded-full glass border border-white/20 flex items-center justify-center shadow-[0_0_35px_rgba(200,255,77,0.3)]">
+        <div className="w-16 h-16 rounded-full bg-lime/20 blur-md animate-pulse" />
+        <div className="absolute w-9 h-9 rounded-full bg-lime text-ink flex items-center justify-center font-bold shadow-lg">
+          <Sparkles size={16} />
         </div>
       </div>
     </div>
   );
 }
 
+export function PulsingCircleRadar({ label = 'EDGE NETWORK ACTIVE', className = '' }) {
+  return (
+    <div className={`inline-flex items-center gap-3 glass px-3.5 py-1.5 rounded-full border border-lime/30 shadow-lg ${className}`}>
+      <span className="relative flex h-3 w-3">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime opacity-75" />
+        <span className="relative inline-flex rounded-full h-3 w-3 bg-lime" />
+      </span>
+      <span className="font-mono text-[11px] font-bold text-lime uppercase tracking-widest">{label}</span>
+    </div>
+  );
+}
 
-/* ==================================================================
- * 2. SPACE EXPLORER — Interactive 3D Spatial Computing Deck
- * Replaces the flat 2D brown/olive room boxes with a 3D command deck
- * ================================================================== */
-const FACILITY_ZONES = [
+/* ============================================================================
+ * 1. AWWWARDS STICKY SCROLL-OVERLAP DECK (Replaces NeuralSpatialCore)
+ * 4 monumental full-screen cards that slide up and overlap each other on scroll
+ * with smooth depth scaling, parallax inner visuals, and bold color contrast.
+ * ============================================================================ */
+const OVERLAP_SLIDES = [
   {
-    id: 'ai-cluster',
-    name: 'Spatial Creative Lab',
-    type: 'Interactive R&D',
-    iso: { x: 50, y: 50, w: 180, h: 140, z: 24 },
-    temp: 18.2,
-    targetTemp: 18.0,
-    cap: 20,
-    occ: 8,
-    co2: 395,
-    noise: 42,
-    status: '120 FPS Shaders Active',
-    color: '#38e0cc', // cyan/aqua
+    id: '01',
+    tag: '01 / 04 — BESPOKE WEB FLAGSHIPS',
+    title: ['Next-Gen Web', '& 3D Flagships.'],
+    subtitle: 'Category-defining websites and high-velocity web platforms engineered with fluid GSAP motion, WebGL shaders, and sub-second page loads that turn visitors into customers.',
+    statVal: '0.3s',
+    statLabel: 'LCP Page Load · 100/100 Lighthouse',
+    stack: ['Next.js 15', 'React 19', 'GSAP & Lenis', 'WebGL / Three.js', 'TailwindCSS'],
+    bullets: [
+      'Awwwards-grade kinetic typography & smooth scroll choreography',
+      'Server-rendered edge architecture with zero layout shift',
+      'Headless CMS & high-converting e-commerce checkout flows',
+    ],
+    theme: {
+      cardBg: 'bg-[#091413] border-lime/25 text-sand',
+      accentText: 'text-lime',
+      pillBg: 'bg-lime/15 text-lime border-lime/30',
+      tagChip: 'bg-white/5 text-sand/80 border-white/10',
+      glow: 'from-lime/20 via-aqua/10 to-transparent',
+      btnVariant: 'solid',
+    },
+    visualType: 'web',
   },
   {
-    id: 'biophilic-atrium',
-    name: 'Experience Pavilion',
-    type: 'Digital Flagship Showroom',
-    iso: { x: 250, y: 50, w: 260, h: 150, z: 32 },
-    temp: 22.4,
-    targetTemp: 22.0,
-    cap: 180,
-    occ: 142,
-    co2: 440,
-    noise: 38,
-    status: 'Spatial Presence 98%',
-    color: '#c8ff4d', // lime
+    id: '02',
+    tag: '02 / 04 — FULL-STACK SAAS & CLOUD',
+    title: ['Scalable SaaS &', 'Cloud Engines.'],
+    subtitle: 'Production-grade multi-tenant SaaS applications, distributed microservices, and real-time APIs architected to handle millions of concurrent requests without breaking a sweat.',
+    statVal: '99.999%',
+    statLabel: 'Enterprise Uptime SLA · Multi-Region',
+    stack: ['Node.js & Go', 'PostgreSQL', 'Redis Cache', 'GraphQL / gRPC', 'Kubernetes'],
+    bullets: [
+      'Multi-tenant database isolation, SSO auth & role-based permissions',
+      'Sub-10ms API response latency across 140+ global edge nodes',
+      'Automated Stripe subscription billing, metering & webhooks',
+    ],
+    theme: {
+      cardBg: 'bg-[#071d1b] border-aqua/30 text-sand',
+      accentText: 'text-aqua',
+      pillBg: 'bg-aqua/15 text-aqua border-aqua/30',
+      tagChip: 'bg-white/5 text-sand/80 border-white/10',
+      glow: 'from-aqua/25 via-lime/10 to-transparent',
+      btnVariant: 'ghost',
+    },
+    visualType: 'saas',
   },
   {
-    id: 'studio-wing',
-    name: 'Brand Architecture Studio',
-    type: 'Creative Craft Hub',
-    iso: { x: 50, y: 220, w: 240, h: 160, z: 20 },
-    temp: 24.8, // hot zone
-    targetTemp: 22.2,
-    cap: 120,
-    occ: 96,
-    co2: 560,
-    noise: 52,
-    status: 'Active Sprint In Progress',
-    color: '#ff6b4a', // amber/coral
+    id: '03',
+    tag: '03 / 04 — AI SYSTEMS & AUTONOMOUS AGENTS',
+    title: ['Autonomous AI &', 'Neural Workflows.'],
+    subtitle: 'Custom LLM pipelines, semantic vector search, and intelligent multi-agent systems embedded directly into your product to automate complex business operations 24/7.',
+    statVal: '10×',
+    statLabel: 'Workflow Velocity · Sub-Second RAG',
+    stack: ['OpenAI / Claude', 'Python & FastAPI', 'pgvector / Pinecone', 'LangGraph', 'Streaming UI'],
+    bullets: [
+      'Deterministic agentic workflows with zero-hallucination guardrails',
+      'Private enterprise knowledge retrieval (RAG) with bank-grade security',
+      'Real-time streaming AI copilots and generative UI interfaces',
+    ],
+    theme: {
+      cardBg: 'bg-lime border-ink/15 text-ink',
+      accentText: 'text-ink',
+      pillBg: 'bg-ink text-lime border-ink',
+      tagChip: 'bg-ink/10 text-ink border-ink/15 font-semibold',
+      glow: 'from-white/40 via-aqua/20 to-transparent',
+      btnVariant: 'dark',
+    },
+    visualType: 'ai',
   },
   {
-    id: 'acoustic-pods',
-    name: 'Generative AI Foundry',
-    type: 'Neural Systems Pod',
-    iso: { x: 310, y: 230, w: 150, h: 150, z: 28 },
-    temp: 21.6,
-    targetTemp: 21.5,
-    cap: 30,
-    occ: 12,
-    co2: 410,
-    noise: 26,
-    status: 'Algorithmic Solver Live',
-    color: '#38e0cc',
-  },
-  {
-    id: 'executive-deck',
-    name: 'Executive Partner Suite',
-    type: 'Strategic War Room',
-    iso: { x: 480, y: 230, w: 160, h: 150, z: 26 },
-    temp: 22.0,
-    targetTemp: 22.0,
-    cap: 24,
-    occ: 18,
-    co2: 420,
-    noise: 30,
-    status: 'Direct Client Collaboration',
-    color: '#c8ff4d',
+    id: '04',
+    tag: '04 / 04 — MOBILE APPS & DESIGN SYSTEMS',
+    title: ['Fluid Mobile Apps', '& Design Systems.'],
+    subtitle: 'Cross-platform iOS and Android applications with silky 120Hz native gesture physics, paired with comprehensive multi-brand design token libraries.',
+    statVal: '4.9★',
+    statLabel: 'App Store Rating · 120Hz Native Feel',
+    stack: ['React Native', 'Expo', 'Swift / Kotlin', 'Figma Tokens', 'Offline-First Sync'],
+    bullets: [
+      'Native-grade gesture animations, haptics & biometric authentication',
+      'Instant offline data synchronization with background cloud workers',
+      'Unified design systems that keep web and mobile 100% consistent',
+    ],
+    theme: {
+      cardBg: 'bg-sand border-ink/15 text-ink',
+      accentText: 'text-[#ff5a36]',
+      pillBg: 'bg-ink text-sand border-ink',
+      tagChip: 'bg-ink/[0.07] text-ink border-ink/15 font-semibold',
+      glow: 'from-lime/40 via-aqua/20 to-transparent',
+      btnVariant: 'dark',
+    },
+    visualType: 'mobile',
   },
 ];
 
-export function SpaceExplorer() {
-  const [zones, setZones] = useState(FACILITY_ZONES);
-  const [selectedId, setSelectedId] = useState('studio-wing');
-  const [filterMode, setFilterMode] = useState('radar'); // 'radar' | 'thermal' | 'airflow'
-  const [stabilized, setStabilized] = useState({});
-  const [lidarX, setLidarX] = useState(0);
-  const [ref, inView] = useInView();
+function SlideVisualArt({ type, index }) {
+  if (type === 'web') {
+    return (
+      <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-[#050b0a] border border-white/10 p-5 sm:p-7 overflow-hidden flex flex-col justify-between group">
+        {/* Ambient radial glow */}
+        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-lime/20 blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
+        <div className="absolute inset-0 dots opacity-40 pointer-events-none" />
 
-  // Selected zone
-  const activeZone = zones.find((z) => z.id === selectedId) || zones[0];
-  const isHot = activeZone.temp > 23.5 && !stabilized[activeZone.id];
-  const isBalanced = stabilized[activeZone.id];
-
-  // Auto-stabilize action
-  const handleAutoAdjust = (id) => {
-    setStabilized((prev) => ({ ...prev, [id]: true }));
-    setZones((prev) =>
-      prev.map((z) =>
-        z.id === id
-          ? { ...z, temp: z.targetTemp, co2: 415, status: 'Aura Autonomous Airflow Balanced' }
-          : z
-      )
-    );
-  };
-
-  // Continuous subtle sensor jitter + Lidar sweep animation
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setZones((prev) =>
-        prev.map((z) => {
-          if (stabilized[z.id]) return z;
-          const delta = (Math.random() - 0.5) * 0.15;
-          return { ...z, temp: +(z.temp + delta).toFixed(1) };
-        })
-      );
-      setLidarX((prev) => (prev > 800 ? 0 : prev + 25));
-    }, 1200);
-    return () => clearInterval(timer);
-  }, [stabilized]);
-
-  // Isometric projection helper: converts (x, y, z) to 2D SVG space (sx, sy)
-  const isoProject = (x, y, z = 0) => {
-    const originX = 410;
-    const originY = 80;
-    // 30 degree isometric angle
-    const sx = originX + (x - y) * 0.866;
-    const sy = originY + (x + y) * 0.5 - z;
-    return `${sx.toFixed(1)},${sy.toFixed(1)}`;
-  };
-
-  return (
-    <div ref={ref} className="w-full">
-      {/* Top Filter Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 px-1">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-xs text-sand/50 uppercase tracking-widest">LAYER FILTER:</span>
-          {[
-            { id: 'radar', label: 'Occupancy Radar' },
-            { id: 'thermal', label: 'Thermal Infrared' },
-            { id: 'airflow', label: 'HVAC Streamlines' },
-          ].map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setFilterMode(f.id)}
-              className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-colors ${
-                filterMode === f.id
-                  ? 'bg-lime text-ink font-bold shadow-md'
-                  : 'bg-white/5 text-sand/60 hover:text-sand hover:bg-white/10'
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
+        {/* Top Browser Bar */}
+        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-coral/80" />
+            <span className="w-3 h-3 rounded-full bg-lime/80" />
+            <span className="w-3 h-3 rounded-full bg-aqua/80" />
+            <span className="ml-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-sand/70">
+              https://flagship.aura.studio
+            </span>
+          </div>
+          <span className="px-2.5 py-1 rounded-full bg-lime/15 text-lime font-mono text-[10px] font-bold border border-lime/30">
+            120 FPS
+          </span>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-xs text-lime">
-          <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
-          <span>ISOMETRIC 3D DIGITAL TWIN // LIVE STREAM</span>
-        </div>
-      </div>
+        {/* Center Layered Visual Mockup */}
+        <div className="relative z-10 my-auto py-6">
+          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-lime mb-2">
+            // INTERACTIVE FLAGSHIP ENGINE
+          </div>
+          <div className="font-display font-extrabold text-3xl sm:text-5xl text-sand leading-[0.95] tracking-tight">
+            Kinetic craft.<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime via-aqua to-lime">
+              Zero friction.
+            </span>
+          </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        {/* 3D Isometric Viewport */}
-        <div className="xl:col-span-8 glass rounded-[2.5rem] p-4 sm:p-8 relative overflow-hidden border border-white/10 min-h-[480px] flex flex-col justify-between shadow-2xl">
-          {/* Subtle Ambient Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-lime/10 blur-[100px] pointer-events-none rounded-full" />
-
-          {/* SVG Isometric Floorplan */}
-          <svg viewBox="0 0 820 480" className="w-full h-auto block select-none" role="img" aria-label="3D Isometric Digital Twin Floorplan">
-            <defs>
-              <linearGradient id="lidarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="50%" stopColor="#c8ff4d" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="transparent" />
-              </linearGradient>
-              <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="rgba(255,255,255,0.12)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0.6)" />
-              </linearGradient>
-            </defs>
-
-            {/* Isometric Base Grid Platform */}
-            <g opacity="0.35">
-              {[0, 100, 200, 300, 400, 500, 600, 700].map((gx) => (
-                <line
-                  key={`gx-${gx}`}
-                  x1={isoProject(gx, 0, 0).split(',')[0]}
-                  y1={isoProject(gx, 0, 0).split(',')[1]}
-                  x2={isoProject(gx, 440, 0).split(',')[0]}
-                  y2={isoProject(gx, 440, 0).split(',')[1]}
-                  stroke="rgba(255,255,255,0.15)"
-                  strokeWidth="1"
-                />
-              ))}
-              {[0, 80, 160, 240, 320, 400, 440].map((gy) => (
-                <line
-                  key={`gy-${gy}`}
-                  x1={isoProject(0, gy, 0).split(',')[0]}
-                  y1={isoProject(0, gy, 0).split(',')[1]}
-                  x2={isoProject(700, gy, 0).split(',')[0]}
-                  y2={isoProject(700, gy, 0).split(',')[1]}
-                  stroke="rgba(255,255,255,0.15)"
-                  strokeWidth="1"
-                />
-              ))}
-            </g>
-
-            {/* 3D Extruded Zones */}
-            {zones.map((z) => {
-              const { x, y, w, h } = z.iso;
-              const isSelected = selectedId === z.id;
-              const lift = isSelected ? 14 : 0;
-              const elevation = z.iso.z + lift;
-
-              // Polygon coordinates for 3D faces
-              const p0 = isoProject(x, y, elevation);
-              const p1 = isoProject(x + w, y, elevation);
-              const p2 = isoProject(x + w, y + h, elevation);
-              const p3 = isoProject(x, y + h, elevation);
-
-              // Bottom points for vertical wall extrusion
-              const b0 = isoProject(x, y, 0);
-              const b1 = isoProject(x + w, y, 0);
-              const b2 = isoProject(x + w, y + h, 0);
-              const b3 = isoProject(x, y + h, 0);
-
-              // Color determination based on filterMode
-              let fillColor = 'rgba(255,255,255,0.04)';
-              let strokeColor = isSelected ? '#c8ff4d' : 'rgba(255,255,255,0.2)';
-              if (filterMode === 'thermal') {
-                fillColor = z.temp > 23.5 ? 'rgba(255,107,74,0.25)' : 'rgba(56,224,204,0.22)';
-                strokeColor = z.temp > 23.5 ? '#ff6b4a' : '#38e0cc';
-              } else if (filterMode === 'radar') {
-                const ratio = z.occ / z.cap;
-                fillColor = `rgba(200,255,77,${0.08 + ratio * 0.25})`;
-                if (isSelected) strokeColor = '#c8ff4d';
-              } else if (filterMode === 'airflow') {
-                fillColor = 'rgba(56,224,204,0.14)';
-                strokeColor = '#38e0cc';
-              }
-
-              return (
-                <g
-                  key={z.id}
-                  onClick={() => setSelectedId(z.id)}
-                  className="cursor-pointer transition-all duration-500"
-                >
-                  {/* Front-facing 3D wall extrusions */}
-                  <polygon
-                    points={`${p3} ${p2} ${b2} ${b3}`}
-                    fill="url(#wallGrad)"
-                    stroke="rgba(255,255,255,0.08)"
-                    strokeWidth="1"
-                  />
-                  <polygon
-                    points={`${p1} ${p2} ${b2} ${b1}`}
-                    fill="rgba(0,0,0,0.5)"
-                    stroke="rgba(255,255,255,0.08)"
-                    strokeWidth="1"
-                  />
-
-                  {/* Top Roof / Floor Surface */}
-                  <polygon
-                    points={`${p0} ${p1} ${p2} ${p3}`}
-                    fill={fillColor}
-                    stroke={strokeColor}
-                    strokeWidth={isSelected ? 2.5 : 1.2}
-                    className="transition-colors duration-300"
-                  />
-
-                  {/* Zone Name Label & Floating Telemetry Tag */}
-                  <g>
-                    {/* Calculate center of top surface */}
-                    {(() => {
-                      const cx = (x + w / 2);
-                      const cy = (y + h / 2);
-                      const [sx, sy] = isoProject(cx, cy, elevation).split(',').map(Number);
-                      return (
-                        <>
-                          {/* Pulsing selection ring */}
-                          {isSelected && (
-                            <circle
-                              cx={sx}
-                              cy={sy - 6}
-                              r="16"
-                              fill="none"
-                              stroke="#c8ff4d"
-                              strokeWidth="1.5"
-                              opacity="0.8"
-                              className="animate-ping"
-                            />
-                          )}
-
-                          <circle cx={sx} cy={sy - 6} r="4" fill={isSelected ? '#c8ff4d' : '#f3eee3'} />
-                          <text
-                            x={sx}
-                            y={sy + 14}
-                            textAnchor="middle"
-                            fill="#f3eee3"
-                            fontFamily="Bricolage Grotesque"
-                            fontWeight="800"
-                            fontSize="13"
-                            className="drop-shadow-md pointer-events-none"
-                          >
-                            {z.name.split(' ')[0]}
-                          </text>
-                          <text
-                            x={sx}
-                            y={sy + 28}
-                            textAnchor="middle"
-                            fill={z.temp > 23.5 && !stabilized[z.id] ? '#ff6b4a' : 'rgba(200,255,77,0.85)'}
-                            fontFamily="JetBrains Mono"
-                            fontSize="10"
-                            className="pointer-events-none"
-                          >
-                            {z.temp}°C · {z.occ} pax
-                          </text>
-                        </>
-                      );
-                    })()}
-                  </g>
-                </g>
-              );
-            })}
-
-            {/* Moving Laser LIDAR Scan Line */}
-            <line
-              x1={lidarX}
-              y1="0"
-              x2={lidarX - 80}
-              y2="480"
-              stroke="url(#lidarGrad)"
-              strokeWidth="2"
-              opacity="0.6"
-              className="pointer-events-none"
-            />
-          </svg>
-
-          {/* Bottom Interactive Legend */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/5 font-mono text-[11px] text-sand/60">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-lime/60" /> Comfort Optimal</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-coral/60" /> Thermal Surge</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-aqua/60" /> Cryo-Ventilated</span>
+          {/* Floating layered glass cards */}
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 group-hover:-translate-y-1 transition-transform duration-500">
+              <div className="flex items-center justify-between text-xs font-mono text-sand/50 mb-1">
+                <span>CORE VITALS</span>
+                <Zap size={13} className="text-lime" />
+              </div>
+              <div className="font-display font-extrabold text-2xl sm:text-3xl text-lime">100 / 100</div>
+              <div className="text-[11px] text-sand/50 mt-0.5">Sub-second First Paint</div>
             </div>
-            <span>Click any zone to inspect & balance</span>
+            <div className="rounded-2xl bg-white/[0.04] backdrop-blur-md border border-white/10 p-4 group-hover:translate-y-1 transition-transform duration-500">
+              <div className="flex items-center justify-between text-xs font-mono text-sand/50 mb-1">
+                <span>CONVERSION</span>
+                <ArrowUpRight size={13} className="text-aqua" />
+              </div>
+              <div className="font-display font-extrabold text-2xl sm:text-3xl text-aqua">+240%</div>
+              <div className="text-[11px] text-sand/50 mt-0.5">Average Client Lift</div>
+            </div>
           </div>
         </div>
 
-        {/* Cybernetic Command Inspector (Right Panel) */}
-        <div className="xl:col-span-4 flex flex-col gap-4">
-          <motion.div
-            key={activeZone.id}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-            className={`glass rounded-[2.5rem] p-6 sm:p-8 border transition-all duration-500 flex flex-col justify-between shadow-2xl relative overflow-hidden ${
-              isHot ? 'border-coral/40 bg-coral/5' : 'border-lime/30 bg-lime/5'
-            }`}
-          >
-            {/* Top Inspector Header */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-[10px] tracking-widest uppercase text-sand/50">
-                  {activeZone.type}
-                </span>
-                <span className={`font-mono text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
-                  isHot 
-                    ? 'bg-coral/10 text-coral border-coral/30' 
-                    : 'bg-lime/10 text-lime border-lime/30'
-                }`}>
-                  {isHot ? 'THERMAL DELTA' : isBalanced ? 'AUTONOMOUSLY OPTIMIZED' : 'ONLINE'}
-                </span>
-              </div>
+        {/* Bottom Marquee Ribbon inside card */}
+        <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+          <span>SSR STREAMING: ACTIVE</span>
+          <span className="text-lime">● EDGE CACHED (14ms)</span>
+        </div>
+      </div>
+    );
+  }
 
-              <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-sand leading-snug">
-                {activeZone.name}
+  if (type === 'saas') {
+    return (
+      <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-[#04100f] border border-aqua/25 p-5 sm:p-7 overflow-hidden flex flex-col justify-between group">
+        <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-aqua/20 blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 dots opacity-40 pointer-events-none" />
+
+        {/* Header */}
+        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
+          <div className="flex items-center gap-2 font-mono text-xs text-aqua">
+            <Server size={15} />
+            <span>CLOUD CLUSTER // MULTI-REGION MESH</span>
+          </div>
+          <span className="px-2.5 py-0.5 rounded-full bg-aqua/15 text-aqua font-mono text-[10px] border border-aqua/30">
+            HEALTHY
+          </span>
+        </div>
+
+        {/* Interactive Node Stack */}
+        <div className="relative z-10 my-auto py-4 space-y-3">
+          {[
+            { region: 'US-EAST · Virginia Edge', qps: '42.8k req/s', lat: '4.2ms', bar: 'w-[92%]', c: 'bg-lime' },
+            { region: 'EU-CENTRAL · Frankfurt', qps: '31.4k req/s', lat: '7.8ms', bar: 'w-[78%]', c: 'bg-aqua' },
+            { region: 'AP-EAST · Tokyo Cluster', qps: '28.9k req/s', lat: '6.1ms', bar: 'w-[84%]', c: 'bg-lime' },
+          ].map((node, i) => (
+            <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/10 p-3.5 hover:border-aqua/40 transition-colors">
+              <div className="flex items-center justify-between text-xs font-mono mb-2">
+                <span className="text-sand font-semibold">{node.region}</span>
+                <span className="text-aqua">{node.qps} · <b className="text-lime">{node.lat}</b></span>
+              </div>
+              <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <div className={`h-full rounded-full ${node.c} ${node.bar} transition-all duration-700`} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+          <span>ZERO-DOWNTIME CI/CD</span>
+          <span className="text-aqua">● AUTO-SCALING: 64 PODS</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'ai') {
+    return (
+      <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-ink text-sand p-5 sm:p-7 overflow-hidden flex flex-col justify-between shadow-2xl group">
+        <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-lime/20 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
+          <div className="flex items-center gap-2 font-mono text-xs text-lime">
+            <Sparkles size={15} />
+            <span>AURA NEURAL AGENT // ORCHESTRATOR</span>
+          </div>
+          <span className="px-2.5 py-0.5 rounded-full bg-lime text-ink font-mono text-[10px] font-bold">
+            LIVE STREAM
+          </span>
+        </div>
+
+        {/* Neural Pipeline Steps */}
+        <div className="relative z-10 my-auto py-4 space-y-3 font-mono text-xs">
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-[10px] text-sand/40 block mb-1">01 // SEMANTIC VECTOR RETRIEVAL</span>
+            <p className="text-sand/90">Indexed 1.4M enterprise docs in <span className="text-lime font-bold">11.2ms</span></p>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-lime/10 border border-lime/30">
+            <span className="text-[10px] text-lime block mb-1">02 // AUTONOMOUS REASONING LOOP</span>
+            <p className="text-sand">Executing multi-step SQL & API tool calls with deterministic verification ✓</p>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] text-sand/40 block">03 // PRODUCTION OUTPUT</span>
+              <span className="text-aqua font-bold">Zero Hallucination Guardrails Passed</span>
+            </div>
+            <span className="w-8 h-8 rounded-full bg-lime text-ink flex items-center justify-center font-bold">✓</span>
+          </div>
+        </div>
+
+        <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+          <span>MODEL: CUSTOM RAG + CLAUDE / GPT</span>
+          <span className="text-lime">185 TOKENS / SEC</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile & Design Systems
+  return (
+    <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-ink text-sand p-5 sm:p-7 overflow-hidden flex flex-col justify-between shadow-2xl group">
+      <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-coral/25 blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
+        <div className="flex items-center gap-2 font-mono text-xs text-lime">
+          <Smartphone size={15} />
+          <span>120Hz NATIVE GESTURE ENGINE</span>
+        </div>
+        <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-sand font-mono text-[10px]">
+          iOS & ANDROID
+        </span>
+      </div>
+
+      {/* Dual Floating App Cards */}
+      <div className="relative z-10 my-auto py-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div className="rounded-2xl bg-gradient-to-br from-white/10 to-white/[0.03] border border-white/15 p-4 flex flex-col justify-between min-h-[170px] group-hover:-rotate-1 transition-transform duration-500">
+          <div className="flex items-center justify-between">
+            <span className="px-2.5 py-0.5 rounded-full bg-lime text-ink font-mono text-[10px] font-bold">APP STORE</span>
+            <span className="font-mono text-xs text-lime">★ 4.9</span>
+          </div>
+          <div>
+            <p className="font-display font-extrabold text-2xl text-sand mt-3">Fluid Touch Physics</p>
+            <p className="text-xs text-sand/60 mt-1">Spring-driven gestures & instant offline SQLite sync.</p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-gradient-to-br from-lime/20 to-aqua/10 border border-lime/30 p-4 flex flex-col justify-between min-h-[170px] group-hover:rotate-1 transition-transform duration-500">
+          <div className="flex items-center justify-between">
+            <span className="px-2.5 py-0.5 rounded-full bg-aqua text-ink font-mono text-[10px] font-bold">DESIGN TOKENS</span>
+            <Layers size={14} className="text-aqua" />
+          </div>
+          <div>
+            <p className="font-display font-extrabold text-2xl text-sand mt-3">60+ UI Primitives</p>
+            <p className="text-xs text-sand/70 mt-1">WCAG AAA accessible components synced with Figma.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+        <span>OTA INSTANT UPDATES</span>
+        <span className="text-lime">● 99.98% CRASH-FREE SESSIONS</span>
+      </div>
+    </div>
+  );
+}
+
+function StickyOverlapCard({ slide, index, total, scrollYProgress }) {
+  // As the user scrolls past this card's threshold, scale it down slightly so the next card overlaps with depth
+  const startScale = index * (1 / total);
+  const targetScale = 1 - (total - 1 - index) * 0.045;
+  const scale = useTransform(scrollYProgress, [startScale, 1], [1, targetScale]);
+
+  return (
+    <div
+      className="sticky w-full pb-12 sm:pb-16"
+      style={{
+        top: `calc(5.5rem + ${index * 22}px)`,
+        zIndex: index + 10,
+      }}
+    >
+      <motion.div
+        style={{ scale, transformOrigin: 'top center' }}
+        className={`relative w-full rounded-[2.2rem] sm:rounded-[3rem] border p-6 sm:p-10 lg:p-14 shadow-[0_-25px_70px_-15px_rgba(0,0,0,0.75)] overflow-hidden transition-colors ${slide.theme.cardBg}`}
+      >
+        {/* Background gradient glow */}
+        <div className={`absolute -top-32 -left-32 w-[32rem] h-[32rem] rounded-full bg-gradient-to-br ${slide.theme.glow} blur-3xl pointer-events-none`} />
+
+        {/* Top Index & Category Bar */}
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-current/10">
+          <div className="flex items-center gap-3">
+            <span className={`px-3.5 py-1 rounded-full font-mono text-xs font-bold border ${slide.theme.pillBg}`}>
+              {slide.tag}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 font-mono text-xs opacity-60">
+            <span>SCROLL TO OVERLAP</span>
+            <span>↓</span>
+          </div>
+        </div>
+
+        {/* Main 12-Col Content Grid */}
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column: Editorial Typography & Capabilities */}
+          <div className="lg:col-span-7 flex flex-col justify-between">
+            <div>
+              <h3 className="font-display font-extrabold text-[clamp(2.4rem,5.2vw,4.75rem)] leading-[0.94] tracking-tight">
+                {slide.title[0]}
+                <span className={`block ${slide.theme.accentText}`}>{slide.title[1]}</span>
               </h3>
-              <p className="font-mono text-xs text-sand/50 mt-1">
-                ZONE ID: {activeZone.id.toUpperCase()} // SENSOR ID: SEN-4482
+
+              <p className="mt-5 text-base sm:text-lg opacity-80 max-w-2xl leading-relaxed">
+                {slide.subtitle}
               </p>
 
-              {/* Real-time Oscilloscope Telemetry Sparkline */}
-              <div className="my-6 p-4 rounded-2xl bg-black/40 border border-white/10">
-                <div className="flex items-center justify-between mb-2 font-mono text-[10px] text-sand/50">
-                  <span>LIVE SENSOR TELEMETRY</span>
-                  <span className="text-lime">100Hz FEED</span>
-                </div>
-                <svg viewBox="0 0 280 40" className="w-full h-10">
-                  <path
-                    d="M0,20 Q35,5 70,20 T140,20 T210,10 T280,20"
-                    fill="none"
-                    stroke={isHot ? '#ff6b4a' : '#c8ff4d'}
-                    strokeWidth="2"
-                    className="opacity-80"
-                  />
-                  <path
-                    d="M0,20 Q35,5 70,20 T140,20 T210,10 T280,20 L280,40 L0,40 Z"
-                    fill={isHot ? 'rgba(255,107,74,0.1)' : 'rgba(200,255,77,0.1)'}
-                  />
-                </svg>
-              </div>
+              {/* Key Deliverables */}
+              <ul className="mt-6 space-y-2.5">
+                {slide.bullets.map((b, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-sm sm:text-base opacity-90">
+                    <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold ${slide.theme.pillBg}`}>
+                      ✓
+                    </span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
 
-              {/* 4 Sensor Gauges */}
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Zap size={14} className={isHot ? 'text-coral' : 'text-lime'} />
-                    <span>Render Rate</span>
-                  </div>
-                  <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    120 <span className="text-xs font-normal">FPS</span>
-                  </p>
-                  <p className="font-mono text-[10px] text-sand/40">Zero Frame Drops</p>
-                </div>
-
-                <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Activity size={14} className="text-aqua" />
-                    <span>Interactive Nodes</span>
-                  </div>
-                  <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    {activeZone.occ * 8}
-                  </p>
-                  <p className="font-mono text-[10px] text-sand/40">Active GLSL Particles</p>
-                </div>
-
-                <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Cpu size={14} className="text-sand/70" />
-                    <span>Shader Compute</span>
-                  </div>
-                  <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    0.8 <span className="text-xs font-normal">ms</span>
-                  </p>
-                  <p className="font-mono text-[10px] text-sand/40">Sub-millisecond Latency</p>
-                </div>
-
-                <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-2 text-sand/60 text-xs font-mono mb-1">
-                    <Sparkles size={14} className="text-sand/70" />
-                    <span>Craft Index</span>
-                  </div>
-                  <p className="font-display font-bold text-2xl text-sand tabular-nums">
-                    99.8<span className="text-xs font-normal">%</span>
-                  </p>
-                  <p className="font-mono text-[10px] text-sand/40">Aura Precision Standard</p>
-                </div>
-              </div>
-
-              {/* Status Notice */}
-              <div className="flex items-start gap-2.5 text-xs text-sand/70 leading-relaxed bg-white/5 p-3 rounded-2xl border border-white/5">
-                <Sparkles size={16} className="text-lime shrink-0 mt-0.5" />
-                <span>
-                  {isBalanced
-                    ? 'Aura Studio dynamic shaders and lighting models optimized. Real-time render pipeline operates at peak fluid craft.'
-                    : isHot
-                    ? 'Sprint delivery velocity elevated. Creative engineering squad engaged on interactive physics.'
-                    : 'Studio discipline operating within target aesthetic and performance parameters.'}
-                </span>
+              {/* Tech Stack Pills */}
+              <div className="mt-7 flex flex-wrap gap-2">
+                {slide.stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className={`px-3.5 py-1.5 rounded-full font-mono text-xs border ${slide.theme.tagChip}`}
+                  >
+                    {tech}
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Action Trigger Button */}
-            <div className="mt-6 pt-4 border-t border-white/10">
-              <WaterButton
-                variant={isBalanced ? 'ghost' : 'solid'}
-                className="w-full !py-4 text-sm"
-                onClick={() => handleAutoAdjust(activeZone.id)}
-              >
-                {isBalanced ? (
-                  <>
-                    <Check size={16} className="text-lime" /> Pipeline Optimized
-                  </>
-                ) : (
-                  <>
-                    <Zap size={16} /> Trigger Interactive Pulse
-                  </>
-                )}
+            {/* Bottom Stat + CTA Row */}
+            <div className="mt-8 pt-6 border-t border-current/10 flex flex-wrap items-center justify-between gap-6">
+              <div>
+                <div className={`font-display font-extrabold text-4xl sm:text-5xl leading-none ${slide.theme.accentText}`}>
+                  {slide.statVal}
+                </div>
+                <div className="font-mono text-xs opacity-65 mt-1">{slide.statLabel}</div>
+              </div>
+
+              <WaterButton to="/contact" variant={slide.theme.btnVariant} className="!px-7 !py-4 text-sm">
+                Build with this stack <ArrowUpRight size={16} />
               </WaterButton>
             </div>
+          </div>
+
+          {/* Right Column: Layered Visual Art */}
+          <div className="lg:col-span-5 h-full">
+            <SlideVisualArt type={slide.visualType} index={index} />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export function SoftwareSolutionsBento() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+
+  return (
+    <div ref={containerRef} className="relative w-full pt-4">
+      {OVERLAP_SLIDES.map((slide, index) => (
+        <StickyOverlapCard
+          key={slide.id}
+          slide={slide}
+          index={index}
+          total={OVERLAP_SLIDES.length}
+          scrollYProgress={scrollYProgress}
+        />
+      ))}
+    </div>
+  );
+}
+
+export const NeuralSpatialCore = SoftwareSolutionsBento;
+export const SoftwareEngineCore = SoftwareSolutionsBento;
+
+
+/* ============================================================================
+ * 2. AWWWARDS HORIZONTAL SCROLL SHOWCASE + KINETIC CURTAIN LIST (Replaces SpaceExplorer)
+ * Part A: Pinned Horizontal Scroll Case-Study & Architecture Gallery on vertical scroll
+ * Part B: Interactive Hover-Curtain Capabilities List
+ * ============================================================================ */
+const HORIZONTAL_REEL = [
+  {
+    num: '01',
+    client: 'KINETIX LUXURY',
+    category: 'Headless Web Flagship · Next.js 15 & WebGL',
+    metric: '+310% Conversion Lift',
+    title: 'Global E-Commerce & Interactive 3D Configurator',
+    desc: 'Sub-second global page loads paired with real-time physical shaders and instant Stripe one-click checkout.',
+    accent: 'from-lime/30 via-aqua/15 to-ink',
+    badgeColor: 'bg-lime text-ink',
+    tags: ['Next.js 15', 'WebGL Shaders', 'Headless Shopify', '0.3s LCP'],
+  },
+  {
+    num: '02',
+    client: 'HYPERION FINTECH',
+    category: 'High-Frequency Web Platform · Rust & React 19',
+    metric: '4ms Socket Latency',
+    title: 'Real-Time Institutional Trading & Analytics Terminal',
+    desc: 'Streaming WebSocket order books, multi-window workspace management, and bank-grade SOC 2 encryption.',
+    accent: 'from-aqua/30 via-lime/10 to-ink',
+    badgeColor: 'bg-aqua text-ink',
+    tags: ['React 19', 'Rust WASM', 'WebSockets', '99.999% SLA'],
+  },
+  {
+    num: '03',
+    client: 'SYNAPSE AI LABS',
+    category: 'Agentic SaaS Platform · Python, RAG & Vector DB',
+    metric: '10× Workflow Speed',
+    title: 'Autonomous Multi-Agent Enterprise Workspace',
+    desc: 'Custom LLM orchestration and hybrid semantic search over 10M+ proprietary documents with zero data leakage.',
+    accent: 'from-coral/30 via-lime/15 to-ink',
+    badgeColor: 'bg-coral text-ink',
+    tags: ['OpenAI / Claude', 'pgvector', 'FastAPI', 'Multi-Agent'],
+  },
+  {
+    num: '04',
+    client: 'ORBITAL CLOUD',
+    category: 'Distributed Microservices · Go & Kubernetes',
+    metric: '48M Daily Requests',
+    title: 'Global Multi-Region API Mesh & DevOps Portal',
+    desc: 'Zero-downtime canary deployments, automated container auto-scaling, and real-time telemetry across 140 edge PoPs.',
+    accent: 'from-lime/25 via-sand/15 to-ink',
+    badgeColor: 'bg-sand text-ink',
+    tags: ['Golang', 'Kubernetes', 'GraphQL Mesh', 'Terraform'],
+  },
+  {
+    num: '05',
+    client: 'VORTEX MOBILE',
+    category: 'iOS & Android Super-App · React Native',
+    metric: '4.9★ App Store (2.4M Users)',
+    title: '120Hz Cross-Platform Consumer Fintech App',
+    desc: 'Silky gesture-driven navigation, biometric passkeys, and instant offline-first SQLite synchronization.',
+    accent: 'from-aqua/30 via-coral/15 to-ink',
+    badgeColor: 'bg-lime text-ink',
+    tags: ['React Native', '120Hz Reanimated', 'Biometrics', 'Offline Sync'],
+  },
+];
+
+const KINETIC_ROWS = [
+  { num: '01', name: 'Custom Web Applications', detail: 'Next.js 15 · React 19 · GSAP · Sub-Second LCP', stat: '100/100 Vitals' },
+  { num: '02', name: 'Full-Stack SaaS Platforms', detail: 'Multi-Tenant · Stripe Billing · SSO & RBAC', stat: '99.999% Uptime' },
+  { num: '03', name: 'AI Agents & LLM Workflows', detail: 'Custom RAG · Vector Search · Tool Calling', stat: '10× Efficiency' },
+  { num: '04', name: 'Cloud & API Microservices', detail: 'Go · Node.js · GraphQL · Kubernetes · AWS', stat: '<8ms Latency' },
+  { num: '05', name: 'Mobile Apps & Design Systems', detail: 'iOS & Android · React Native · Figma Tokens', stat: '4.9★ Rated' },
+];
+
+export function TechStackAndWhyUs() {
+  const scrollRef = useRef(null);
+  const [hoveredRow, setHoveredRow] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ['start start', 'end end'],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 26, mass: 0.25 });
+
+  // Horizontal translation for the 5-card reel
+  const xReel = useTransform(smoothProgress, [0, 1], ['0%', '-66%']);
+  // Counter-moving giant background typography
+  const xBgText = useTransform(smoothProgress, [0, 1], ['-10%', '18%']);
+
+  return (
+    <div className="w-full space-y-24">
+      {/* PART A: PINNED HORIZONTAL SCROLL SHOWCASE REEL */}
+      <div ref={scrollRef} className="relative h-[270vh]">
+        <div className="sticky top-20 h-[84vh] flex flex-col justify-between overflow-hidden rounded-[2.5rem] sm:rounded-[3rem] border border-white/10 bg-[#060d0c]/90 backdrop-blur-xl p-6 sm:p-10 shadow-2xl">
+          {/* Giant Counter-Moving Background Watermark */}
+          <motion.div
+            style={{ x: xBgText }}
+            className="pointer-events-none select-none absolute top-1/2 -translate-y-1/2 left-0 whitespace-nowrap font-display font-extrabold text-[18vw] leading-none text-transparent opacity-25"
+          >
+            <span style={{ WebkitTextStroke: '1px rgba(200, 255, 77, 0.22)' }}>
+              AURA ENGINEERING // SELECTED SHOWCASE // 2026 //
+            </span>
           </motion.div>
+
+          {/* Top Bar inside Pinned Stage */}
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-lime animate-ping" />
+              <span className="font-mono text-xs uppercase tracking-widest text-lime font-bold">
+                HORIZONTAL SCROLL REEL // ENGINEERED FLAGSHIPS
+              </span>
+            </div>
+
+            {/* Scroll Progress Scrubber */}
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-xs text-sand/50 hidden sm:inline">SCROLL DOWN TO GLIDE →</span>
+              <div className="w-32 sm:w-44 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <motion.div
+                  style={{ scaleX: smoothProgress, transformOrigin: 'left' }}
+                  className="w-full h-full bg-gradient-to-r from-lime to-aqua"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Horizontal Sliding Track */}
+          <div className="relative z-10 my-auto flex items-center">
+            <motion.div style={{ x: xReel }} className="flex gap-6 sm:gap-8 pr-[30vw] will-change-transform">
+              {HORIZONTAL_REEL.map((item) => (
+                <Link
+                  to="/customers"
+                  key={item.num}
+                  data-hot
+                  className="group relative w-[82vw] sm:w-[56vw] lg:w-[42vw] shrink-0 min-h-[370px] sm:min-h-[430px] rounded-[2.2rem] border border-white/15 bg-[#0a1514] p-7 sm:p-10 flex flex-col justify-between overflow-hidden hover:border-lime/60 transition-colors duration-500"
+                >
+                  {/* Dynamic Gradient Backdrop */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${item.accent} opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700`} />
+                  <div className="absolute inset-0 dots opacity-40" />
+
+                  {/* Giant Background Number */}
+                  <span className="pointer-events-none select-none absolute -right-4 -bottom-8 font-display font-extrabold text-[11rem] sm:text-[14rem] leading-none text-white/[0.04] group-hover:text-lime/[0.09] transition-colors duration-500">
+                    {item.num}
+                  </span>
+
+                  {/* Card Top */}
+                  <div className="relative z-10 flex items-center justify-between gap-3">
+                    <div>
+                      <span className="font-mono text-[11px] uppercase tracking-widest text-sand/60 block">
+                        {item.client}
+                      </span>
+                      <span className="font-mono text-xs text-lime">{item.category}</span>
+                    </div>
+                    <span className={`px-3.5 py-1.5 rounded-full font-mono text-xs font-bold ${item.badgeColor}`}>
+                      {item.metric}
+                    </span>
+                  </div>
+
+                  {/* Card Middle: Title & Description */}
+                  <div className="relative z-10 my-6">
+                    <h4 className="font-display font-extrabold text-2xl sm:text-4xl text-sand leading-[1.05] group-hover:text-lime transition-colors">
+                      {item.title}
+                    </h4>
+                    <p className="mt-3 text-sm sm:text-base text-sand/70 max-w-lg leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  {/* Card Bottom: Tech Tags & Magnetic Arrow */}
+                  <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between gap-4">
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.tags.map((t) => (
+                        <span key={t} className="px-3 py-1 rounded-full bg-black/40 border border-white/10 font-mono text-[11px] text-sand/80">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="w-11 h-11 rounded-full bg-sand text-ink flex items-center justify-center shrink-0 group-hover:bg-lime group-hover:rotate-45 transition-all duration-500">
+                      <ArrowUpRight size={20} />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Bottom Bar inside Pinned Stage */}
+          <div className="relative z-10 flex items-center justify-between pt-4 border-t border-white/10 font-mono text-xs text-sand/50">
+            <span>01 — 05 PRODUCTION FLAGSHIPS</span>
+            <Link to="/customers" className="text-lime hover:underline inline-flex items-center gap-1.5 font-bold">
+              Explore all case studies <ArrowUpRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* PART B: AWWWARDS KINETIC HOVER-CURTAIN CAPABILITIES MATRIX */}
+      <div className="rounded-[2.5rem] sm:rounded-[3rem] border border-white/10 bg-[#071110]/90 p-6 sm:p-12 shadow-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8 mb-4 border-b border-white/10">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-lime font-bold block mb-2">
+              // INTERACTIVE CAPABILITIES INDEX
+            </span>
+            <h3 className="font-display font-extrabold text-3xl sm:text-5xl text-sand leading-none">
+              Full-stack mastery. Zero templates.
+            </h3>
+          </div>
+          <span className="font-mono text-xs text-sand/50">HOVER ANY DISCIPLINE TO EXPAND</span>
+        </div>
+
+        <div className="divide-y divide-white/10">
+          {KINETIC_ROWS.map((row, i) => {
+            const isActive = hoveredRow === i;
+            return (
+              <Link
+                to="/product"
+                key={row.num}
+                data-hot
+                onMouseEnter={() => setHoveredRow(i)}
+                className="group relative block py-7 sm:py-9 px-4 sm:px-6 overflow-hidden rounded-2xl transition-colors"
+              >
+                {/* Sliding Lime Curtain Background on Hover */}
+                <motion.div
+                  initial={false}
+                  animate={{
+                    scaleY: isActive ? 1 : 0,
+                    opacity: isActive ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ transformOrigin: 'bottom' }}
+                  className="absolute inset-0 bg-lime pointer-events-none z-0 rounded-2xl"
+                />
+
+                <div className="relative z-10 grid grid-cols-12 items-center gap-4">
+                  <span className={`col-span-2 sm:col-span-1 font-mono text-sm font-bold transition-colors duration-300 ${isActive ? 'text-ink' : 'text-lime'}`}>
+                    /{row.num}
+                  </span>
+
+                  <div className="col-span-10 sm:col-span-6">
+                    <h4 className={`font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight transition-all duration-500 ${isActive ? 'text-ink translate-x-3' : 'text-sand'}`}>
+                      {row.name}
+                    </h4>
+                  </div>
+
+                  <div className={`col-span-8 sm:col-span-3 font-mono text-xs sm:text-sm transition-colors duration-300 ${isActive ? 'text-ink/80 font-semibold' : 'text-sand/55'}`}>
+                    {row.detail}
+                  </div>
+
+                  <div className="col-span-4 sm:col-span-2 flex justify-end items-center gap-3">
+                    <span className={`hidden xl:inline-block px-3 py-1 rounded-full font-mono text-xs font-bold border transition-colors duration-300 ${isActive ? 'bg-ink text-lime border-ink' : 'bg-white/5 text-sand/70 border-white/10'}`}>
+                      {row.stat}
+                    </span>
+                    <span className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${isActive ? 'bg-ink text-lime rotate-45 scale-110' : 'border border-white/20 text-sand'}`}>
+                      <ArrowUpRight size={18} />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 }
+
+export const SpaceExplorer = TechStackAndWhyUs;

@@ -38,7 +38,7 @@ function MainLayout() {
   }, [location.pathname]);
 
   return (
-    <div className="relative bg-ink text-sand min-h-screen overflow-x-hidden">
+    <div className="relative bg-ink text-sand min-h-screen [overflow-x:clip]">
       <ScrollProgress />
       <WebGLBackground />
       <CustomCursor />

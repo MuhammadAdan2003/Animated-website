@@ -4,14 +4,25 @@ import { Plus, Minus, Check, Quote, ArrowUpRight, Star } from 'lucide-react';
 import { Heading, Reveal, WaterButton, Marquee, Magnetic, Eyebrow, Counter } from './ui.jsx';
 
 /* ---------------- Page hero (inner pages) ---------------- */
-export function PageHero({ eyebrow, lines, text, children }) {
+export function PageHero({ eyebrow, lines, text, children, className = '' }) {
   return (
-    <section className="relative gutter pt-44 pb-20 sm:pb-28">
-      <Eyebrow className="text-lime mb-8">{eyebrow}</Eyebrow>
-      <Heading as="h1" lines={lines} className="font-display font-extrabold text-[clamp(3rem,9vw,9rem)] leading-[0.95] text-sand" />
-      <div className="mt-10 flex flex-col lg:flex-row gap-8 lg:items-end justify-between">
-        <Reveal delay={0.3} className="max-w-2xl text-lg sm:text-xl text-sand/65 leading-relaxed">{text}</Reveal>
-        {children && <Reveal delay={0.4}>{children}</Reveal>}
+    <section className={`relative gutter pt-36 sm:pt-48 pb-18 sm:pb-24 overflow-hidden ${className}`}>
+      {/* Background Subtle Ambient Aura Glow */}
+      <div className="pointer-events-none absolute top-20 left-1/4 w-[34rem] h-[22rem] bg-lime/10 blur-[130px] rounded-full" />
+
+      <Reveal y={15} delay={0.1}>
+        <Eyebrow className="text-lime mb-6">{eyebrow}</Eyebrow>
+      </Reveal>
+      <Heading
+        as="h1"
+        lines={lines}
+        className="font-display font-extrabold text-[clamp(3.2rem,8.4vw,9.2rem)] leading-[0.93] tracking-[-0.04em] text-sand"
+      />
+      <div className="mt-10 sm:mt-12 flex flex-col lg:flex-row gap-8 lg:items-end justify-between">
+        <Reveal delay={0.25} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
+          {text}
+        </Reveal>
+        {children && <Reveal delay={0.35} className="shrink-0">{children}</Reveal>}
       </div>
     </section>
   );
@@ -22,7 +33,7 @@ export function SectionHead({ eyebrow, lines, text, light = false, className = '
     <div className={`flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14 ${className}`}>
       <div>
         <Eyebrow className={`mb-6 ${light ? 'text-ink/70' : 'text-lime'}`}>{eyebrow}</Eyebrow>
-        <Heading lines={lines} className={`font-display font-extrabold text-[clamp(2.4rem,6vw,5.5rem)] leading-[1] ${light ? 'text-ink' : 'text-sand'}`} />
+        <Heading lines={lines} className={`font-display font-extrabold text-[clamp(2rem,4.6vw,4.25rem)] leading-[1.02] ${light ? 'text-ink' : 'text-sand'}`} />
       </div>
       {text && <Reveal className={`max-w-md text-lg leading-relaxed ${light ? 'text-ink/65' : 'text-sand/60'}`}>{text}</Reveal>}
     </div>
@@ -37,16 +48,21 @@ export function DashboardMock() {
     <div className="relative">
       <div className="absolute -inset-10 bg-gradient-to-r from-lime/15 via-aqua/10 to-transparent blur-3xl rounded-full pointer-events-none" />
       <div className="relative glass rounded-[2.5rem] p-3 sm:p-5 border border-white/10 shadow-2xl">
-        <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 mb-2">
+        <div className="flex items-center justify-between px-3 py-2.5 border-b border-white/10 mb-2">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-coral/80" />
             <span className="w-3 h-3 rounded-full bg-lime/80" />
             <span className="w-3 h-3 rounded-full bg-aqua/80" />
-            <span className="ml-3 font-mono text-[11px] text-sand/50">aura.app // telemetry // realtime-stream</span>
+            <span className="ml-3 font-mono text-[11px] text-sand/60">
+              aura.engine // telemetry // live-stream
+            </span>
           </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
-            <span className="font-mono text-[10px] text-lime uppercase tracking-widest">Connected (WebSockets: 14ms)</span>
+          <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] text-lime uppercase tracking-wider">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-lime" />
+            </span>
+            <span>140 EDGE POPS ACTIVE · P99: 8.4ms</span>
           </div>
         </div>
 
@@ -54,18 +70,24 @@ export function DashboardMock() {
         <LiveDashboard />
       </div>
 
-      <div className="hidden md:flex absolute -left-6 -bottom-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/10 shadow-xl backdrop-blur-xl">
-        <span className="w-10 h-10 rounded-xl bg-lime/20 text-lime flex items-center justify-center font-bold">✓</span>
+      <div className="hidden md:flex absolute -left-6 -bottom-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/15 shadow-2xl backdrop-blur-xl">
+        <div className="relative w-10 h-10 rounded-xl bg-lime/20 text-lime flex items-center justify-center font-bold">
+          <div className="absolute inset-0 rounded-xl border border-lime/30 pulse-ring" />
+          <span className="text-lime text-base font-bold">✓</span>
+        </div>
         <div>
-          <p className="text-sm font-bold text-sand">Interactive 3D Engine Active</p>
-          <p className="text-xs text-sand/50">Rendered at 120 FPS // Zero latency</p>
+          <p className="text-sm font-bold text-sand">Next.js 15 Web Platform Active</p>
+          <p className="text-xs text-sand/50 font-mono">0.3s LCP · 100/100 Lighthouse Vitals</p>
         </div>
       </div>
-      <div className="hidden md:flex absolute -right-6 -top-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/10 shadow-xl backdrop-blur-xl" style={{ animationDelay: '-3.5s' }}>
-        <span className="w-10 h-10 rounded-xl bg-aqua/20 text-aqua flex items-center justify-center"><Check size={18} /></span>
+      <div className="hidden md:flex absolute -right-6 -top-6 glass rounded-2xl p-4 items-center gap-3 animate-float border border-white/15 shadow-2xl backdrop-blur-xl" style={{ animationDelay: '-3.5s' }}>
+        <div className="relative w-10 h-10 rounded-xl bg-aqua/20 text-aqua flex items-center justify-center">
+          <div className="absolute inset-0 rounded-xl border border-aqua/30 pulse-ring" style={{ animationDelay: '1s' }} />
+          <Check size={18} className="text-aqua" />
+        </div>
         <div>
-          <p className="text-sm font-bold text-sand">Aura Creative Lab Shipped</p>
-          <p className="text-xs text-sand/50">FWA of the Month & Site of the Day</p>
+          <p className="text-sm font-bold text-sand">Multi-Region Cloud Mesh</p>
+          <p className="text-xs text-sand/50 font-mono">99.999% SLA Uptime Assured</p>
         </div>
       </div>
     </div>
@@ -77,7 +99,7 @@ const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO/LAB', 'Meridian', 'ORBITAL', 'Fo
 export function LogoCloud() {
   return (
     <section className="relative py-14 border-y border-white/10 bg-ink/40 backdrop-blur-sm">
-      <p className="text-center font-mono text-[11px] tracking-[0.2em] uppercase text-sand/40 mb-8">Trusted by industry pioneers & category-defining global brands</p>
+      <p className="text-center font-mono text-[11px] tracking-[0.2em] uppercase text-sand/40 mb-8">Trusted by visionary tech founders, enterprise leaders & scaling startups</p>
       <Marquee items={LOGOS} itemClass="font-display font-extrabold text-3xl text-sand/35 hover:text-lime transition-colors" />
     </section>
   );
@@ -86,9 +108,9 @@ export function LogoCloud() {
 /* ---------------- Stats ---------------- */
 export function StatsBand({ light = false }) {
   const stats = [
-    { to: 140, s: '+', l: 'Global Design & FWA Awards' },
-    { to: 98, s: '%', l: 'Client Partnership Retention' },
-    { to: 450, s: 'M', l: 'Global Audiences Engaged' },
+    { to: 140, s: '+', l: 'Global Web & Software Awards' },
+    { to: 99.9, s: '%', l: 'Production SLA & Uptime Record', d: 1 },
+    { to: 450, s: 'M', l: 'Monthly API Requests Handled' },
     { to: 4.9, s: '/5', l: 'Client Satisfaction Rating', d: 1 },
   ];
   return (
@@ -105,9 +127,9 @@ export function StatsBand({ light = false }) {
 
 /* ---------------- Testimonials ---------------- */
 const QUOTES = [
-  { q: 'Aura transformed our digital presence into an intoxicating, award-winning digital flagship. Our inbound enterprise pipeline tripled within 60 days of launch.', n: 'Julian Sterling', r: 'Chief Brand Officer, Kinetix Luxury', c: 'bg-lime text-ink' },
-  { q: 'The creative engineering mastery here is unmatched. They delivered real-time WebGL spatial shaders and a fluid design system on schedule with zero compromises.', n: 'Aya Takahashi', r: 'Global Head of Design, Kyoto Interactive', c: 'bg-ink3 text-sand' },
-  { q: 'Working with Aura felt like collaborating with the world’s most visionary minds. They push the boundaries of what is possible on the web while obsessing over every pixel.', n: 'Marc Vance', r: 'Founder & CEO, Horizon Spatial', c: 'bg-sand text-ink' },
+  { q: 'Aura completely modernized our customer platform into a blistering, high-converting digital web flagship. Page load dropped to 0.4s and enterprise conversions tripled within 60 days of launch.', n: 'Julian Sterling', r: 'Chief Technology Officer, Kinetix Luxury', c: 'bg-lime text-ink' },
+  { q: 'The full-stack engineering rigor here is unmatched. They delivered distributed microservices, a custom React 19 design system, and sub-second APIs with zero technical compromises.', n: 'Aya Takahashi', r: 'VP of Engineering, Kyoto Systems', c: 'bg-ink3 text-sand' },
+  { q: 'Collaborating with Aura felt like having the world’s elite software engineering minds in our corner. They push the boundaries of modern web applications while obsessing over clean architecture.', n: 'Marc Vance', r: 'Founder & CEO, Horizon Cloud', c: 'bg-sand text-ink' },
 ];
 export function Testimonials() {
   return (
@@ -156,9 +178,9 @@ export function FAQ({ items }) {
 
 /* ---------------- Partnership Models / Pricing ---------------- */
 export const PLANS = [
-  { name: 'Flagship Sprint', m: 18500, y: 16000, d: 'For ambitious brands launching a category-defining web experience or campaign.', f: ['4-week high-velocity sprint', 'Dedicated Art Director & Creative Engineer', 'Bespoke 3D WebGL & micro-interactions', 'Performance optimization (<0.8s LCP)', 'Complete design tokens & source code'], cta: 'Inquire for Sprint' },
-  { name: 'Studio Pod', m: 32000, y: 28000, d: 'Our flagship embedded agency partnership for high-growth tech & enterprise leaders.', f: ['Full multidisciplinary pod (Design + Tech)', 'Continuous sprint delivery & roadmap execution', 'Generative AI & spatial computing systems', 'Private Slack war-room & daily syncs', 'Unlimited high-craft iterations'], cta: 'Book Studio Pod', hot: true },
-  { name: 'Venture Transformation', m: null, y: null, d: 'For global enterprises undergoing full-scale brand & digital metamorphosis.', f: ['Comprehensive multi-quarter engagement', 'End-to-end brand architecture & design system', 'Proprietary custom 3D / spatial software', 'Global rollout & engineering team onboarding', 'Executive creative directorship'], cta: 'Request Executive Briefing' },
+  { name: 'Web Flagship Sprint', m: 18500, y: 16000, d: 'For startups & brands launching high-performance web applications, SaaS MVPs, or brand flagships.', f: ['4-week high-velocity engineering sprint', 'Dedicated Lead Full-Stack & UI/UX Engineer', 'Next.js 15, React 19 & bespoke WebGL shaders', 'Core Web Vitals optimization (<0.6s LCP, 100 Perf)', 'Production source code, CI/CD pipeline & docs'], cta: 'Inquire for Sprint' },
+  { name: 'Dedicated Engineering Pod', m: 32000, y: 28000, d: 'Our flagship embedded agency partnership for high-growth tech companies & enterprise products.', f: ['Full multidisciplinary pod (Lead, Frontend, Backend, DevOps)', 'Continuous sprint delivery & roadmap execution', 'Custom software, microservices & AI automation', 'Private Slack war-room & daily standups', 'Unlimited code reviews & performance audits'], cta: 'Book Engineering Pod', hot: true },
+  { name: 'Enterprise Transformation', m: null, y: null, d: 'For enterprise organizations modernizing legacy monolithic software into distributed cloud systems.', f: ['Comprehensive multi-quarter cloud transformation', 'End-to-end cloud architecture & distributed microservices', 'Custom enterprise software & AI workflow pipelines', 'Global multi-region cloud deployment & SOC 2 compliance', 'Executive technical directorship & team training'], cta: 'Request Technical Briefing' },
 ];
 export function PricingCards({ yearly }) {
   return (
@@ -201,14 +223,14 @@ export function Newsletter() {
   return (
     <div className="panel rounded-[2rem] p-8 sm:p-12 flex flex-col lg:flex-row gap-8 lg:items-center justify-between">
       <div className="max-w-xl">
-        <h3 className="font-display font-extrabold text-3xl sm:text-4xl">The Aura Perspective</h3>
-        <p className="text-sand/60 mt-3">Monthly curated essays on spatial computing, avant-garde web engineering, generative aesthetics, and the future of brand craft.</p>
+        <h3 className="font-display font-extrabold text-3xl sm:text-4xl">The Engineering Perspective</h3>
+        <p className="text-sand/60 mt-3">Monthly curated essays on modern web architecture, Next.js / React 19, distributed cloud infrastructure, and generative AI engineering.</p>
       </div>
       {done ? (
-        <p className="text-lime font-bold flex items-center gap-2"><Check size={18} /> Welcome to the inner circle.</p>
+        <p className="text-lime font-bold flex items-center gap-2"><Check size={18} /> Welcome to the developer circle.</p>
       ) : (
         <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} className="flex flex-col sm:flex-row gap-3 w-full lg:w-[480px]">
-          <input id="newsletter-email" required type="email" placeholder="you@luxurybrand.com" className="field" />
+          <input id="newsletter-email" required type="email" placeholder="you@techcompany.com" className="field" />
           <WaterButton type="submit" variant="solid">Join dispatch</WaterButton>
         </form>
       )}
@@ -222,11 +244,11 @@ export function CTABand() {
     <section className="relative z-10 bg-lime text-ink gutter py-28 sm:py-40 overflow-hidden">
       <div className="absolute -right-32 -top-32 w-[40rem] h-[40rem] rounded-full border-[3rem] border-ink/5" />
       <div className="absolute -right-10 -bottom-48 w-[30rem] h-[30rem] rounded-full border-[2rem] border-ink/5" />
-      <Eyebrow className="text-ink/70 mb-8">Ready to define what comes next?</Eyebrow>
-      <Heading as="h2" lines={['Let’s create something', 'unforgettable together.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
+      <Eyebrow className="text-ink/70 mb-8">Ready to engineer what comes next?</Eyebrow>
+      <Heading as="h2" lines={['Let’s build something', 'extraordinary together.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
       <Reveal delay={0.2} className="mt-12 flex flex-wrap gap-4">
         <Magnetic><WaterButton to="/contact" variant="dark" className="!px-10 !py-5 text-base">Start a project <ArrowUpRight size={18} /></WaterButton></Magnetic>
-        <WaterButton to="/pricing" variant="light" className="!px-10 !py-5 text-base border border-ink/20">View engagements</WaterButton>
+        <WaterButton to="/pricing" variant="light" className="!px-10 !py-5 text-base border border-ink/20">View engineering models</WaterButton>
       </Reveal>
     </section>
   );

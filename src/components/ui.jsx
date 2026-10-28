@@ -11,14 +11,13 @@ gsap.registerPlugin(ScrollTrigger);
  * extraDelay gives the page curtain time to lift for above-the-fold items.
  * Includes a safety fallback so content can never stay hidden.
  * ------------------------------------------------------------------ */
-export function useInView(margin = '0px 0px -6% 0px') {
+export function useInView(margin = '0px 0px -4% 0px') {
   const ref = useRef(null);
   const [state, setState] = useState({ on: false, extra: 0 });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const mounted = performance.now();
-    const fire = () => setState({ on: true, extra: performance.now() - mounted < 1500 ? 0.55 : 0 });
+    const fire = () => setState({ on: true, extra: 0 });
     if (typeof IntersectionObserver === 'undefined') { fire(); return; }
     const io = new IntersectionObserver(
       (entries) => { if (entries.some((e) => e.isIntersecting)) { fire(); io.disconnect(); } },
@@ -26,7 +25,7 @@ export function useInView(margin = '0px 0px -6% 0px') {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [margin]);
   return [ref, state.on, state.extra];
 }
 

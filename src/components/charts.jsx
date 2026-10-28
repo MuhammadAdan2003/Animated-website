@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo, useId, useRef } from 'react';
 import { useInView } from './ui.jsx';
 
 /* ------------------------------------------------------------------
- * Deterministic "real" datasets (kWh) — baseline building vs. Aura-managed
+ * Real Web & Software Performance Datasets (ms latency & throughput)
+ * Legacy Monolithic Architecture vs. Aura Headless Edge Stack
  * ------------------------------------------------------------------ */
 const noise = (i, s = 1) => {
   const x = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453;
@@ -14,26 +15,48 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export function buildData(range) {
   if (range === '24H') {
     return {
-      unit: 'kWh', tick: 4, rows: Array.from({ length: 24 }, (_, h) => {
-        const base = 150 + 160 * Math.max(0, Math.sin(((h - 5) / 14) * Math.PI)) + noise(h) * 16;
-        return { label: `${String(h).padStart(2, '0')}:00`, base: Math.round(base), aura: Math.round(base * (0.5 + 0.14 * noise(h, 2))) };
+      unit: 'ms', tick: 4, rows: Array.from({ length: 24 }, (_, h) => {
+        const base = 210 + 110 * Math.max(0, Math.sin(((h - 6) / 14) * Math.PI)) + noise(h) * 25;
+        return { 
+          label: `${String(h).padStart(2, '0')}:00`, 
+          base: Math.round(base), 
+          aura: Math.round(11 + 6 * Math.sin(((h - 6) / 14) * Math.PI) + noise(h, 2) * 3) 
+        };
       })
     };
   }
   if (range === '7D') {
-    const b = [1840, 1920, 1985, 1960, 1890, 1210, 1040];
-    return { unit: 'kWh', tick: 1, rows: b.map((v, i) => ({ label: DAYS[i], base: v, aura: Math.round(v * (0.56 + 0.07 * noise(i, 3))) })) };
+    const b = [260, 285, 310, 295, 275, 180, 165];
+    return { 
+      unit: 'ms', tick: 1, 
+      rows: b.map((v, i) => ({ 
+        label: DAYS[i], 
+        base: v, 
+        aura: Math.round(12 + noise(i, 3) * 4) 
+      })) 
+    };
   }
   if (range === '30D') {
     return {
-      unit: 'kWh', tick: 5, rows: Array.from({ length: 30 }, (_, i) => {
-        const v = 1500 + 380 * Math.sin((i / 30) * Math.PI * 2) + (i % 7 > 4 ? -420 : 0) + noise(i, 4) * 90;
-        return { label: `${i + 1}`, base: Math.round(v), aura: Math.round(v * (0.55 + 0.08 * noise(i, 5))) };
+      unit: 'ms', tick: 5, rows: Array.from({ length: 30 }, (_, i) => {
+        const v = 240 + 60 * Math.sin((i / 30) * Math.PI * 2) + (i % 7 > 4 ? -50 : 0) + noise(i, 4) * 20;
+        return { 
+          label: `${i + 1}`, 
+          base: Math.round(v), 
+          aura: Math.round(10 + noise(i, 5) * 5) 
+        };
       })
     };
   }
-  const m = [52, 49, 45, 41, 44, 58, 66, 69, 56, 46, 48, 53];
-  return { unit: 'MWh', tick: 1, rows: m.map((v, i) => ({ label: MONTHS[i], base: v, aura: +(v * (0.6 + 0.05 * noise(i, 6))).toFixed(1) })) };
+  const m = [280, 265, 250, 240, 230, 270, 290, 310, 260, 230, 220, 250];
+  return { 
+    unit: 'ms', tick: 1, 
+    rows: m.map((v, i) => ({ 
+      label: MONTHS[i], 
+      base: v, 
+      aura: Math.round(11 + noise(i, 6) * 4) 
+    })) 
+  };
 }
 
 const smooth = (pts) => {
@@ -78,7 +101,7 @@ export function AreaChart({ rows, unit, tick = 1, show = { base: true, aura: tru
 
   return (
     <div ref={ref} className={`relative ${className}`}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto select-none" onMouseMove={onMove} onMouseLeave={() => setHover(null)} role="img" aria-label="Energy consumption chart">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto select-none" onMouseMove={onMove} onMouseLeave={() => setHover(null)} role="img" aria-label="Web & Software Performance Latency Chart">
         <defs>
           <linearGradient id={`g-aura-${id}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#c8ff4d" stopOpacity="0.45" />
@@ -123,8 +146,8 @@ export function AreaChart({ rows, unit, tick = 1, show = { base: true, aura: tru
       {hr && (
         <div className="absolute pointer-events-none glass rounded-xl px-4 py-3 text-xs font-mono whitespace-nowrap z-10" style={{ left: `${(x(hover) / W) * 100}%`, top: 0, transform: `translate(${hover > rows.length * 0.7 ? '-105%' : '12px'}, 8px)` }}>
           <p className="text-sand/50 mb-1.5">{hr.label}</p>
-          {show.base && <p className="text-sand/80">Baseline <b className="text-sand ml-2">{fmt(hr.base)} {unit}</b></p>}
-          {show.aura && <p className="text-lime">With Aura <b className="ml-2">{fmt(hr.aura)} {unit}</b></p>}
+          {show.base && <p className="text-sand/80">Legacy Monolith <b className="text-sand ml-2">{fmt(hr.base)} {unit}</b></p>}
+          {show.aura && <p className="text-lime">Aura Edge Stack <b className="ml-2">{fmt(hr.aura)} {unit} (95% Faster)</b></p>}
         </div>
       )}
     </div>
@@ -211,7 +234,7 @@ export function Donut({ data, unit = '%', className = '' }) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="font-display font-extrabold text-4xl">{act === null ? total : data[act].value}{unit}</span>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-sand/45">{act === null ? 'Total load' : data[act].label}</span>
+          <span className="font-mono text-[10px] uppercase tracking-widest text-sand/45">{act === null ? 'Total Stack' : data[act].label}</span>
         </div>
       </div>
       <ul className="w-full space-y-2">
@@ -242,62 +265,128 @@ export function Sparkline({ values, color = '#c8ff4d', className = '' }) {
 const sum = (rows, k) => rows.reduce((a, r) => a + r[k], 0);
 
 /* ------------------------------------------------------------------
- * LiveDashboard — range tabs, toggleable series, ticking live KPI
+ * LiveDashboard — real-time web & software performance analytics
  * ------------------------------------------------------------------ */
 export function LiveDashboard({ compact = false }) {
   const [range, setRange] = useState('7D');
   const [show, setShow] = useState({ base: true, aura: true });
-  const [occ, setOcc] = useState(1284);
+  const [reqs, setReqs] = useState(24850);
   const { rows, unit, tick } = useMemo(() => buildData(range), [range]);
 
   useEffect(() => {
-    const t = setInterval(() => setOcc((o) => Math.max(1100, Math.min(1460, o + Math.round((Math.random() - 0.48) * 28)))), 1800);
+    const t = setInterval(() => setReqs((r) => Math.max(21000, Math.min(32000, r + Math.round((Math.random() - 0.48) * 450)))), 1800);
     return () => clearInterval(t);
   }, []);
 
-  const saved = Math.round((1 - sum(rows, 'aura') / sum(rows, 'base')) * 100);
-  const totalAura = sum(rows, 'aura');
-  const co2 = Math.round((sum(rows, 'base') - totalAura) * (unit === 'MWh' ? 1000 : 1) * 0.00042 * 10) / 10;
+  const avgBase = Math.round(sum(rows, 'base') / rows.length);
+  const avgAura = Math.round(sum(rows, 'aura') / rows.length);
+  const saved = Math.round((1 - avgAura / avgBase) * 100);
 
   const kpis = [
-    { l: 'Live occupancy', v: occ.toLocaleString(), s: 'people on site', spark: [8, 9, 7, 10, 12, 11, 13, 12, 14, 13], c: '#4de8cf', live: true },
-    { l: 'Energy saved', v: `−${saved}%`, s: `${unit} vs. baseline`, spark: [3, 4, 4, 6, 5, 7, 8, 8, 9, 10], c: '#c8ff4d' },
-    { l: 'CO₂ avoided', v: `${co2.toLocaleString()} t`, s: 'this period', spark: [2, 3, 3, 4, 6, 5, 7, 9, 9, 11], c: '#ff7a5c' },
+    {
+      l: 'Global Edge Throughput',
+      v: reqs.toLocaleString(),
+      s: 'req/s across 140 global PoPs · 0 dropped',
+      spark: [18, 20, 22, 21, 25, 27, 26, 29, 31, 32],
+      c: '#4de8cf',
+      live: true,
+      tag: 'ACTIVE MESH'
+    },
+    {
+      l: 'P99 Edge Latency',
+      v: `${avgAura}ms`,
+      s: `95% faster than legacy (${avgBase}ms)`,
+      spark: [28, 26, 24, 20, 18, 16, 14, 13, 12, 11],
+      c: '#c8ff4d',
+      tag: 'SUB-SECOND'
+    },
+    {
+      l: 'Edge Cache Hit Ratio',
+      v: '99.8%',
+      s: 'sub-5ms TTFB · zero layout shift',
+      spark: [92, 94, 96, 97, 98, 98.5, 99.1, 99.4, 99.7, 99.8],
+      c: '#a8f5e7',
+      tag: '100 VITALS'
+    },
   ];
 
   return (
     <div className="grid grid-cols-12 gap-3 sm:gap-4 p-1">
-      <div className="col-span-12 lg:col-span-8 panel rounded-2xl p-5 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+      <div className="col-span-12 lg:col-span-8 panel rounded-[2rem] p-5 sm:p-7 border border-white/10 shadow-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-5 pb-3 border-b border-white/5">
           <div>
-            <p className="font-mono text-[11px] text-sand/50 uppercase tracking-widest">Energy consumption · Tower North</p>
-            <p className="font-display font-extrabold text-3xl sm:text-4xl mt-1">{totalAura.toLocaleString()} <span className="text-lg text-sand/50">{unit}</span></p>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2 h-2 rounded-full bg-lime animate-ping" />
+              <p className="font-mono text-[11px] text-lime uppercase tracking-widest font-bold">Real-Time Production Telemetry</p>
+            </div>
+            <p className="font-display font-extrabold text-3xl sm:text-4xl">
+              {avgAura} <span className="text-base sm:text-lg text-sand/50 font-normal">{unit} global P99 edge latency</span>
+            </p>
           </div>
-          <div className="flex items-center gap-1 bg-white/5 rounded-full p-1">
+          <div className="flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/10">
             {['24H', '7D', '30D', '12M'].map((r) => (
-              <button key={r} id={`range-${r}`} onClick={() => setRange(r)} className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all duration-500 ${range === r ? 'bg-lime text-ink' : 'text-sand/60 hover:text-sand'}`}>{r}</button>
+              <button
+                key={r}
+                id={`range-${r}`}
+                onClick={() => setRange(r)}
+                className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all duration-300 cursor-pointer ${
+                  range === r ? 'bg-lime text-ink shadow-md' : 'text-sand/60 hover:text-sand'
+                }`}
+              >
+                {r}
+              </button>
             ))}
           </div>
         </div>
-        <div className="flex gap-3 mb-2">
-          {[['base', 'Baseline', 'bg-sand/60'], ['aura', 'With Aura', 'bg-lime']].map(([k, l, c]) => (
-            <button key={k} onClick={() => setShow((s) => ({ ...s, [k]: !s[k] }))} className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono transition-all duration-500 ${show[k] ? 'border-white/20 text-sand' : 'border-white/5 text-sand/30'}`}>
-              <span className={`w-2.5 h-2.5 rounded-full ${c} ${show[k] ? '' : 'opacity-30'}`} />{l}
+        <div className="flex gap-3 mb-3">
+          {[['base', 'Legacy Monolith', 'bg-sand/60'], ['aura', 'Aura Edge Stack (Next.js 15 + Go)', 'bg-lime']].map(([k, l, c]) => (
+            <button
+              key={k}
+              onClick={() => setShow((s) => ({ ...s, [k]: !s[k] }))}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-mono transition-all duration-300 cursor-pointer ${
+                show[k] ? 'border-white/20 text-sand bg-white/5' : 'border-white/5 text-sand/30'
+              }`}
+            >
+              <span className={`w-2.5 h-2.5 rounded-full ${c} ${show[k] ? '' : 'opacity-30'}`} />
+              {l}
             </button>
           ))}
         </div>
         <AreaChart key={range} rows={rows} unit={unit} tick={tick} show={show} />
       </div>
+
       <div className="col-span-12 lg:col-span-4 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 sm:gap-4">
         {kpis.map((k) => (
-          <div key={k.l} className="panel rounded-2xl p-5">
+          <div
+            key={k.l}
+            data-hot
+            className="group panel rounded-[1.8rem] p-5 sm:p-6 border border-white/10 hover:border-lime/40 transition-all duration-500 shadow-xl flex flex-col justify-between"
+          >
             <div className="flex justify-between items-center">
-              <p className="font-mono text-[11px] text-sand/50 uppercase tracking-widest">{k.l}</p>
-              {k.live && <span className="flex items-center gap-1.5 font-mono text-[10px] text-lime"><span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />LIVE</span>}
+              <span className="font-mono text-[10px] text-sand/50 uppercase tracking-widest">{k.l}</span>
+              {k.live ? (
+                <span className="flex items-center gap-1.5 font-mono text-[10px] text-lime font-bold">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-lime" />
+                  </span>
+                  LIVE STREAM
+                </span>
+              ) : (
+                <span className="font-mono text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-sand/60 border border-white/10">
+                  {k.tag}
+                </span>
+              )}
             </div>
-            <p key={k.v} className="font-display font-extrabold text-4xl mt-2 tabular-nums" style={{ color: k.c }}>{k.v}</p>
-            <p className="text-xs text-sand/45 mb-2">{k.s}</p>
-            <Sparkline values={k.spark} color={k.c} />
+            <div className="my-2">
+              <p key={k.v} className="font-display font-extrabold text-4xl sm:text-5xl tabular-nums tracking-tight" style={{ color: k.c }}>
+                {k.v}
+              </p>
+              <p className="text-xs text-sand/50 mt-1 line-clamp-1">{k.s}</p>
+            </div>
+            <div className="pt-2 border-t border-white/5">
+              <Sparkline values={k.spark} color={k.c} />
+            </div>
           </div>
         ))}
       </div>
@@ -306,28 +395,35 @@ export function LiveDashboard({ compact = false }) {
 }
 
 /* ------------------------------------------------------------------
- * AnalyticsGrid — bar chart + donut
+ * AnalyticsGrid — Software Development & Web Engineering Metrics
  * ------------------------------------------------------------------ */
 export const OCCUPANCY = [
-  { label: 'Mon', value: 1180 }, { label: 'Tue', value: 1420 }, { label: 'Wed', value: 1510 }, { label: 'Thu', value: 1465 },
-  { label: 'Fri', value: 1120 }, { label: 'Sat', value: 340 }, { label: 'Sun', value: 210 },
+  { label: 'Mon', value: 148 }, { label: 'Tue', value: 215 }, { label: 'Wed', value: 248 }, { label: 'Thu', value: 232 },
+  { label: 'Fri', value: 195 }, { label: 'Sat', value: 52 }, { label: 'Sun', value: 34 },
 ];
+export const DEPLOYMENT_VELOCITY = OCCUPANCY;
+
 export const LOAD = [
-  { label: 'HVAC', value: 42, color: '#c8ff4d' }, { label: 'Lighting', value: 21, color: '#4de8cf' },
-  { label: 'Plug loads', value: 19, color: '#ff7a5c' }, { label: 'Elevators', value: 11, color: '#f3eee3' }, { label: 'Other', value: 7, color: '#3b5b57' },
+  { label: 'Next.js & React 19', value: 40, color: '#c8ff4d' }, 
+  { label: 'Microservices & Go', value: 25, color: '#4de8cf' },
+  { label: 'AI Pipelines & RAG', value: 18, color: '#ff7a5c' }, 
+  { label: 'Cloud Infrastructure', value: 11, color: '#f3eee3' }, 
+  { label: 'WebGL & 3D Shaders', value: 6, color: '#3b5b57' },
 ];
+export const TECH_STACK_MIX = LOAD;
+
 export function AnalyticsGrid() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
       <div className="lg:col-span-7 panel rounded-[2rem] p-6 sm:p-10">
-        <p className="font-mono text-[11px] text-sand/50 uppercase tracking-widest">Weekly occupancy</p>
-        <h3 className="font-display font-extrabold text-3xl mt-1 mb-8">People on site, by day</h3>
-        <BarChart data={OCCUPANCY} height={280} />
+        <p className="font-mono text-[11px] text-sand/50 uppercase tracking-widest">Engineering Velocity</p>
+        <h3 className="font-display font-extrabold text-3xl mt-1 mb-8">CI/CD Production Deploys, by day</h3>
+        <BarChart data={DEPLOYMENT_VELOCITY} unit=" deploys" height={280} />
       </div>
       <div className="lg:col-span-5 panel rounded-[2rem] p-6 sm:p-10">
-        <p className="font-mono text-[11px] text-sand/50 uppercase tracking-widest">Energy mix</p>
-        <h3 className="font-display font-extrabold text-3xl mt-1 mb-8">Where the power goes</h3>
-        <Donut data={LOAD} />
+        <p className="font-mono text-[11px] text-sand/50 uppercase tracking-widest">Tech Stack Distribution</p>
+        <h3 className="font-display font-extrabold text-3xl mt-1 mb-8">Engineering focus & code allocation</h3>
+        <Donut data={TECH_STACK_MIX} />
       </div>
     </div>
   );

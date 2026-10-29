@@ -11,7 +11,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-react': ['react', 'react-dom', '@tanstack/react-router'],
           'vendor-motion': ['framer-motion'],
           'vendor-gsap': ['gsap', 'lenis'],
           'vendor-icons': ['lucide-react'],

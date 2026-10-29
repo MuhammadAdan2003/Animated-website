@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useLocation } from '@tanstack/react-router';
+import { Link, NavLink } from './navigation/Link.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X, ArrowUpRight, Github, Twitter, Linkedin, Youtube } from 'lucide-react';
 import { WaterButton, Heading, Reveal } from './ui.jsx';
@@ -164,7 +165,7 @@ export function Footer() {
           >
             aura
           </span>
-          <span className="text-lime">studio</span>
+          <span className="text-lime drop-shadow-[0_0_30px_rgba(200,255,77,0.45)]">studio</span>
         </p>
       </div>
       <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-sand/50 font-mono">

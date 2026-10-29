@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from './navigation/Link.jsx';
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
 import {
   Sparkles, Zap, ArrowUpRight, ArrowLeft, ArrowRight, Server, Layers, Smartphone

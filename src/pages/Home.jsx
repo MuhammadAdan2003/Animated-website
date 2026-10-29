@@ -113,10 +113,6 @@ export default function HomePage() {
               i: Code2,
               tag: 'Weeks 1–2 · Foundation',
               status: 'SYSTEM BLUEPRINT',
-              metric: '100%',
-              metricSub: 'Zero-Debt RFC Spec',
-              pipeline: ['DISCOVERY', 'TOPOLOGY', 'API MESH'],
-              chips: ['System Design', 'Cloud Topology', 'Data Modeling', 'Security Audit'],
             },
             {
               n: '02',
@@ -125,10 +121,6 @@ export default function HomePage() {
               i: Cpu,
               tag: 'Weeks 3–6 · Production Code',
               status: 'FULL-STACK BUILD',
-              metric: '120 FPS',
-              metricSub: '0.3s LCP Edge Hydration',
-              pipeline: ['REACT 19', 'WEBGL GPU', 'GO APIS'],
-              chips: ['Next.js 15', 'WebGL Shaders', 'Rust · Go', 'Design Tokens'],
             },
             {
               n: '03',
@@ -137,16 +129,12 @@ export default function HomePage() {
               i: Workflow,
               tag: 'Ongoing · 99.999% SLA',
               status: 'GLOBAL PRODUCTION',
-              metric: '99.999%',
-              metricSub: 'Multi-Region SLA Uptime',
-              pipeline: ['CANARY CI/CD', 'KUBERNETES', 'EDGE POPS'],
-              chips: ['Auto-Scaling', 'SOC 2 Type II', '140+ Edge Nodes', '24/7 Telemetry'],
             },
           ].map((s) => (
             <div
               key={s.n}
               data-hot
-              className="group relative rounded-[1.85rem] sm:rounded-[2.2rem] bg-[#071311] text-sand p-6 sm:p-10 min-h-[440px] sm:min-h-[490px] flex flex-col justify-between border border-white/10 hover:border-lime/70 shadow-2xl hover:shadow-[0_30px_80px_-15px_rgba(200,255,77,0.28)] transition-all duration-500 hover:-translate-y-3 cursor-pointer overflow-hidden spot card-smoke"
+              className="group relative rounded-[1.85rem] sm:rounded-[2.2rem] bg-[#071311] text-sand p-6 sm:p-10 min-h-[380px] sm:min-h-[420px] flex flex-col justify-between border border-white/10 hover:border-lime/70 shadow-2xl hover:shadow-[0_30px_80px_-15px_rgba(200,255,77,0.28)] transition-all duration-500 hover:-translate-y-3 cursor-pointer overflow-hidden spot card-smoke"
             >
               <CardSmoke tone="dark" />
 
@@ -186,47 +174,8 @@ export default function HomePage() {
                 </span>
               </div>
 
-              {/* Middle Interactive Telemetry & Architecture Schematic Box */}
-              <div className="relative z-10 my-6 rounded-2xl bg-white/[0.03] group-hover:bg-white/[0.06] border border-white/10 group-hover:border-lime/35 p-4 transition-all duration-500">
-                <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
-                  <div>
-                    <span className="font-mono text-[10px] text-sand/45 uppercase block">PHASE BENCHMARK</span>
-                    <span className="font-mono text-xs text-sand/80">{s.metricSub}</span>
-                  </div>
-                  <span className="font-display font-extrabold text-2xl sm:text-3xl text-lime group-hover:text-aqua transition-colors duration-300">
-                    {s.metric}
-                  </span>
-                </div>
-
-                {/* 3-Node Architecture Flow Schematic */}
-                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-1 sm:gap-1.5 mb-3">
-                  {s.pipeline.map((step, idx) => (
-                    <React.Fragment key={step}>
-                      <span className="px-2 sm:px-2.5 py-1 rounded-lg bg-ink/80 border border-white/10 group-hover:border-lime/40 font-mono text-[9px] sm:text-[10px] text-sand/85 group-hover:text-lime transition-colors duration-300 truncate">
-                        {step}
-                      </span>
-                      {idx < s.pipeline.length - 1 && (
-                        <span className="text-lime/50 group-hover:text-lime font-mono text-[10px] sm:text-xs transition-colors">→</span>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-
-                {/* Deliverable Tech Chips */}
-                <div className="flex flex-wrap gap-1.5">
-                  {s.chips.map((chip) => (
-                    <span
-                      key={chip}
-                      className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-sand/65 group-hover:text-sand group-hover:border-white/25 transition-all duration-300"
-                    >
-                      {chip}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
               {/* Bottom Narrative & Interactive Action Footer */}
-              <div className="relative z-10">
+              <div className="relative z-10 mt-8">
                 <span className="inline-block font-mono text-[11px] uppercase tracking-wider text-lime/80 mb-1.5">
                   {s.tag}
                 </span>

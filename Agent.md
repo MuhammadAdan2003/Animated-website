@@ -50,7 +50,7 @@ c:\Users\Adan\Desktop\newsite\
 │   │   │   └── Link.jsx         # React.forwardRef wrappers (Link, NavLink) around TanStack Router Link
 │   │   ├── journal/
 │   │   │   └── ArticleModal.jsx # Editorial modal reader for Journal articles
-│   │   └── ui/                  # Atomic UI primitives (Heading, Reveal, WaterButton, Magnetic, CardSmoke, Counter, Eyebrow, Marquee, PageTransition, CustomCursor, WebGLBackground)
+│   │   └── ui/                  # Atomic UI primitives (LoadingScreen, Heading, Reveal, WaterButton, Magnetic, CardSmoke, Counter, Eyebrow, Marquee, PageTransition, CustomCursor, WebGLBackground)
 │   └── pages/
 │       ├── Home.jsx             # Flagship landing page (Full-screen Hero -> Section 2 Fog/Fade/Scale Showcase -> LogoCloud -> Core Pillars -> Work Reel -> Methodology -> Testimonials -> CTA)
 │       ├── Product.jsx          # Services / Engineering architecture page

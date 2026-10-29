@@ -35,10 +35,10 @@ const CORE_WEB_VITALS = [
     name: 'Interaction to Next Paint',
     val: '12ms',
     threshold: '< 200ms',
-    rating: 'Good (120 FPS Response)',
+    rating: 'Good (Instant Response)',
     color: 'text-aqua',
     bg: 'bg-aqua/10 border-aqua/30',
-    desc: 'Input latency for clicks and gestures. Zero main-thread blocking JavaScript.',
+    desc: 'Response time for clicks and gestures. Zero main-thread blocking JavaScript.',
   },
   {
     code: 'CLS',
@@ -83,15 +83,15 @@ const CORE_WEB_VITALS = [
 ];
 
   const EDGE_POPS = [
-    { region: 'US-East · Northern Virginia (iad1)', latency: '4.2ms', status: 'Healthy', traffic: '38%', qps: '18,420 req/s' },
-    { region: 'EU-Central · Frankfurt (fra1)', latency: '6.8ms', status: 'Healthy', traffic: '27%', qps: '12,950 req/s' },
-    { region: 'AP-Northeast · Tokyo (hnd1)', latency: '8.4ms', status: 'Healthy', traffic: '21%', qps: '9,840 req/s' },
-    { region: 'EU-West · London (lhr1)', latency: '5.1ms', status: 'Healthy', traffic: '14%', qps: '6,490 req/s' },
+    { region: 'US-East · Northern Virginia (iad1)', responseTime: '4.2ms', status: 'Healthy', traffic: '38%', qps: '18,420 req/s' },
+    { region: 'EU-Central · Frankfurt (fra1)', responseTime: '6.8ms', status: 'Healthy', traffic: '27%', qps: '12,950 req/s' },
+    { region: 'AP-Northeast · Tokyo (hnd1)', responseTime: '8.4ms', status: 'Healthy', traffic: '21%', qps: '9,840 req/s' },
+    { region: 'EU-West · London (lhr1)', responseTime: '5.1ms', status: 'Healthy', traffic: '14%', qps: '6,490 req/s' },
   ];
 
   const SECURITY_METRICS = [
     { title: 'SOC-2 Type II Certified', detail: 'Bank-grade enterprise compliance & audited access control.' },
-    { title: 'TLS 1.3 · 0-RTT Handshake', detail: 'End-to-end encrypted protocol with zero handshake latency.' },
+    { title: 'TLS 1.3 · 0-RTT Handshake', detail: 'End-to-end encrypted protocol with instant handshake.' },
     { title: '99.999% SLA Cloud Architecture', detail: 'Multi-region automated failover across Kubernetes pods.' },
     { title: 'Zero CVE Vulnerabilities', detail: 'Continuous Snyk & Dependabot container security audits.' },
   ];
@@ -213,7 +213,7 @@ const CORE_WEB_VITALS = [
         </div>
 
         <div className="flex items-center gap-2 font-mono text-xs text-lime">
-          <span className="w-2 h-2 rounded-full bg-lime animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-lime" />
           <span>PRODUCTION VERIFIED · 100% SLA</span>
         </div>
       </div>
@@ -251,7 +251,7 @@ const CORE_WEB_VITALS = [
                                       <div className="relative z-10 space-y-3 font-mono">
                                         <div className="hidden sm:grid grid-cols-12 text-xs text-sand/40 px-4 pb-1 uppercase tracking-wider">
                                           <span className="col-span-5">Edge PoP Location</span>
-                                          <span className="col-span-2">P99 Latency</span>
+                                          <span className="col-span-2">Response Time</span>
                                           <span className="col-span-2">Traffic Load</span>
                                           <span className="col-span-3 text-right">Throughput</span>
                                         </div>
@@ -261,11 +261,11 @@ const CORE_WEB_VITALS = [
                                             className="rounded-2xl bg-white/[0.04] border border-white/10 p-4 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center hover:border-lime/40 transition-colors"
                                           >
                                             <div className="sm:col-span-5 flex items-center gap-3">
-                                              <span className="w-2.5 h-2.5 rounded-full bg-lime animate-pulse shrink-0" />
+                                              <span className="w-2.5 h-2.5 rounded-full bg-lime shrink-0" />
                                               <span className="text-sand text-sm font-semibold">{pop.region}</span>
                                             </div>
                                             <div className="sm:col-span-2 text-lime font-bold text-sm">
-                                              {pop.latency}
+                                              {pop.responseTime}
                                             </div>
                                             <div className="sm:col-span-2 flex items-center gap-2">
                                               <div className="w-16 h-1.5 rounded-full bg-white/10 overflow-hidden">

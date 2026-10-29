@@ -4,6 +4,7 @@ import { Link, NavLink } from './navigation/Link.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X, ArrowUpRight, Github, Twitter, Linkedin, Youtube } from 'lucide-react';
 import { WaterButton, Heading, Reveal } from './ui.jsx';
+import { useLoaderFinished } from '../hooks/useLoaderState.js';
 
 export const NAV = [
   { to: '/product', label: 'Services' },
@@ -33,6 +34,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const scrolledRef = React.useRef(false);
   const location = useLocation();
+  const loaderFinished = useLoaderFinished();
 
   useEffect(() => setOpen(false), [location.pathname]);
 
@@ -67,8 +69,8 @@ export function Navbar() {
       <header className="fixed top-4 left-0 right-0 z-[80] flex justify-center px-4 pointer-events-none">
         <motion.nav
           initial={{ y: -80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          animate={loaderFinished ? { y: 0, opacity: 1 } : { y: -80, opacity: 0 }}
+          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           className={`glass pointer-events-auto rounded-full flex items-center gap-3 lg:gap-8 pl-5 pr-2 py-2 transition-all duration-700 ${
             scrolled ? 'bg-ink/60 w-[min(1080px,100%)]' : 'w-[min(1180px,100%)]'
           }`}
@@ -170,7 +172,7 @@ export function Navbar() {
               </Link>
               <div className="flex items-center justify-between text-[11px] font-mono text-sand/40 pt-1">
                 <span>AURA STUDIO 2026</span>
-                <span className="text-lime">120 FPS CRAFT</span>
+                <span className="text-lime">HIGH CRAFT</span>
               </div>
             </motion.div>
           </motion.div>

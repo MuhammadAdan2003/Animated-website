@@ -18,7 +18,7 @@ export default function AboutPage() {
       r: 'Head of Web Architecture & WebGL',
       img: '/images/rafael.jpg',
       fallback: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-      bio: 'Ex-MIT Media Lab fellow. Shipped real-time 3D web engines, WebGL physics shaders, and low-latency micro-frontends.',
+      bio: 'Ex-MIT Media Lab fellow. Shipped real-time 3D web engines, WebGL physics shaders, and high-speed micro-frontends.',
       handle: '@rafaduarte',
     },
     {
@@ -34,7 +34,7 @@ export default function AboutPage() {
       r: 'VP of UI Systems & Performance',
       img: '/images/sam.jpg',
       fallback: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
-      bio: 'Ex-Apple UI systems engineer. Obsessed with Core Web Vitals, sub-millisecond interaction latency, and design tokens.',
+      bio: 'Ex-Apple UI systems engineer. Obsessed with Core Web Vitals, sub-millisecond interaction speed, and design tokens.',
       handle: '@samokoye',
     },
   ];
@@ -50,7 +50,7 @@ export default function AboutPage() {
     },
     {
       t: 'Sub-Second Speed',
-      d: 'Performance is a core feature. We engineer sub-second web flagships with 100/100 Core Web Vitals, instant hydration, and 120 FPS fluid micro-interactions.',
+      d: 'Performance is a core feature. We engineer sub-second web flagships with 100/100 Core Web Vitals, instant hydration, and fluid micro-interactions.',
       img: '/images/clarity.jpg',
       fallback: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
       badge: '100/100 Lighthouse',
@@ -101,7 +101,7 @@ export default function AboutPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent opacity-90" />
                 <span className="absolute top-4 left-4 glass px-3.5 py-1.5 rounded-full text-xs font-mono font-bold text-sand border border-white/15 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-lime" />
                   0{i + 1} · {v.badge}
                 </span>
               </div>

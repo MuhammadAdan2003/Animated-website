@@ -60,7 +60,7 @@ export function AnimatedGeometricCircles({ size = 520, className = '' }) {
     >
       {/* Ambient Radial Core Glow */}
       <div
-        className="absolute inset-0 rounded-full animate-pulse"
+        className="absolute inset-0 rounded-full"
         style={{ background: 'radial-gradient(circle, rgba(200,255,77,0.16) 0%, rgba(77,232,207,0.06) 45%, transparent 70%)' }}
       />
 
@@ -85,14 +85,14 @@ export function AnimatedGeometricCircles({ size = 520, className = '' }) {
         </span>
       </div>
 
-      {/* Layer 5: Concentric Pulse Wave Rings */}
-      <div className="absolute w-36 h-36 rounded-full border border-lime/30 pulse-ring" />
-      <div className="absolute w-36 h-36 rounded-full border border-aqua/30 pulse-ring" style={{ animationDelay: '1.2s' }} />
+      {/* Layer 5: Concentric Ring Boundaries */}
+      <div className="absolute w-36 h-36 rounded-full border border-lime/30" />
+      <div className="absolute w-36 h-36 rounded-full border border-aqua/30" />
 
       {/* Center Core Sphere */}
       <div className="relative w-28 h-28 rounded-full bg-ink/80 border border-white/20 flex items-center justify-center shadow-[0_0_35px_rgba(200,255,77,0.3)]">
         <div
-          className="w-20 h-20 rounded-full animate-pulse"
+          className="w-20 h-20 rounded-full"
           style={{ background: 'radial-gradient(circle, rgba(200,255,77,0.35) 0%, transparent 70%)' }}
         />
         <div className="absolute w-9 h-9 rounded-full bg-lime text-ink flex items-center justify-center font-bold shadow-lg">
@@ -106,9 +106,8 @@ export function AnimatedGeometricCircles({ size = 520, className = '' }) {
 export function PulsingCircleRadar({ label = 'EDGE NETWORK ACTIVE', className = '' }) {
   return (
     <div className={`inline-flex items-center gap-3 glass px-3.5 py-1.5 rounded-full border border-lime/30 shadow-lg ${className}`}>
-      <span className="relative flex h-3 w-3">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime opacity-75" />
-        <span className="relative inline-flex rounded-full h-3 w-3 bg-lime" />
+      <span className="relative flex h-2.5 w-2.5">
+        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-lime" />
       </span>
       <span className="font-mono text-[11px] font-bold text-lime uppercase tracking-widest">{label}</span>
     </div>
@@ -129,7 +128,7 @@ const HERO_SHOWCASE_FRAMES = [
     titleLine2: 'architecture.',
     accentColor: 'text-lime',
     accentBg: 'bg-lime text-ink',
-    desc: 'High-converting Next.js 15 & WebGL digital flagships engineered for instant edge hydration and 120 FPS motion.',
+    desc: 'High-converting Next.js 15 & WebGL digital flagships engineered for instant edge hydration and fluid motion.',
     metric: '0.3s LCP · 100/100 Vitals',
     statBig: '+310%',
     statSub: 'Average Client Conversion Lift',
@@ -148,7 +147,7 @@ const HERO_SHOWCASE_FRAMES = [
     desc: 'Resilient Go & Node.js microservices, automated Kubernetes scaling, and sub-10ms global edge routing.',
     metric: '99.999% SLA · 450M+ Req/Mo',
     statBig: '4.2ms',
-    statSub: 'Global Edge API Latency',
+    statSub: 'Global Edge API Speed',
     tags: ['Golang', 'Kubernetes', 'GraphQL Mesh'],
     label: 'Cloud Systems',
     img: '/images/clarity.jpg',
@@ -203,7 +202,7 @@ function ChapterScrubberButton({ frame, index, isCurrent, onSelect }) {
       <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs min-w-0">
         <span
           className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full shrink-0 ${
-            isCurrent ? 'bg-ink animate-ping' : 'bg-lime/50'
+            isCurrent ? 'bg-ink' : 'bg-lime/50'
           }`}
         />
         <span className="font-bold tracking-wider uppercase truncate">
@@ -244,43 +243,43 @@ export function HeroExpandShowcase() {
     offset: ['start 85%', 'end end'],
   });
 
-  // Phase 1 (0.00 -> 0.42): Scroll-Controlled Scale + Opacity (0 -> 1) + Fog Parting Reveal
+  // Phase 1 (0.00 -> 0.20): Scroll-Controlled Scale + Opacity (0 -> 1) + Fog Parting Reveal
   const initialScale = isMobile ? 0.86 : 0.50;
   const initialRadius = isMobile ? 24 : 36;
-  const scale = useTransform(scrollYProgress, [0, 0.42], [initialScale, 1], { clamp: true });
+  const scale = useTransform(scrollYProgress, [0, 0.20], [initialScale, 1], { clamp: true });
   const imgInnerScale = useTransform(
     scrollYProgress,
-    [0, 0.42, 1],
+    [0, 0.20, 1],
     [1.24, 1, 1],
     { clamp: true }
   );
-  const borderRadius = useTransform(scrollYProgress, [0, 0.42], [initialRadius, 0], { clamp: true });
+  const borderRadius = useTransform(scrollYProgress, [0, 0.20], [initialRadius, 0], { clamp: true });
 
   // Strict 0 -> 1 Opacity Reveal synced with Scale & Fog Clearing (retains full 100% opacity with NO fade-out on the last image)
   const imageOpacity = useTransform(
     scrollYProgress,
-    [0, 0.14, 0.30, 0.42, 1],
-    [0, 0.32, 0.76, 1, 1],
+    [0, 0.08, 0.16, 0.20, 1],
+    [0, 0.35, 0.82, 1, 1],
     { clamp: true }
   );
   const cardOpacity = useTransform(
     scrollYProgress,
-    [0, 0.08, 0.24, 1],
-    [0, 0.55, 1, 1],
+    [0, 0.05, 0.14, 1],
+    [0, 0.60, 1, 1],
     { clamp: true }
   );
 
   // Optical Fog Diffusion on the Image (Materializes from misty blur -> razor-sharp focus with no blur re-entry)
   const imgBlurPx = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.40, 1],
-    [22, 12, 0, 0],
+    [0, 0.10, 0.20, 1],
+    [22, 10, 0, 0],
     { clamp: true }
   );
   const imgBrightness = useTransform(
     scrollYProgress,
-    [0, 0.22, 0.42, 1],
-    [0.68, 0.86, 1, 1],
+    [0, 0.12, 0.20, 1],
+    [0.68, 0.88, 1, 1],
     { clamp: true }
   );
   const imageFilter = useMotionTemplate`blur(${imgBlurPx}px) brightness(${imgBrightness})`;
@@ -288,51 +287,52 @@ export function HeroExpandShowcase() {
   // Volumetric Parting Fog Curtains (Swirls in at 0, parts outward as image scales & clears)
   const centerFogOpacity = useTransform(
     scrollYProgress,
-    [0, 0.10, 0.25, 0.42, 1],
-    [0, 0.92, 0.68, 0, 0],
+    [0, 0.05, 0.12, 0.20, 1],
+    [0, 0.92, 0.65, 0, 0],
     { clamp: true }
   );
-  const centerFogScale = useTransform(scrollYProgress, [0, 0.42], [0.92, 1.45], { clamp: true });
+  const centerFogScale = useTransform(scrollYProgress, [0, 0.20], [0.92, 1.45], { clamp: true });
 
   const fogCurtainOpacity = useTransform(
     scrollYProgress,
-    [0, 0.10, 0.28, 0.44, 1],
-    [0, 0.95, 0.80, 0.12, 0.12],
+    [0, 0.05, 0.12, 0.22, 1],
+    [0, 0.95, 0.78, 0.10, 0.10],
     { clamp: true }
   );
-  const leftFogX = useTransform(scrollYProgress, [0, 0.44, 1], ['0%', '-58%', '-58%']);
-  const rightFogX = useTransform(scrollYProgress, [0, 0.44, 1], ['0%', '58%', '58%']);
-  const groundFogY = useTransform(scrollYProgress, [0, 0.44, 1], ['0%', '46%', '46%']);
+  const leftFogX = useTransform(scrollYProgress, [0, 0.22, 1], ['0%', '-58%', '-58%']);
+  const rightFogX = useTransform(scrollYProgress, [0, 0.22, 1], ['0%', '58%', '58%']);
+  const groundFogY = useTransform(scrollYProgress, [0, 0.22, 1], ['0%', '46%', '46%']);
   const ambientMistDriftX = useTransform(scrollYProgress, [0, 1], ['-6%', '8%']);
 
   // HUD Overlays synced to appear cleanly right as the fog clears
   const miniBadgeOpacity = useTransform(
     scrollYProgress,
-    [0, 0.08, 0.24, 0.34],
+    [0, 0.04, 0.12, 0.18],
     [0, 1, 0.92, 0],
     { clamp: true }
   );
-  const miniBadgeScale = useTransform(scrollYProgress, [0, 0.34], [0.94, 1.04], { clamp: true });
+  const miniBadgeScale = useTransform(scrollYProgress, [0, 0.18], [0.94, 1.04], { clamp: true });
   const contentOpacity = useTransform(
     scrollYProgress,
-    [0.35, 0.44, 1],
+    [0.17, 0.23, 1],
     [0, 1, 1],
     { clamp: true }
   );
-  const contentY = useTransform(scrollYProgress, [0.35, 0.44], [24, 0], { clamp: true });
+  const contentY = useTransform(scrollYProgress, [0.17, 0.23], [24, 0], { clamp: true });
 
-  // Phase 2 (0.42 -> 0.98): 1:1 Scroll-Synced switching across the 4 showcase frames
+  // Phase 2 (0.20 -> 0.98): Generously spaced 1:1 scroll switching across the 4 showcase frames
+  // Requires deliberate scrolling for each slide (~1,100px per slide) so they never change on a single scroll flick
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (!Number.isFinite(v)) return;
-    const nextExpanded = v > 0.35;
+    const nextExpanded = v > 0.16;
     if (nextExpanded !== expandedRef.current) {
       expandedRef.current = nextExpanded;
       setIsExpanded(nextExpanded);
     }
 
     let nextIdx = 0;
-    if (v > 0.42) {
-      const norm = Math.min(0.9999, Math.max(0, (v - 0.42) / 0.56));
+    if (v > 0.20) {
+      const norm = Math.min(0.9999, Math.max(0, (v - 0.20) / 0.78));
       nextIdx = Math.min(
         HERO_SHOWCASE_FRAMES.length - 1,
         Math.max(0, Math.floor(norm * HERO_SHOWCASE_FRAMES.length) || 0)
@@ -355,7 +355,7 @@ export function HeroExpandShowcase() {
     const rect = el.getBoundingClientRect();
     const absTop = window.scrollY + rect.top;
     const totalScrollable = el.offsetHeight - window.innerHeight * 0.15;
-    const targetProgress = 0.44 + (safeTarget / HERO_SHOWCASE_FRAMES.length) * 0.52;
+    const targetProgress = 0.22 + (safeTarget / HERO_SHOWCASE_FRAMES.length) * 0.74;
     const targetY = absTop - window.innerHeight * 0.85 + targetProgress * totalScrollable;
     if (window.__lenis) {
       window.__lenis.scrollTo(targetY, { duration: 0.85 });
@@ -371,7 +371,7 @@ export function HeroExpandShowcase() {
   const activeFrame = HERO_SHOWCASE_FRAMES[safeIdx] || HERO_SHOWCASE_FRAMES[0];
 
   return (
-    <div ref={containerRef} className="relative h-[310vh] sm:h-[360vh] w-full">
+    <div ref={containerRef} className="relative h-[520vh] sm:h-[620vh] w-full">
       <div
         style={{ position: 'sticky', top: 0 }}
         className="sticky top-0 h-[100dvh] h-screen w-full flex items-center justify-center overflow-hidden"
@@ -490,18 +490,18 @@ export function HeroExpandShowcase() {
             {/* Top Viewfinder HUD Bar */}
             <div className="flex items-center justify-between gap-2">
               <span className="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-ink/85 border border-lime/40 text-lime font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 sm:gap-2">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-lime animate-ping shrink-0" />
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-lime shrink-0" />
                 LIVE FLAGSHIP PORTAL
               </span>
               <span className="hidden sm:inline-block px-4 py-1.5 rounded-full bg-ink/85 border border-white/15 text-sand/80 font-mono text-xs">
-                01 — 04 · 120 FPS
+                01 — 04 · SHOWCASE
               </span>
             </div>
 
             {/* Center Expanding Portal Badge */}
             <div className="my-auto flex flex-col items-center text-center px-2">
               <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-lime text-ink flex items-center justify-center shadow-[0_0_40px_rgba(200,255,77,0.5)] mb-3 sm:mb-4">
-                <span className="absolute inset-0 rounded-full border border-lime pulse-ring" />
+                <span className="absolute inset-0 rounded-full border border-lime" />
                 <ArrowUpRight size={22} />
               </div>
               <span className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-ink/90 border border-white/20 text-sand font-mono text-[10px] sm:text-sm font-bold uppercase tracking-[0.14em] sm:tracking-[0.2em] shadow-2xl">
@@ -670,7 +670,7 @@ const OVERLAP_SLIDES = [
     stack: ['Node.js & Go', 'PostgreSQL', 'Redis Cache', 'GraphQL · gRPC', 'Kubernetes'],
     bullets: [
       'Multi-tenant database isolation, SSO auth & role-based permissions',
-      'Sub-10ms API response latency across 140+ global edge nodes',
+      'Sub-10ms API response time across 140+ global edge nodes',
       'Automated Stripe subscription billing, metering & webhooks',
     ],
     theme: {
@@ -748,7 +748,7 @@ function SlideVisualArt({ type }) {
             </span>
           </div>
           <span className="px-2 sm:px-2.5 py-1 rounded-full bg-lime/15 text-lime font-mono text-[9px] sm:text-[10px] font-bold border border-lime/30 shrink-0">
-            120 FPS
+            HIGH CRAFT
           </span>
         </div>
 
@@ -1096,7 +1096,7 @@ const SUPAH_CAROUSEL_ITEMS = [
     num: '02',
     client: 'HYPERION FINTECH',
     title: 'Trading Terminal',
-    metric: '4ms Latency',
+    metric: '4ms Response',
     tag: 'Rust WASM · React 19',
     img: '/images/clarity.jpg',
     fallback: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80',
@@ -1114,7 +1114,7 @@ const SUPAH_CAROUSEL_ITEMS = [
     num: '04',
     client: 'ORBITAL CLOUD',
     title: 'Global API Mesh',
-    metric: '48M Req / Day',
+    metric: '48M Daily Requests',
     tag: 'Golang · Kubernetes',
     img: '/images/lasting.jpg',
     fallback: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80',
@@ -1122,7 +1122,7 @@ const SUPAH_CAROUSEL_ITEMS = [
   {
     num: '05',
     client: 'VORTEX MOBILE',
-    title: '120Hz Consumer App',
+    title: 'Fluid Consumer App',
     metric: '4.9★ App Store',
     tag: 'React Native · Reanimated',
     img: '/images/work3.jpg',
@@ -1161,7 +1161,7 @@ const KINETIC_ROWS = [
   { num: '01', name: 'Custom Web Applications', detail: 'Next.js 15 · React 19 · GSAP · Sub-Second LCP', stat: '100/100 Vitals' },
   { num: '02', name: 'Full-Stack SaaS Platforms', detail: 'Multi-Tenant · Stripe Billing · SSO & RBAC', stat: '99.999% Uptime' },
   { num: '03', name: 'AI Agents & LLM Workflows', detail: 'Custom RAG · Vector Search · Tool Calling', stat: '10× Efficiency' },
-  { num: '04', name: 'Cloud & API Microservices', detail: 'Go · Node.js · GraphQL · Kubernetes · AWS', stat: '<8ms Latency' },
+  { num: '04', name: 'Cloud & API Microservices', detail: 'Go · Node.js · GraphQL · Kubernetes · AWS', stat: '<8ms Response' },
   { num: '05', name: 'Mobile Apps & Design Systems', detail: 'iOS & Android · React Native · Figma Tokens', stat: '4.9★ Rated' },
 ];
 

@@ -18,7 +18,7 @@ export const PRODUCT_CAPABILITIES = [
   { i: Box, t: 'Custom Enterprise Software', d: 'Scalable multi-tenant SaaS platforms, internal ERP/CRM workflow engines, and mission-critical transactional software.' },
   { i: Server, t: 'Cloud Microservices & APIs', d: 'High-throughput GraphQL, gRPC, and REST API architectures written in Go, Node.js, and Rust with zero bottlenecks.' },
   { i: Sparkles, t: 'AI Engineering & Agents', d: 'Proprietary LLM integrations, autonomous AI agents, intelligent vector search engines, and automated data pipelines.' },
-  { i: Layers, t: 'Interactive WebGL & 3D Web', d: 'Bespoke 3D WebGL experiences, interactive product customizers, and GPU-accelerated shader engines running at 120 FPS.' },
+  { i: Layers, t: 'Interactive WebGL & 3D Web', d: 'Bespoke 3D WebGL experiences, interactive product customizers, and GPU-accelerated shader engines running in real time.' },
   { i: Cpu, t: 'DevOps & Multi-Region Cloud', d: 'Kubernetes orchestration, automated CI/CD canary pipelines, Docker containerization, and automated auto-scaling.' },
   { i: Database, t: 'Distributed Database Systems', d: 'PostgreSQL sharding, Redis in-memory caching clusters, Vector databases, and sub-millisecond query optimization.' },
   { i: ShieldCheck, t: 'Enterprise Security & SOC 2', d: 'Bank-grade zero-trust encryption, penetration testing, compliance assurance, and dedicated 99.999% SLA support.' },
@@ -26,7 +26,7 @@ export const PRODUCT_CAPABILITIES = [
 
 export default function ProductPage() {
   const modules = [
-    { i: Monitor, t: 'Full-Stack Web Development', d: 'We build high-performance web applications and digital flagships engineered with Next.js 15, React 19, and headless architectures with sub-second page loads.', tag: 'Frontend & Web', stat: 'Next.js 15 / React 19' },
+    { i: Monitor, t: 'Full-Stack Web Development', d: 'We build high-performance web applications and digital flagships engineered with Next.js 15, React 19, and headless architectures with sub-second page loads.', tag: 'Frontend & Web', stat: 'Next.js 15 & React 19' },
     { i: Server, t: 'Custom Enterprise Software', d: 'End-to-end bespoke SaaS platforms, multi-tenant portals, workflow automation engines, and high-throughput transactional backends.', tag: 'SaaS & Enterprise', stat: 'Bespoke Architecture' },
     { i: Cpu, t: 'Cloud Microservices & DevOps', d: 'Resilient distributed microservices, gRPC & GraphQL meshes, automated CI/CD pipelines, and multi-region Kubernetes cloud infrastructure.', tag: 'Backend & Cloud', stat: '99.999% SLA' },
     { i: Sparkles, t: 'AI Systems & Intelligent Agents', d: 'Custom proprietary LLM pipelines, autonomous agentic workflows, intelligent semantic search engines, and real-time RAG systems.', tag: 'AI Engineering', stat: 'Proprietary Tech' },

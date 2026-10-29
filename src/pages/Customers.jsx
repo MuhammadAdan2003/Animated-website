@@ -16,15 +16,15 @@ export const CASES = [
     n: 'CloudSphere Microservices',
     k: 'Distributed Cloud',
     s: '48M Daily Requests',
-    d: 'High-concurrency microservices mesh with automated multi-region Kubernetes routing and sub-10ms latency.',
+    d: 'High-concurrency microservices mesh with automated multi-region Kubernetes routing and sub-10ms speed.',
     img: '/images/work2.jpg',
     c: 'from-aqua/40 to-lime/15',
   },
   {
     n: 'Apex FinTech Terminal',
     k: 'Real-Time Trading',
-    s: '4ms Feed Latency',
-    d: 'Ultra-low latency institutional trading web application with real-time WebSocket feeds and Rust WASM compute.',
+    s: '4ms Response Time',
+    d: 'Ultra-high speed institutional trading web application with real-time WebSocket feeds and Rust WASM compute.',
     img: '/images/work3.jpg',
     c: 'from-coral/40 to-sand/15',
   },
@@ -99,7 +99,7 @@ export default function CustomersPage() {
                 <div className="relative z-10 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">
                     <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 bg-ink/85 backdrop-blur-md border border-white/20 group-hover:border-lime/45 shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-colors">
-                      <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-lime shrink-0" />
                       <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-sand/90">
                         {c.k}
                       </span>

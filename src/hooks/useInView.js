@@ -1,37 +1,60 @@
 import { useRef, useState, useEffect } from 'react';
+import { useLoaderFinished } from './useLoaderState.js';
 
 /**
  * One-shot IntersectionObserver hook. Returns [ref, visible, extraDelay].
- * extraDelay gives page curtain time to lift for above-the-fold items.
- * Includes a safety fallback so content can never stay hidden.
+ * Waits for the initial loading screen curtain to lift before triggering
+ * entrance animations for above-the-fold content.
  */
 export function useInView(margin = '0px 0px -4% 0px') {
   const ref = useRef(null);
-  const [state, setState] = useState({ on: false, extra: 0 });
+  const [on, setOn] = useState(false);
+  const loaderFinished = useLoaderFinished();
+  const hasIntersectedRef = useRef(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const fire = () => setState({ on: true, extra: 0 });
+
     if (typeof IntersectionObserver === 'undefined') {
-      fire();
+      hasIntersectedRef.current = true;
+      if (loaderFinished) {
+        setOn(true);
+      }
       return;
     }
+
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
-          fire();
-          io.disconnect();
+          hasIntersectedRef.current = true;
+          if (loaderFinished) {
+            setOn(true);
+            io.disconnect();
+          }
         }
       },
       { rootMargin: margin, threshold: 0.01 }
     );
+
     io.observe(el);
     return () => io.disconnect();
-  }, [margin]);
+  }, [margin, loaderFinished]);
 
-  return [ref, state.on, state.extra];
+  useEffect(() => {
+    if (loaderFinished) {
+      if (hasIntersectedRef.current && !on) {
+        setOn(true);
+      }
+    } else {
+      // When loader is replayed or active, reset to initial hidden state
+      if (on) {
+        setOn(false);
+      }
+    }
+  }, [loaderFinished, on]);
+
+  return [ref, on, 0];
 }
 
 export default useInView;
-

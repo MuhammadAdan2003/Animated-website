@@ -14,4 +14,5 @@ export { PageTransition } from './ui/PageTransition.jsx';
 export { CustomCursor } from './ui/CustomCursor.jsx';
 export { WebGLBackground } from './ui/WebGLBackground.jsx';
 export { Eyebrow } from './ui/Eyebrow.jsx';
+export { LoadingScreen } from './ui/LoadingScreen.jsx';
 export { Link, NavLink } from './navigation/Link.jsx';

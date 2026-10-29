@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useSmoothScroll } from '../hooks/useSmoothScroll.js';
 import { resetScrollToTop } from '../hooks/useScrollToTop.js';
 import { WebGLBackground, CustomCursor } from '../components/ui.jsx';
+import { LoadingScreen } from '../components/ui/LoadingScreen.jsx';
 import { ScrollProgress } from '../components/wow.jsx';
 import { Navbar, Footer } from '../components/Layout.jsx';
 
@@ -59,6 +60,7 @@ export function RootLayout() {
 
   return (
     <div className="relative bg-ink text-sand min-h-screen">
+      <LoadingScreen />
       <ScrollProgress />
       <WebGLBackground />
       <CustomCursor />

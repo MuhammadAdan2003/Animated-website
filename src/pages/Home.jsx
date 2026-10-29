@@ -1,10 +1,13 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { ArrowUpRight, Play, Code2, Cpu, Workflow } from 'lucide-react';
 import { PageTransition, Heading, Reveal, WaterButton, Magnetic, CardSmoke } from '../components/ui.jsx';
 import { LogoCloud, StatsBand, Testimonials, SectionHead, CTABand, Newsletter } from '../components/sections.jsx';
 import { SpaceExplorer, NeuralSpatialCore, AnimatedGeometricCircles, HeroExpandShowcase } from '../components/wow.jsx';
+import { useLoaderFinished } from '../hooks/useLoaderState.js';
 
 export default function HomePage() {
+  const loaderFinished = useLoaderFinished();
   return (
     <PageTransition>
       {/* 1. HERO — MONUMENTAL EDITORIAL HEADLINE (FULL SCREEN HEIGHT / DEVICE SCREEN SIZE) */}
@@ -16,9 +19,14 @@ export default function HomePage() {
         />
 
         {/* Ambient Animated Concentric Orbital Circles */}
-        <div className="pointer-events-none absolute right-[-18%] sm:right-[2%] top-[18rem] sm:top-[22rem] -translate-y-1/2 w-[320px] sm:w-[600px] h-[320px] sm:h-[600px] flex items-center justify-center opacity-25 sm:opacity-45 scale-[0.6] sm:scale-100">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={loaderFinished ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          className="pointer-events-none absolute right-[-18%] sm:right-[2%] top-[18rem] sm:top-[22rem] -translate-y-1/2 w-[320px] sm:w-[600px] h-[320px] sm:h-[600px] flex items-center justify-center opacity-25 sm:opacity-45 scale-[0.6] sm:scale-100"
+        >
           <AnimatedGeometricCircles size={560} />
-        </div>
+        </motion.div>
 
         {/* Center / Primary Area: Eyebrow Badge + Monumental Heading */}
         <div className="relative z-10 flex-1 flex flex-col justify-center">
@@ -26,7 +34,7 @@ export default function HomePage() {
           <Reveal y={15} delay={0.08} className="relative z-10 mb-4 sm:mb-5">
             <span className="glass inline-flex flex-wrap items-center gap-2 sm:gap-3 rounded-full pl-2.5 pr-4 sm:pr-5 py-2 text-xs sm:text-sm cursor-pointer hover:border-lime/40 transition-colors max-w-full" data-hot>
               <span className="px-2.5 sm:px-3 py-1 rounded-full bg-lime text-ink font-mono font-bold text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-ink animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-ink" />
                 AURA 2026
               </span>
               <span className="text-sand/90 font-medium truncate">Software Engineering & Digital Web Agency</span>
@@ -164,7 +172,7 @@ export default function HomePage() {
                     {s.n}
                   </span>
                   <span className="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime/10 border border-lime/25 font-mono text-[10px] text-lime font-bold tracking-wider uppercase">
-                    <span className="w-1.5 h-1.5 rounded-full bg-lime animate-ping" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-lime" />
                     {s.status}
                   </span>
                 </div>

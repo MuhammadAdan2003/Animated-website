@@ -6,7 +6,47 @@
 
 ## 1. Summary of Recent Completed Work
 
-1. **Mobile Hamburger Menu Collision & Layout Fix (`src/components/Layout.jsx`)**:
+1. **Synchronized Hero Entrance Animation Post-Loader (`src/hooks/useLoaderState.js`, `src/hooks/useInView.js`, `src/pages/Home.jsx`, `src/components/Layout.jsx`)**:
+   - Previously, above-the-fold entrance animations in the Hero section fired immediately upon mounting (t=0ms) behind the full-screen `#050a0a` loading screen, leaving the Hero static once the curtain lifted.
+   - Built a lightweight singleton loader state listener hook [`useLoaderFinished`](file:///c:/Users/Adan/Desktop/newsite/src/hooks/useLoaderState.js) using `useSyncExternalStore`.
+   - Wired [`useInView.js`](file:///c:/Users/Adan/Desktop/newsite/src/hooks/useInView.js) to pause firing for above-the-fold content until `setLoaderFinished(true)` is signaled by [`LoadingScreen.jsx`](file:///c:/Users/Adan/Desktop/newsite/src/components/ui/LoadingScreen.jsx) right as the curtain starts lifting.
+   - Choreographed the Hero section elements to cascade in as the curtain sweeps upward:
+     - Navbar slides down smoothly (`y: -80 → 0`).
+     - Eyebrow badge springs into place (`y: 15 → 0`).
+     - Monumental 3-line heading words rise sequentially from below their overflow masks (`translateY(125%) → 0`).
+     - Background orbital geometric rings gently scale and dissolve in (`scale: 0.8 → 1, opacity: 0 → 1`).
+     - Narrative paragraph and magnetic action buttons slide up into position.
+   - On later page navigations, `loaderFinished` remains `true` so subsequent routes animate immediately on entry without delay. Supports `window.__replayLoadingScreen()` for developer testing.
+
+2. **Buttery-Smooth Loading Screen Redesign (`src/components/ui/LoadingScreen.jsx`)**:
+   - Re-engineered the preloader for silky-smooth motion and zero micro-stutters:
+     - Eliminated 60FPS React state churn by updating `counterRef.current.textContent` and `barRef.current.style.width` directly in `requestAnimationFrame` using a continuous cubic polynomial curve (`1 - Math.pow(1 - rawRatio, 2.8)`).
+     - Removed the background radial green glow behind "Studio" and removed drop shadows, delivering a clean, luxury typographic presentation matching the footer (`text-lime` + stroked sand `aura`).
+     - Removed rotating dashed beacons and blinking rings.
+     - Stripped out `/` and `//` slashes: telemetry phases now cycle through clean strings (`INITIALIZING CORE ENGINE`, `HYDRATING SHADERS`, `PREPARING EXPERIENCE`, `SYSTEM READY`).
+     - Removed `LATENCY 4MS · 120 FPS ENGINE` from bottom telemetry, replaced with clean `DIGITAL FLAGSHIP ARCHITECTURE`.
+     - Preserved smooth theatrical curtain shutter lift (`y: 0% → -100%`, `ease: [0.76, 0, 0.24, 1]`).
+     - Retained instant `[ SKIP ]` shortcut and scroll locking.
+
+2. **Complete Site-Wide Blinking Dot Removal**:
+   - Stripped all `animate-ping`, `animate-pulse`, and `pulse-ring` decorative effects across every component and page (`Home.jsx`, `Customers.jsx`, `About.jsx`, `charts.jsx`, `wow.jsx`), replacing them with static solid dots for a calm, ultra-premium editorial aesthetic.
+
+3. **Complete Removal of Clutter Tokens (`/`, `//`, `latency`, `120fps`)**:
+   - Replaced all instances of `latency` and `120fps`/`120 FPS` with clean, modern language across the entire project:
+     - `Customers.jsx`: `4ms Response Time`, `sub-10ms speed`, `Ultra-high speed`.
+     - `Product.jsx`: `running in real time`, `Next.js 15 & React 19`.
+     - `Solutions.jsx`: `Ultra-fast transactional feeds`, `Real-time WebSocket streams`, `Real-Time Render`.
+     - `About.jsx`: `high-speed micro-frontends`, `sub-millisecond interaction speed`.
+     - `charts.jsx`: `Instant Response`, `Response time for clicks and gestures`, `instant handshake`, `Response Time`.
+     - `wow.jsx`: `Sub-10ms API response time`, `4ms Response`, `<8ms Response`, `48M Daily Requests`, `High-Refresh Consumer App`.
+     - `Layout.jsx`: `HIGH CRAFT`.
+
+4. **Calibrated Generous Scroll Distance for Section 2 Slides (`src/components/wow.jsx`)**:
+   - Expanded container height to `h-[520vh] sm:h-[620vh]`, giving each of the 4 slides over ~1,100px of dedicated scroll space (previously ~430px, which caused multiple slides to blow past on a single wheel flick).
+   - Calibrated Phase 1 (Fog reveal, scale, opacity `0 → 1`) to complete smoothly over `scrollYProgress` `[0.00, 0.20]`.
+   - Dedicated `scrollYProgress` `[0.20, 0.98]` exclusively to deliberate, paced slide switching (`~1,100px` per slide) so a single scroll wheel flick or trackpad gesture comfortably browses within the current slide rather than skipping across slides.
+   - Synchronized `jumpToFrame(idx)` scroll target math with the updated track.
+2. **Mobile Hamburger Menu Collision & Layout Fix (`src/components/Layout.jsx`)**:
    - Fixed an issue where the desktop "Start a project" button was forcing its `display: inline-flex` via `.water-btn` on mobile screens, causing it to collide with the hamburger button (`#menu-toggle`) and push it outside the navbar pill.
    - Wrapped the desktop action button in `<div className="hidden sm:block">` so the mobile navbar pill cleanly holds only the `Logo` and the circular hamburger toggle with zero overflow or collision.
    - Redesigned the open mobile overlay: added comfortable top padding (`pt-28 pb-10`), smooth link click auto-close handlers (`onClick={() => setOpen(false)}`), locked body scroll while open (`document.body.style.overflow = 'hidden'`), and added a dedicated full-width mobile CTA button at the bottom.

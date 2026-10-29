@@ -6,7 +6,11 @@
 
 ## 1. Summary of Recent Completed Work
 
-1. **Customers Page Card Badges & Lighting Enhancements (`src/pages/Customers.jsx`)**:
+1. **Mobile Hamburger Menu Collision & Layout Fix (`src/components/Layout.jsx`)**:
+   - Fixed an issue where the desktop "Start a project" button was forcing its `display: inline-flex` via `.water-btn` on mobile screens, causing it to collide with the hamburger button (`#menu-toggle`) and push it outside the navbar pill.
+   - Wrapped the desktop action button in `<div className="hidden sm:block">` so the mobile navbar pill cleanly holds only the `Logo` and the circular hamburger toggle with zero overflow or collision.
+   - Redesigned the open mobile overlay: added comfortable top padding (`pt-28 pb-10`), smooth link click auto-close handlers (`onClick={() => setOpen(false)}`), locked body scroll while open (`document.body.style.overflow = 'hidden'`), and added a dedicated full-width mobile CTA button at the bottom.
+2. **Customers Page Card Badges & Lighting Enhancements (`src/pages/Customers.jsx`)**:
    - Re-engineered the case study badges into architectural glass pills (`bg-ink/85 border-white/20 hover:border-lime/45`) with active lime indicator dots (`animate-pulse`) and chapter numbers (`01`–`04`).
    - Added volumetric page lighting: top ambient lime/aqua dome, side atmospheric glow fields, and card hover blooms (`bg-lime/20` & `bg-aqua/20` radial blurs) plus top-edge specular gradient highlights.
    - Connected rich photographic backdrops (`/images/work1.jpg`–`work4.jpg`) with smooth dark vignettes.

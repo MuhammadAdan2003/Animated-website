@@ -35,6 +35,20 @@ export function Navbar() {
   const location = useLocation();
 
   useEffect(() => setOpen(false), [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
   useEffect(() => {
     const on = () => {
       const next = window.scrollY > 40;
@@ -85,14 +99,16 @@ export function Navbar() {
             ))}
           </ul>
           <div className="ml-auto lg:ml-0 flex items-center gap-2">
-            <WaterButton to="/contact" variant="light" className="water-sm hidden sm:inline-flex">
-              Start a project <ArrowUpRight size={15} />
-            </WaterButton>
+            <div className="hidden sm:block">
+              <WaterButton to="/contact" variant="light" className="water-sm">
+                Start a project <ArrowUpRight size={15} />
+              </WaterButton>
+            </div>
             <button
               id="menu-toggle"
               onClick={() => setOpen(!open)}
-              aria-label="Toggle menu"
-              className="lg:hidden w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              className="lg:hidden w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-sand transition-all shrink-0"
             >
               {open ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -106,15 +122,57 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-ink/95 backdrop-blur-xl lg:hidden flex flex-col justify-center overflow-y-auto py-24 gutter"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[70] bg-[#050a0a]/98 backdrop-blur-2xl lg:hidden flex flex-col justify-between pt-28 pb-10 px-6 sm:px-10 overflow-y-auto"
           >
-            {[...NAV, { to: '/contact', label: 'Contact Studio' }].map((n, i) => (
-              <motion.div key={n.to} initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.06 * i, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}>
-                <Link to={n.to} className="block font-display font-extrabold text-3xl sm:text-5xl py-2 text-sand hover:text-lime transition-colors">
-                  {n.label}
-                </Link>
-              </motion.div>
-            ))}
+            {/* Ambient Background Glow in Mobile Menu */}
+            <div
+              className="pointer-events-none absolute top-1/4 right-0 w-80 h-80 rounded-full blur-[100px] opacity-25"
+              style={{ background: 'radial-gradient(circle, rgba(200,255,77,0.3) 0%, transparent 70%)' }}
+            />
+
+            {/* Menu Links */}
+            <div className="flex flex-col space-y-3 sm:space-y-4 my-auto relative z-10">
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-lime/80 mb-2">
+                Navigation
+              </span>
+              {NAV.map((n, i) => (
+                <motion.div
+                  key={n.to}
+                  initial={{ y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.04 * i, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Link
+                    to={n.to}
+                    onClick={() => setOpen(false)}
+                    className="block font-display font-extrabold text-3xl sm:text-4xl text-sand hover:text-lime transition-colors py-1"
+                  >
+                    {n.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Bottom Mobile Action CTA */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.28, duration: 0.45 }}
+              className="pt-6 border-t border-white/10 flex flex-col gap-3 relative z-10"
+            >
+              <Link
+                to="/contact"
+                onClick={() => setOpen(false)}
+                className="w-full py-3.5 px-6 rounded-full bg-lime text-ink font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(200,255,77,0.35)]"
+              >
+                Start a project <ArrowUpRight size={16} />
+              </Link>
+              <div className="flex items-center justify-between text-[11px] font-mono text-sand/40 pt-1">
+                <span>AURA STUDIO 2026</span>
+                <span className="text-lime">120 FPS CRAFT</span>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

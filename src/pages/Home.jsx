@@ -19,19 +19,19 @@ export default function HomePage() {
           />
 
           {/* Ambient Animated Concentric Orbital Circles */}
-          <div className="pointer-events-none absolute right-[-8%] sm:right-[2%] top-[22rem] -translate-y-1/2 w-[480px] sm:w-[600px] h-[480px] sm:h-[600px] flex items-center justify-center opacity-30 sm:opacity-45">
+          <div className="pointer-events-none absolute right-[-18%] sm:right-[2%] top-[18rem] sm:top-[22rem] -translate-y-1/2 w-[320px] sm:w-[600px] h-[320px] sm:h-[600px] flex items-center justify-center opacity-25 sm:opacity-45 scale-[0.6] sm:scale-100">
             <AnimatedGeometricCircles size={560} />
           </div>
 
           {/* Top Eyebrow Badge */}
           <Reveal y={15} delay={0.08} className="relative z-10 mb-6">
-            <span className="glass inline-flex items-center gap-3 rounded-full pl-2.5 pr-5 py-2 text-xs sm:text-sm cursor-pointer hover:border-lime/40 transition-colors" data-hot>
-              <span className="px-3 py-1 rounded-full bg-lime text-ink font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <span className="glass inline-flex flex-wrap items-center gap-2 sm:gap-3 rounded-full pl-2.5 pr-4 sm:pr-5 py-2 text-xs sm:text-sm cursor-pointer hover:border-lime/40 transition-colors max-w-full" data-hot>
+              <span className="px-2.5 sm:px-3 py-1 rounded-full bg-lime text-ink font-mono font-bold text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-ink animate-ping" />
                 AURA 2026
               </span>
-              <span className="text-sand/90 font-medium">Software Engineering & Digital Web Agency</span>
-              <ArrowUpRight size={14} className="text-lime" />
+              <span className="text-sand/90 font-medium truncate">Software Engineering & Digital Web Agency</span>
+              <ArrowUpRight size={14} className="text-lime shrink-0 hidden xs:inline sm:inline" />
             </span>
           </Reveal>
 
@@ -43,7 +43,7 @@ export default function HomePage() {
               { t: 'Engineering the web.', c: 'text-lime' },
               'Scaling ventures.',
             ]}
-            className="relative z-10 font-display font-extrabold text-[clamp(3.2rem,8.8vw,10.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
+            className="relative z-10 font-display font-extrabold text-[clamp(2.35rem,8.8vw,10.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
           />
 
           {/* Editorial Narrative & Uniform Action Controls */}
@@ -146,7 +146,7 @@ export default function HomePage() {
             <div
               key={s.n}
               data-hot
-              className="group relative rounded-[2.2rem] bg-[#071311] text-sand p-8 sm:p-10 min-h-[490px] flex flex-col justify-between border border-white/10 hover:border-lime/70 shadow-2xl hover:shadow-[0_30px_80px_-15px_rgba(200,255,77,0.28)] transition-all duration-500 hover:-translate-y-3 cursor-pointer overflow-hidden spot card-smoke"
+              className="group relative rounded-[1.85rem] sm:rounded-[2.2rem] bg-[#071311] text-sand p-6 sm:p-10 min-h-[440px] sm:min-h-[490px] flex flex-col justify-between border border-white/10 hover:border-lime/70 shadow-2xl hover:shadow-[0_30px_80px_-15px_rgba(200,255,77,0.28)] transition-all duration-500 hover:-translate-y-3 cursor-pointer overflow-hidden spot card-smoke"
             >
               <CardSmoke tone="dark" />
 
@@ -199,14 +199,14 @@ export default function HomePage() {
                 </div>
 
                 {/* 3-Node Architecture Flow Schematic */}
-                <div className="flex items-center justify-between gap-1.5 mb-3">
+                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-1 sm:gap-1.5 mb-3">
                   {s.pipeline.map((step, idx) => (
                     <React.Fragment key={step}>
-                      <span className="px-2.5 py-1 rounded-lg bg-ink/80 border border-white/10 group-hover:border-lime/40 font-mono text-[10px] text-sand/85 group-hover:text-lime transition-colors duration-300 truncate">
+                      <span className="px-2 sm:px-2.5 py-1 rounded-lg bg-ink/80 border border-white/10 group-hover:border-lime/40 font-mono text-[9px] sm:text-[10px] text-sand/85 group-hover:text-lime transition-colors duration-300 truncate">
                         {step}
                       </span>
                       {idx < s.pipeline.length - 1 && (
-                        <span className="text-lime/50 group-hover:text-lime font-mono text-xs transition-colors">→</span>
+                        <span className="text-lime/50 group-hover:text-lime font-mono text-[10px] sm:text-xs transition-colors">→</span>
                       )}
                     </React.Fragment>
                   ))}

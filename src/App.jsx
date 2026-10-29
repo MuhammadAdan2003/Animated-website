@@ -1,26 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { WebGLBackground, CustomCursor } from './components/ui.jsx';
 import { ScrollProgress } from './components/wow.jsx';
 import { Navbar, Footer } from './components/Layout.jsx';
 import HomePage from './pages/Home.jsx';
-import { ProductPage, SolutionsPage, CustomersPage, PricingPage, AboutPage, JournalPage, ContactPage } from './pages/Pages.jsx';
 
-gsap.registerPlugin(ScrollTrigger);
+const ProductPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.ProductPage })));
+const SolutionsPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.SolutionsPage })));
+const CustomersPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.CustomersPage })));
+const PricingPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.PricingPage })));
+const AboutPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.AboutPage })));
+const JournalPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.JournalPage })));
+const ContactPage = lazy(() => import('./pages/Pages.jsx').then((m) => ({ default: m.ContactPage })));
 
 function useSmoothScroll() {
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.25, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+    const lenis = new Lenis({
+      lerp: 0.1,
+      smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 1,
+    });
     window.__lenis = lenis;
-    lenis.on('scroll', ScrollTrigger.update);
     const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
-    return () => { gsap.ticker.remove(tick); lenis.destroy(); window.__lenis = null; };
+    return () => {
+      gsap.ticker.remove(tick);
+      lenis.destroy();
+      window.__lenis = null;
+    };
   }, []);
 }
 
@@ -34,7 +46,6 @@ function MainLayout() {
     } else {
       window.scrollTo(0, 0);
     }
-    ScrollTrigger.refresh();
   }, [location.pathname]);
 
   return (
@@ -51,20 +62,22 @@ function MainLayout() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: 'easeInOut' }}
+            transition={{ duration: 0.24, ease: 'easeOut' }}
             className="w-full"
           >
-            <Routes location={location}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/product" element={<ProductPage />} />
-              <Route path="/solutions" element={<SolutionsPage />} />
-              <Route path="/customers" element={<CustomersPage />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/journal" element={<JournalPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="*" element={<HomePage />} />
-            </Routes>
+            <Suspense fallback={<div className="min-h-screen w-full" />}>
+              <Routes location={location}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/product" element={<ProductPage />} />
+                <Route path="/solutions" element={<SolutionsPage />} />
+                <Route path="/customers" element={<CustomersPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/journal" element={<JournalPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="*" element={<HomePage />} />
+              </Routes>
+            </Suspense>
           </motion.div>
         </AnimatePresence>
       </main>

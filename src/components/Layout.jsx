@@ -30,11 +30,18 @@ export function Logo({ className = '' }) {
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const scrolledRef = React.useRef(false);
   const location = useLocation();
 
   useEffect(() => setOpen(false), [location.pathname]);
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 40);
+    const on = () => {
+      const next = window.scrollY > 40;
+      if (next !== scrolledRef.current) {
+        scrolledRef.current = next;
+        setScrolled(next);
+      }
+    };
     on();
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
@@ -98,11 +105,11 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-ink/90 backdrop-blur-2xl lg:hidden flex flex-col justify-center gutter"
+            className="fixed inset-0 z-[70] bg-ink/95 backdrop-blur-xl lg:hidden flex flex-col justify-center overflow-y-auto py-24 gutter"
           >
             {[...NAV, { to: '/contact', label: 'Contact Studio' }].map((n, i) => (
-              <motion.div key={n.to} initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.08 * i, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
-                <Link to={n.to} className="block font-display font-extrabold text-5xl py-2 text-sand hover:text-lime transition-colors">
+              <motion.div key={n.to} initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.06 * i, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}>
+                <Link to={n.to} className="block font-display font-extrabold text-3xl sm:text-5xl py-2 text-sand hover:text-lime transition-colors">
                   {n.label}
                 </Link>
               </motion.div>

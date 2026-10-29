@@ -194,23 +194,26 @@ function ChapterScrubberButton({ frame, index, isCurrent, onSelect }) {
       type="button"
       onClick={() => onSelect(index)}
       data-hot
-      className={`text-left cursor-pointer rounded-2xl px-4 py-3.5 border transition-all duration-300 flex items-center justify-between gap-3 ${isCurrent
-        ? 'bg-lime text-ink border-lime shadow-[0_0_25px_rgba(200,255,77,0.35)]'
-        : 'bg-black/45 text-sand border-white/12 hover:border-lime/50 hover:bg-white/10'
-        }`}
+      className={`text-left cursor-pointer rounded-xl sm:rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3.5 border transition-all duration-300 flex items-center justify-between gap-2 sm:gap-3 min-w-0 ${
+        isCurrent
+          ? 'bg-lime text-ink border-lime shadow-[0_0_25px_rgba(200,255,77,0.35)]'
+          : 'bg-black/45 text-sand border-white/12 hover:border-lime/50 hover:bg-white/10'
+      }`}
     >
-      <div className="flex items-center gap-2.5 font-mono text-xs">
+      <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs min-w-0">
         <span
-          className={`w-2 h-2 rounded-full shrink-0 ${isCurrent ? 'bg-ink animate-ping' : 'bg-lime/50'
-            }`}
+          className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full shrink-0 ${
+            isCurrent ? 'bg-ink animate-ping' : 'bg-lime/50'
+          }`}
         />
-        <span className="font-bold tracking-wider uppercase">
+        <span className="font-bold tracking-wider uppercase truncate">
           {frame.id} // {frame.label}
         </span>
       </div>
       <span
-        className={`font-mono text-[10px] uppercase px-2 py-0.5 rounded-full ${isCurrent ? 'bg-ink/15 text-ink font-bold' : 'text-sand/45'
-          }`}
+        className={`hidden xs:inline-block sm:inline-block shrink-0 font-mono text-[9px] sm:text-[10px] uppercase px-1.5 sm:px-2 py-0.5 rounded-full ${
+          isCurrent ? 'bg-ink/15 text-ink font-bold' : 'text-sand/45'
+        }`}
       >
         {isCurrent ? 'LIVE' : `0${index + 1}`}
       </span>
@@ -222,8 +225,18 @@ export function HeroExpandShowcase() {
   const containerRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 640 : false
+  );
   const activeIdxRef = useRef(0);
   const expandedRef = useRef(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Direct 1:1 scroll binding (Lenis already smooths window.scrollY, so zero extra spring lag!)
   const { scrollYProgress } = useScroll({
@@ -231,10 +244,12 @@ export function HeroExpandShowcase() {
     offset: ['start 78%', 'end end'],
   });
 
-  // Phase 1 (0.00 -> 0.30): 1:1 Scroll-Synced Expansion from compact Hero card (0.46) to FULL SCREEN (1.0)
-  const scale = useTransform(scrollYProgress, [0, 0.30], [0.46, 1], { clamp: true });
-  const imgInnerScale = useTransform(scrollYProgress, [0, 0.30], [1.18, 1], { clamp: true });
-  const borderRadius = useTransform(scrollYProgress, [0, 0.30], [40, 0], { clamp: true });
+  // Phase 1 (0.00 -> 0.30): 1:1 Scroll-Synced Expansion from compact Hero card to FULL SCREEN (1.0)
+  const initialScale = isMobile ? 0.88 : 0.46;
+  const initialRadius = isMobile ? 28 : 40;
+  const scale = useTransform(scrollYProgress, [0, 0.30], [initialScale, 1], { clamp: true });
+  const imgInnerScale = useTransform(scrollYProgress, [0, 0.30], [1.15, 1], { clamp: true });
+  const borderRadius = useTransform(scrollYProgress, [0, 0.30], [initialRadius, 0], { clamp: true });
   const contentOpacity = useTransform(scrollYProgress, [0.18, 0.32], [0, 1], { clamp: true });
   const contentY = useTransform(scrollYProgress, [0.18, 0.32], [24, 0], { clamp: true });
   const miniBadgeOpacity = useTransform(scrollYProgress, [0, 0.16], [1, 0], { clamp: true });
@@ -290,10 +305,10 @@ export function HeroExpandShowcase() {
   const activeFrame = HERO_SHOWCASE_FRAMES[safeIdx] || HERO_SHOWCASE_FRAMES[0];
 
   return (
-    <div ref={containerRef} className="relative h-[330vh] w-full">
+    <div ref={containerRef} className="relative h-[280vh] sm:h-[330vh] w-full">
       <div
-        style={{ position: 'sticky', top: 0, height: '100vh' }}
-        className="sticky top-0 h-screen w-full flex items-start justify-center overflow-hidden"
+        style={{ position: 'sticky', top: 0 }}
+        className="sticky top-0 h-[100dvh] w-full flex items-start justify-center overflow-hidden"
       >
         <motion.div
           style={{
@@ -313,12 +328,14 @@ export function HeroExpandShowcase() {
               return (
                 <div
                   key={frame.id}
-                  className={`absolute inset-0 transition-all duration-700 ease-out ${isCurrent ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0 pointer-events-none'
-                    }`}
+                  className={`absolute inset-0 transition-opacity duration-700 ease-out ${
+                    isCurrent ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                  }`}
                 >
                   <img
                     src={frame.img}
                     alt={frame.titleLine1}
+                    decoding="async"
                     onError={(e) => {
                       if (e.currentTarget.src !== frame.fallback) {
                         e.currentTarget.onerror = null;
@@ -343,32 +360,32 @@ export function HeroExpandShowcase() {
           {/* COMPACT HERO PORTAL OVERLAY (Shown when small on the Hero section) */}
           <motion.div
             style={{ opacity: miniBadgeOpacity, scale: miniBadgeScale }}
-            className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-7 sm:p-10"
+            className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-10"
           >
             {/* Top Viewfinder HUD Bar */}
-            <div className="flex items-center justify-between">
-              <span className="px-4 py-1.5 rounded-full bg-ink/85 border border-lime/40 text-lime font-mono text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-lime animate-ping" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-ink/85 border border-lime/40 text-lime font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 sm:gap-2">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-lime animate-ping shrink-0" />
                 LIVE FLAGSHIP PORTAL
               </span>
-              <span className="px-4 py-1.5 rounded-full bg-ink/85 border border-white/15 text-sand/80 font-mono text-xs">
+              <span className="hidden sm:inline-block px-4 py-1.5 rounded-full bg-ink/85 border border-white/15 text-sand/80 font-mono text-xs">
                 01 — 04 // 120 FPS
               </span>
             </div>
 
             {/* Center Expanding Portal Badge */}
-            <div className="my-auto flex flex-col items-center text-center">
-              <div className="relative w-16 h-16 rounded-full bg-lime text-ink flex items-center justify-center shadow-[0_0_40px_rgba(200,255,77,0.5)] mb-4">
+            <div className="my-auto flex flex-col items-center text-center px-2">
+              <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-lime text-ink flex items-center justify-center shadow-[0_0_40px_rgba(200,255,77,0.5)] mb-3 sm:mb-4">
                 <span className="absolute inset-0 rounded-full border border-lime pulse-ring" />
-                <ArrowUpRight size={26} />
+                <ArrowUpRight size={22} />
               </div>
-              <span className="px-6 py-2.5 rounded-full bg-ink/90 border border-white/20 text-sand font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-2xl">
+              <span className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-ink/90 border border-white/20 text-sand font-mono text-[10px] sm:text-sm font-bold uppercase tracking-[0.14em] sm:tracking-[0.2em] shadow-2xl">
                 SCROLL TO EXPAND SHOWCASE ↓
               </span>
             </div>
 
             {/* Bottom Viewfinder Corner Marks */}
-            <div className="flex items-center justify-between font-mono text-xs text-sand/60">
+            <div className="flex items-center justify-between font-mono text-[10px] sm:text-xs text-sand/60">
               <span>[ AURA SHOWREEL 2026 ]</span>
               <span className="text-lime">SYNCED WITH SCROLL ●</span>
             </div>
@@ -377,16 +394,17 @@ export function HeroExpandShowcase() {
           {/* EXPANDED FULL-SECTION INTERFACE (Full-Screen Width with Gutter Alignment) */}
           <motion.div
             style={{ opacity: contentOpacity, y: contentY }}
-            className={`relative z-20 w-full h-full gutter pt-24 pb-8 sm:pt-28 sm:pb-12 flex flex-col justify-between ${isExpanded ? '' : 'pointer-events-none'
-              }`}
+            className={`relative z-20 w-full h-full gutter pt-20 pb-5 sm:pt-28 sm:pb-12 flex flex-col justify-between ${
+              isExpanded ? '' : 'pointer-events-none'
+            }`}
           >
             {/* Top Architectural HUD Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/15 pb-4">
-              <div className="flex items-center gap-3">
-                <span className={`px-3 py-1 rounded-full font-mono text-xs font-bold ${activeFrame.accentBg}`}>
+            <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4 border-b border-white/15 pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <span className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-mono text-[10px] sm:text-xs font-bold shrink-0 ${activeFrame.accentBg}`}>
                   {activeFrame.id} / 04
                 </span>
-                <span className="font-mono text-xs uppercase tracking-[0.18em] text-sand/90 font-bold">
+                <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.18em] text-sand/90 font-bold truncate">
                   {activeFrame.eyebrow.split('—')[1] || activeFrame.eyebrow}
                 </span>
               </div>
@@ -402,33 +420,40 @@ export function HeroExpandShowcase() {
                     </span>
                   ))}
                 </div>
-                <span className="px-3.5 py-1 rounded-full bg-lime/15 border border-lime/40 font-mono text-xs text-lime font-bold">
+                <span className="hidden sm:inline-block px-3.5 py-1 rounded-full bg-lime/15 border border-lime/40 font-mono text-xs text-lime font-bold">
                   {activeFrame.metric}
                 </span>
               </div>
             </div>
 
             {/* Center Editorial Split: Monumental Heading (Left) + Floating Spec Card (Right) */}
-            <div className="my-auto py-4 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+            <div className="my-auto py-2 sm:py-4 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-end">
               {/* Left 8 Cols: Monumental Switching Headings */}
-              <div className="lg:col-span-8 relative min-h-[200px] sm:min-h-[250px] flex items-end">
+              <div className="lg:col-span-8 relative min-h-[165px] sm:min-h-[250px] flex items-end">
                 {HERO_SHOWCASE_FRAMES.map((frame, i) => {
                   const isCurrent = i === safeIdx;
                   return (
                     <div
                       key={frame.id}
-                      className={`w-full transition-all duration-500 ease-out ${isCurrent
-                        ? 'opacity-100 translate-y-0 relative z-10'
-                        : 'opacity-0 translate-y-5 absolute inset-x-0 bottom-0 pointer-events-none z-0'
-                        }`}
+                      className={`w-full transition-all duration-500 ease-out ${
+                        isCurrent
+                          ? 'opacity-100 translate-y-0 relative z-10'
+                          : 'opacity-0 translate-y-5 absolute inset-x-0 bottom-0 pointer-events-none z-0'
+                      }`}
                     >
-                      <h2 className="font-display font-extrabold text-[clamp(2.6rem,6.4vw,6.4rem)] leading-[0.96] tracking-[-0.035em] text-sand">
+                      <h2 className="font-display font-extrabold text-[clamp(2rem,6.4vw,6.4rem)] leading-[0.96] tracking-[-0.035em] text-sand">
                         {frame.titleLine1}
                         <span className={`block ${frame.accentColor}`}>{frame.titleLine2}</span>
                       </h2>
-                      <p className="mt-4 max-w-2xl text-base sm:text-xl text-sand/80 leading-relaxed">
+                      <p className="mt-2.5 sm:mt-4 max-w-2xl text-sm sm:text-xl text-sand/80 leading-relaxed">
                         {frame.desc}
                       </p>
+                      {/* Compact Benchmark Badge on Mobile/Tablet */}
+                      <div className="mt-3 flex lg:hidden items-center gap-3">
+                        <span className="px-3 py-1 rounded-full bg-ink/80 border border-white/15 font-mono text-xs text-lime font-bold">
+                          {frame.statBig} · {frame.statSub}
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
@@ -462,8 +487,8 @@ export function HeroExpandShowcase() {
             </div>
 
             {/* Bottom 4-Chapter Selector Tabs (No Progress Bars) */}
-            <div className="pt-4 border-t border-white/15">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div className="pt-3 sm:pt-4 border-t border-white/15">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
                 {HERO_SHOWCASE_FRAMES.map((frame, i) => (
                   <ChapterScrubberButton
                     key={frame.id}
@@ -584,57 +609,57 @@ const OVERLAP_SLIDES = [
 function SlideVisualArt({ type }) {
   if (type === 'web') {
     return (
-      <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-[#050b0a] border border-white/10 p-5 sm:p-7 overflow-hidden flex flex-col justify-between group">
+      <div className="relative w-full h-full min-h-[260px] sm:min-h-[400px] rounded-[1.5rem] sm:rounded-[2rem] bg-[#050b0a] border border-white/10 p-4 sm:p-7 overflow-hidden flex flex-col justify-between group">
         <div className="absolute inset-0 dots opacity-40 pointer-events-none" />
 
         {/* Top Browser Bar */}
-        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-coral/80" />
-            <span className="w-3 h-3 rounded-full bg-lime/80" />
-            <span className="w-3 h-3 rounded-full bg-aqua/80" />
-            <span className="ml-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-sand/70">
+        <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/10 pb-3 sm:pb-3.5">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-coral/80 shrink-0" />
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-lime/80 shrink-0" />
+            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-aqua/80 shrink-0" />
+            <span className="ml-1 sm:ml-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[9px] sm:text-[10px] text-sand/70 truncate">
               https://flagship.aura.studio
             </span>
           </div>
-          <span className="px-2.5 py-1 rounded-full bg-lime/15 text-lime font-mono text-[10px] font-bold border border-lime/30">
+          <span className="px-2 sm:px-2.5 py-1 rounded-full bg-lime/15 text-lime font-mono text-[9px] sm:text-[10px] font-bold border border-lime/30 shrink-0">
             120 FPS
           </span>
         </div>
 
         {/* Center Layered Visual Mockup */}
-        <div className="relative z-10 my-auto py-6">
+        <div className="relative z-10 my-auto py-4 sm:py-6">
           <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-lime mb-2">
             // INTERACTIVE FLAGSHIP ENGINE
           </div>
-          <div className="font-display font-extrabold text-3xl sm:text-5xl text-sand leading-[0.95] tracking-tight">
+          <div className="font-display font-extrabold text-2xl sm:text-5xl text-sand leading-[0.95] tracking-tight">
             Kinetic craft.<br />
             <span className="text-lime">Zero friction.</span>
           </div>
 
           {/* Inner metric cards */}
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-4 group-hover:-translate-y-1 transition-transform duration-500">
-              <div className="flex items-center justify-between text-xs font-mono text-sand/50 mb-1">
+          <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2.5 sm:gap-3">
+            <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-3 sm:p-4 group-hover:-translate-y-1 transition-transform duration-500">
+              <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono text-sand/50 mb-1">
                 <span>CORE VITALS</span>
-                <Zap size={13} className="text-lime" />
+                <Zap size={13} className="text-lime shrink-0" />
               </div>
-              <div className="font-display font-extrabold text-2xl sm:text-3xl text-lime">100 / 100</div>
-              <div className="text-[11px] text-sand/50 mt-0.5">Sub-second First Paint</div>
+              <div className="font-display font-extrabold text-xl sm:text-3xl text-lime">100 / 100</div>
+              <div className="text-[10px] sm:text-[11px] text-sand/50 mt-0.5">Sub-second First Paint</div>
             </div>
-            <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-4 group-hover:translate-y-1 transition-transform duration-500">
-              <div className="flex items-center justify-between text-xs font-mono text-sand/50 mb-1">
+            <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-3 sm:p-4 group-hover:translate-y-1 transition-transform duration-500">
+              <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono text-sand/50 mb-1">
                 <span>CONVERSION</span>
-                <ArrowUpRight size={13} className="text-aqua" />
+                <ArrowUpRight size={13} className="text-aqua shrink-0" />
               </div>
-              <div className="font-display font-extrabold text-2xl sm:text-3xl text-aqua">+240%</div>
-              <div className="text-[11px] text-sand/50 mt-0.5">Average Client Lift</div>
+              <div className="font-display font-extrabold text-xl sm:text-3xl text-aqua">+240%</div>
+              <div className="text-[10px] sm:text-[11px] text-sand/50 mt-0.5">Average Client Lift</div>
             </div>
           </div>
         </div>
 
         {/* Bottom Ribbon inside card */}
-        <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+        <div className="relative z-10 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] sm:text-[10px] text-sand/50">
           <span>SSR STREAMING: ACTIVE</span>
           <span className="text-lime">● EDGE CACHED (14ms)</span>
         </div>
@@ -644,33 +669,33 @@ function SlideVisualArt({ type }) {
 
   if (type === 'saas') {
     return (
-      <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-[#04100f] border border-aqua/25 p-5 sm:p-7 overflow-hidden flex flex-col justify-between group">
+      <div className="relative w-full h-full min-h-[260px] sm:min-h-[400px] rounded-[1.5rem] sm:rounded-[2rem] bg-[#04100f] border border-aqua/25 p-4 sm:p-7 overflow-hidden flex flex-col justify-between group">
         <div className="absolute inset-0 dots opacity-40 pointer-events-none" />
 
         {/* Header */}
-        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
-          <div className="flex items-center gap-2 font-mono text-xs text-aqua">
-            <Server size={15} />
-            <span>CLOUD CLUSTER // MULTI-REGION MESH</span>
+        <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/10 pb-3 sm:pb-3.5">
+          <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-aqua min-w-0">
+            <Server size={15} className="shrink-0" />
+            <span className="truncate">CLOUD CLUSTER // MULTI-REGION MESH</span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-aqua/15 text-aqua font-mono text-[10px] border border-aqua/30">
+          <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-aqua/15 text-aqua font-mono text-[9px] sm:text-[10px] border border-aqua/30 shrink-0">
             HEALTHY
           </span>
         </div>
 
         {/* Interactive Node Stack (No Progress Bars) */}
-        <div className="relative z-10 my-auto py-4 space-y-3">
+        <div className="relative z-10 my-auto py-3 sm:py-4 space-y-2.5 sm:space-y-3">
           {[
             { region: 'US-EAST · Virginia Edge', qps: '42.8k req/s', lat: '4.2ms', status: '99.999% SLA', c: 'text-lime border-lime/30 bg-lime/10' },
             { region: 'EU-CENTRAL · Frankfurt', qps: '31.4k req/s', lat: '7.8ms', status: 'ACTIVE MESH', c: 'text-aqua border-aqua/30 bg-aqua/10' },
             { region: 'AP-EAST · Tokyo Cluster', qps: '28.9k req/s', lat: '6.1ms', status: 'EDGE SYNCED', c: 'text-lime border-lime/30 bg-lime/10' },
           ].map((node, i) => (
-            <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/10 p-3.5 hover:border-aqua/40 transition-colors flex items-center justify-between gap-3">
-              <div>
-                <span className="text-sand font-mono text-xs font-semibold block">{node.region}</span>
-                <span className="text-aqua font-mono text-[11px]">{node.qps} · <b className="text-lime">{node.lat}</b></span>
+            <div key={i} className="rounded-2xl bg-white/[0.04] border border-white/10 p-3 sm:p-3.5 hover:border-aqua/40 transition-colors flex items-center justify-between gap-2 sm:gap-3">
+              <div className="min-w-0">
+                <span className="text-sand font-mono text-[11px] sm:text-xs font-semibold block truncate">{node.region}</span>
+                <span className="text-aqua font-mono text-[10px] sm:text-[11px]">{node.qps} · <b className="text-lime">{node.lat}</b></span>
               </div>
-              <span className={`px-2.5 py-1 rounded-full border font-mono text-[10px] font-bold ${node.c}`}>
+              <span className={`px-2 sm:px-2.5 py-1 rounded-full border font-mono text-[9px] sm:text-[10px] font-bold shrink-0 ${node.c}`}>
                 {node.status}
               </span>
             </div>
@@ -678,7 +703,7 @@ function SlideVisualArt({ type }) {
         </div>
 
         {/* Footer */}
-        <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+        <div className="relative z-10 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] sm:text-[10px] text-sand/50">
           <span>ZERO-DOWNTIME CI/CD</span>
           <span className="text-aqua">● AUTO-SCALING: 64 PODS</span>
         </div>
@@ -688,37 +713,37 @@ function SlideVisualArt({ type }) {
 
   if (type === 'ai') {
     return (
-      <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-ink text-sand p-5 sm:p-7 overflow-hidden flex flex-col justify-between shadow-2xl group">
-        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
-          <div className="flex items-center gap-2 font-mono text-xs text-lime">
-            <Sparkles size={15} />
-            <span>AURA NEURAL AGENT // ORCHESTRATOR</span>
+      <div className="relative w-full h-full min-h-[260px] sm:min-h-[400px] rounded-[1.5rem] sm:rounded-[2rem] bg-ink text-sand p-4 sm:p-7 overflow-hidden flex flex-col justify-between shadow-2xl group">
+        <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/10 pb-3 sm:pb-3.5">
+          <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-lime min-w-0">
+            <Sparkles size={15} className="shrink-0" />
+            <span className="truncate">AURA NEURAL AGENT // ORCHESTRATOR</span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-lime text-ink font-mono text-[10px] font-bold">
+          <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-lime text-ink font-mono text-[9px] sm:text-[10px] font-bold shrink-0">
             LIVE STREAM
           </span>
         </div>
 
         {/* Neural Pipeline Steps */}
-        <div className="relative z-10 my-auto py-4 space-y-3 font-mono text-xs">
-          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
-            <span className="text-[10px] text-sand/40 block mb-1">01 // SEMANTIC VECTOR RETRIEVAL</span>
+        <div className="relative z-10 my-auto py-3 sm:py-4 space-y-2.5 sm:space-y-3 font-mono text-[11px] sm:text-xs">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-[9px] sm:text-[10px] text-sand/40 block mb-1">01 // SEMANTIC VECTOR RETRIEVAL</span>
             <p className="text-sand/90">Indexed 1.4M enterprise docs in <span className="text-lime font-bold">11.2ms</span></p>
           </div>
-          <div className="p-3.5 rounded-2xl bg-lime/10 border border-lime/30">
-            <span className="text-[10px] text-lime block mb-1">02 // AUTONOMOUS REASONING LOOP</span>
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-lime/10 border border-lime/30">
+            <span className="text-[9px] sm:text-[10px] text-lime block mb-1">02 // AUTONOMOUS REASONING LOOP</span>
             <p className="text-sand">Executing multi-step SQL & API tool calls with deterministic verification ✓</p>
           </div>
-          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <div>
-              <span className="text-[10px] text-sand/40 block">03 // PRODUCTION OUTPUT</span>
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <span className="text-[9px] sm:text-[10px] text-sand/40 block">03 // PRODUCTION OUTPUT</span>
               <span className="text-aqua font-bold">Zero Hallucination Guardrails Passed</span>
             </div>
-            <span className="w-8 h-8 rounded-full bg-lime text-ink flex items-center justify-center font-bold">✓</span>
+            <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-lime text-ink flex items-center justify-center font-bold shrink-0">✓</span>
           </div>
         </div>
 
-        <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+        <div className="relative z-10 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] sm:text-[10px] text-sand/50">
           <span>MODEL: CUSTOM RAG + CLAUDE / GPT</span>
           <span className="text-lime">185 TOKENS / SEC</span>
         </div>
@@ -728,43 +753,43 @@ function SlideVisualArt({ type }) {
 
   // Mobile & Design Systems
   return (
-    <div className="relative w-full h-full min-h-[320px] sm:min-h-[400px] rounded-[2rem] bg-ink text-sand p-5 sm:p-7 overflow-hidden flex flex-col justify-between shadow-2xl group">
-      <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5">
-        <div className="flex items-center gap-2 font-mono text-xs text-lime">
-          <Smartphone size={15} />
-          <span>120Hz NATIVE GESTURE ENGINE</span>
+    <div className="relative w-full h-full min-h-[260px] sm:min-h-[400px] rounded-[1.5rem] sm:rounded-[2rem] bg-ink text-sand p-4 sm:p-7 overflow-hidden flex flex-col justify-between shadow-2xl group">
+      <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/10 pb-3 sm:pb-3.5">
+        <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-lime min-w-0">
+          <Smartphone size={15} className="shrink-0" />
+          <span className="truncate">120Hz NATIVE GESTURE ENGINE</span>
         </div>
-        <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-sand font-mono text-[10px]">
+        <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-white/10 text-sand font-mono text-[9px] sm:text-[10px] shrink-0">
           iOS & ANDROID
         </span>
       </div>
 
       {/* Dual Floating App Cards */}
-      <div className="relative z-10 my-auto py-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-        <div className="rounded-2xl bg-gradient-to-br from-white/10 to-white/[0.03] border border-white/15 p-4 flex flex-col justify-between min-h-[170px] group-hover:-rotate-1 transition-transform duration-500">
+      <div className="relative z-10 my-auto py-3 sm:py-4 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+        <div className="rounded-2xl bg-gradient-to-br from-white/10 to-white/[0.03] border border-white/15 p-3.5 sm:p-4 flex flex-col justify-between min-h-[135px] sm:min-h-[170px] group-hover:-rotate-1 transition-transform duration-500">
           <div className="flex items-center justify-between">
             <span className="px-2.5 py-0.5 rounded-full bg-lime text-ink font-mono text-[10px] font-bold">APP STORE</span>
             <span className="font-mono text-xs text-lime">★ 4.9</span>
           </div>
           <div>
-            <p className="font-display font-extrabold text-2xl text-sand mt-3">Fluid Touch Physics</p>
+            <p className="font-display font-extrabold text-xl sm:text-2xl text-sand mt-2.5 sm:mt-3">Fluid Touch Physics</p>
             <p className="text-xs text-sand/60 mt-1">Spring-driven gestures & instant offline SQLite sync.</p>
           </div>
         </div>
 
-        <div className="rounded-2xl bg-gradient-to-br from-lime/20 to-aqua/10 border border-lime/30 p-4 flex flex-col justify-between min-h-[170px] group-hover:rotate-1 transition-transform duration-500">
+        <div className="rounded-2xl bg-gradient-to-br from-lime/20 to-aqua/10 border border-lime/30 p-3.5 sm:p-4 flex flex-col justify-between min-h-[135px] sm:min-h-[170px] group-hover:rotate-1 transition-transform duration-500">
           <div className="flex items-center justify-between">
             <span className="px-2.5 py-0.5 rounded-full bg-aqua text-ink font-mono text-[10px] font-bold">DESIGN TOKENS</span>
             <Layers size={14} className="text-aqua" />
           </div>
           <div>
-            <p className="font-display font-extrabold text-2xl text-sand mt-3">60+ UI Primitives</p>
+            <p className="font-display font-extrabold text-xl sm:text-2xl text-sand mt-2.5 sm:mt-3">60+ UI Primitives</p>
             <p className="text-xs text-sand/70 mt-1">WCAG AAA accessible components synced with Figma.</p>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-sand/50">
+      <div className="relative z-10 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] sm:text-[10px] text-sand/50">
         <span>OTA INSTANT UPDATES</span>
         <span className="text-lime">● 99.98% CRASH-FREE SESSIONS</span>
       </div>
@@ -773,58 +798,89 @@ function SlideVisualArt({ type }) {
 }
 
 function StickyOverlapCard({ slide, index, total, smoothScroll }) {
+  const cardRef = useRef(null);
+  const [stickyTop, setStickyTop] = useState(84 + index * 20);
   const isLast = index === total - 1;
   const startScale = index * (1 / total);
   const targetScale = isLast ? 1 : 1 - (total - 1 - index) * 0.038;
   const scale = useTransform(smoothScroll, [startScale, 1], [1, targetScale], { clamp: true });
 
+  // Viewport-aware sticky top: on desktop (where card fits in viewport), pins at top (84px + offset).
+  // On mobile/short screens (where card is taller than viewport), allows scrolling through 100% of
+  // the card until its bottom edge is visible before pinning and letting the next slide overlap!
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const calc = () => {
+      if (!cardRef.current) return;
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const cardH = cardRef.current.offsetHeight;
+      const baseTop = (vw < 640 ? 72 : 84) + index * (vw < 640 ? 12 : 20);
+      const bottomAlignedTop = vh - cardH - (vw < 640 ? 16 : 24);
+      setStickyTop(Math.round(Math.min(baseTop, bottomAlignedTop)));
+    };
+    calc();
+    let ro;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(calc);
+      ro.observe(el);
+    }
+    window.addEventListener('resize', calc, { passive: true });
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', calc);
+    };
+  }, [index]);
+
   return (
     <div
-      className="sticky w-full pb-12 sm:pb-16"
+      className="sticky w-full pb-10 sm:pb-16"
       style={{
-        top: `calc(5.2rem + ${index * 20}px)`,
+        top: `${stickyTop}px`,
         zIndex: index + 10,
       }}
     >
       <motion.div
+        ref={cardRef}
         style={{ scale, transformOrigin: 'top center' }}
-        className={`relative w-full rounded-[2.2rem] sm:rounded-[3rem] border p-6 sm:p-10 lg:p-14 shadow-2xl overflow-hidden transform-gpu will-change-transform [backface-visibility:hidden] ${slide.theme.cardBg}`}
+        className={`relative w-full rounded-[1.75rem] sm:rounded-[3rem] border p-5 sm:p-10 lg:p-14 shadow-2xl overflow-hidden transform-gpu will-change-transform [backface-visibility:hidden] ${slide.theme.cardBg}`}
       >
         {/* Subtle GPU Smoke Plumes inside every card component */}
         <CardSmoke tone={slide.theme.smokeTone} />
 
         {/* Top Index & Category Bar */}
-        <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-current/10">
-          <div className="flex items-center gap-3">
-            <span className={`px-3.5 py-1 rounded-full font-mono text-xs font-bold border ${slide.theme.pillBg}`}>
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 sm:gap-4 pb-4 mb-5 sm:pb-6 sm:mb-8 border-b border-current/10">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className={`px-3 sm:px-3.5 py-1 rounded-full font-mono text-[10px] sm:text-xs font-bold border truncate ${slide.theme.pillBg}`}>
               {slide.tag}
             </span>
           </div>
-          <div className="flex items-center gap-2 font-mono text-xs opacity-60">
+          <div className="hidden sm:flex items-center gap-2 font-mono text-xs opacity-60">
             <span>SCROLL TO OVERLAP</span>
             <span>↓</span>
           </div>
         </div>
 
         {/* Main 12-Col Content Grid */}
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
           {/* Left Column: Editorial Typography & Capabilities */}
           <div className="lg:col-span-7 flex flex-col justify-between">
             <div>
-              <h3 className="font-display font-extrabold text-[clamp(2.4rem,5.2vw,4.75rem)] leading-[0.96] tracking-tight">
+              <h3 className="font-display font-extrabold text-[clamp(1.9rem,5.2vw,4.75rem)] leading-[0.98] sm:leading-[0.96] tracking-tight">
                 {slide.title[0]}
                 <span className={`block ${slide.theme.accentText}`}>{slide.title[1]}</span>
               </h3>
 
-              <p className="mt-5 text-base sm:text-lg opacity-80 max-w-2xl leading-relaxed">
+              <p className="mt-3.5 sm:mt-5 text-sm sm:text-lg opacity-80 max-w-2xl leading-relaxed">
                 {slide.subtitle}
               </p>
 
               {/* Key Deliverables */}
-              <ul className="mt-6 space-y-2.5">
+              <ul className="mt-4 sm:mt-6 space-y-2 sm:space-y-2.5">
                 {slide.bullets.map((b, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-sm sm:text-base opacity-90">
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold ${slide.theme.pillBg}`}>
+                  <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-base opacity-90">
+                    <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-[10px] sm:text-xs font-bold ${slide.theme.pillBg}`}>
                       ✓
                     </span>
                     <span>{b}</span>
@@ -833,11 +889,11 @@ function StickyOverlapCard({ slide, index, total, smoothScroll }) {
               </ul>
 
               {/* Tech Stack Pills */}
-              <div className="mt-7 flex flex-wrap gap-2">
+              <div className="mt-5 sm:mt-7 flex flex-wrap gap-1.5 sm:gap-2">
                 {slide.stack.map((tech) => (
                   <span
                     key={tech}
-                    className={`px-3.5 py-1.5 rounded-full font-mono text-xs border ${slide.theme.tagChip}`}
+                    className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full font-mono text-[10px] sm:text-xs border ${slide.theme.tagChip}`}
                   >
                     {tech}
                   </span>
@@ -846,12 +902,12 @@ function StickyOverlapCard({ slide, index, total, smoothScroll }) {
             </div>
 
             {/* Bottom Stat + Standardized CTA Row */}
-            <div className="mt-8 pt-6 border-t border-current/10 flex flex-wrap items-center justify-between gap-6">
+            <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-current/10 flex flex-wrap items-center justify-between gap-4 sm:gap-6">
               <div>
-                <div className={`font-display font-extrabold text-4xl sm:text-5xl leading-none bg-transparent ${slide.theme.accentText}`}>
+                <div className={`font-display font-extrabold text-3xl sm:text-5xl leading-none bg-transparent ${slide.theme.accentText}`}>
                   {slide.statVal}
                 </div>
-                <div className="font-mono text-xs opacity-65 mt-1">{slide.statLabel}</div>
+                <div className="font-mono text-[11px] sm:text-xs opacity-65 mt-1">{slide.statLabel}</div>
               </div>
 
               <WaterButton to="/contact" variant={slide.theme.btnVariant}>
@@ -861,7 +917,7 @@ function StickyOverlapCard({ slide, index, total, smoothScroll }) {
           </div>
 
           {/* Right Column: Layered Visual Art */}
-          <div className="lg:col-span-5 h-full">
+          <div className="lg:col-span-5 h-full w-full">
             <SlideVisualArt type={slide.visualType} index={index} />
           </div>
         </div>
@@ -992,20 +1048,30 @@ function getZindex(array, index) {
 export function TechStackAndWhyUs() {
   const scrollRef = useRef(null);
   const stageRef = useRef(null);
-  const [progress, setProgress] = useState(0);
+  const progressRef = useRef(0);
+  const activeRef = useRef(0);
+  const [active, setActive] = useState(0);
   const [hoveredRow, setHoveredRow] = useState(0);
   const isDownRef = useRef(false);
   const startXRef = useRef(0);
+  const startYRef = useRef(0);
   const draggedRef = useRef(false);
 
   const total = SUPAH_CAROUSEL_ITEMS.length;
-  const safeProgress = Number.isFinite(progress) ? progress : 0;
-  const clampedProgress = Math.max(0, Math.min(100, safeProgress));
-  const rawActive = Math.round((clampedProgress / 100) * (total - 1));
-  const active = Number.isFinite(rawActive) ? Math.max(0, Math.min(total - 1, rawActive)) : 0;
-  const zIndexes = getZindex(SUPAH_CAROUSEL_ITEMS, active);
+  const safeActive = Number.isInteger(active) ? Math.max(0, Math.min(total - 1, active)) : 0;
+  const zIndexes = getZindex(SUPAH_CAROUSEL_ITEMS, safeActive);
 
-  // Sticky Vertical Scroll -> 1:1 Synced with Horizontal Supah Carousel & Horizontal Scrollbar
+  const commitProgress = (nextProg) => {
+    const clamped = Math.max(0, Math.min(100, Number.isFinite(nextProg) ? nextProg : 0));
+    progressRef.current = clamped;
+    const nextIdx = Math.max(0, Math.min(total - 1, Math.round((clamped / 100) * (total - 1)) || 0));
+    if (nextIdx !== activeRef.current) {
+      activeRef.current = nextIdx;
+      setActive(nextIdx);
+    }
+  };
+
+  // Sticky Vertical Scroll -> 1:1 Synced with Horizontal Supah Carousel (Only re-renders when active card index changes!)
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ['start start', 'end end'],
@@ -1013,32 +1079,32 @@ export function TechStackAndWhyUs() {
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (!Number.isFinite(v) || isDownRef.current) return;
-    const next = Math.max(0, Math.min(100, v * 100));
-    setProgress((prev) => {
-      const base = Number.isFinite(prev) ? prev : 0;
-      return Math.abs(base - next) < 0.2 ? base : next;
-    });
+    commitProgress(v * 100);
   });
 
   const handlePointerDown = (e) => {
     isDownRef.current = true;
     draggedRef.current = false;
     const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+    const clientY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
     startXRef.current = Number.isFinite(clientX) ? clientX : 0;
+    startYRef.current = Number.isFinite(clientY) ? clientY : 0;
   };
 
   const handlePointerMove = (e) => {
     if (!isDownRef.current) return;
     const x = e.clientX ?? e.touches?.[0]?.clientX;
+    const y = e.clientY ?? e.touches?.[0]?.clientY ?? startYRef.current;
     if (!Number.isFinite(x)) return;
-    const diff = x - startXRef.current;
-    if (Math.abs(diff) > 4) draggedRef.current = true;
-    const mouseProgress = diff * -0.15; // speedDrag
+    const diffX = x - startXRef.current;
+    const diffY = y - startYRef.current;
+    // On touch screens, let vertical scroll pass through naturally unless user swipes horizontally
+    if (e.touches && Math.abs(diffY) > Math.abs(diffX)) return;
+    if (Math.abs(diffX) > 4) draggedRef.current = true;
+    const mouseProgress = diffX * -0.18;
     startXRef.current = x;
-    setProgress((prev) => {
-      const base = Number.isFinite(prev) ? prev : 0;
-      return Math.max(0, Math.min(100, base + mouseProgress));
-    });
+    startYRef.current = y;
+    commitProgress(progressRef.current + mouseProgress);
   };
 
   const handlePointerUp = () => {
@@ -1047,8 +1113,9 @@ export function TechStackAndWhyUs() {
 
   const selectCard = (i) => {
     if (draggedRef.current) return;
-    const ratio = i / (total - 1);
-    setProgress(ratio * 100);
+    const safeTarget = Math.max(0, Math.min(total - 1, i || 0));
+    const ratio = safeTarget / (total - 1);
+    commitProgress(ratio * 100);
     // Sync window scroll position within the sticky runway so scroll & click stay aligned
     const el = scrollRef.current;
     if (el) {
@@ -1065,16 +1132,13 @@ export function TechStackAndWhyUs() {
   };
 
   return (
-    <div className="w-full space-y-24">
+    <div className="w-full space-y-16 sm:space-y-24">
       {/* PART A: FULL-WIDTH UNBOXED STICKY SUPAH 3D FANNED DRAG & SCROLL CAROUSEL */}
-      <div ref={scrollRef} style={{ height: '360vh' }} className="relative h-[360vh] w-full">
+      <div ref={scrollRef} className="relative h-[280vh] sm:h-[360vh] w-full">
         <div
-          style={{ position: 'sticky', top: 0, height: '100vh' }}
-          className="sticky top-0 h-screen w-full flex flex-col justify-between overflow-hidden"
+          style={{ position: 'sticky', top: 0 }}
+          className="sticky top-0 h-[100dvh] w-full flex flex-col justify-between overflow-hidden"
         >
-          {/* Floating Minimal Top Controls (Unboxed, Full Width with Gutter Alignment) */}
-
-
           {/* Full-Bleed 100vw Supah 3D Fanned Carousel Stage (Not in any box) */}
           <div
             ref={stageRef}
@@ -1098,8 +1162,8 @@ export function TechStackAndWhyUs() {
             </div>
 
             {SUPAH_CAROUSEL_ITEMS.map((item, index) => {
-              const isCurrent = index === active;
-              const activeRatio = (index - active) / total;
+              const isCurrent = index === safeActive;
+              const activeRatio = (index - safeActive) / total;
               return (
                 <div
                   key={item.num}
@@ -1110,8 +1174,9 @@ export function TechStackAndWhyUs() {
                     '--zIndex': zIndexes[index],
                     '--active': activeRatio,
                   }}
-                  className={`supah-carousel-item group border card-smoke ${isCurrent ? 'border-lime/70' : 'border-white/15 hover:border-white/35'
-                    }`}
+                  className={`supah-carousel-item group border card-smoke ${
+                    isCurrent ? 'border-lime/70' : 'border-white/15 hover:border-white/35'
+                  }`}
                 >
                   <div className="supah-carousel-box">
                     {/* Subtle Smoke Effect inside every Card Component */}
@@ -1121,6 +1186,8 @@ export function TechStackAndWhyUs() {
                     <img
                       src={item.img}
                       alt={item.title}
+                      loading="lazy"
+                      decoding="async"
                       draggable={false}
                       onError={(e) => {
                         if (e.currentTarget.src !== item.fallback) {
@@ -1132,32 +1199,32 @@ export function TechStackAndWhyUs() {
                     />
 
                     {/* Top Row inside Card: Giant Supah Number + Metric Pill */}
-                    <div className="absolute top-6 left-6 right-6 z-10 flex items-start justify-between gap-2">
-                      <span className="font-display font-extrabold text-5xl sm:text-7xl leading-none text-sand/90 bg-transparent tracking-tight">
+                    <div className="absolute top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 z-10 flex items-start justify-between gap-2">
+                      <span className="font-display font-extrabold text-4xl sm:text-7xl leading-none text-sand/90 bg-transparent tracking-tight">
                         {item.num}
                       </span>
-                      <span className="px-3 py-1 rounded-full bg-lime text-ink font-mono text-[10px] font-bold uppercase tracking-wider shadow-lg">
+                      <span className="px-2.5 sm:px-3 py-1 rounded-full bg-lime text-ink font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-lg">
                         {item.metric}
                       </span>
                     </div>
 
                     {/* Bottom Row inside Card: Client, Title, Tech Tag & Link */}
-                    <div className="absolute bottom-6 left-6 right-6 z-10 flex flex-col justify-end">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-lime font-bold mb-1">
+                    <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-10 flex flex-col justify-end">
+                      <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-lime font-bold mb-1">
                         {item.client}
                       </span>
-                      <h4 className="font-display font-extrabold text-2xl sm:text-3xl text-sand leading-tight">
+                      <h4 className="font-display font-extrabold text-xl sm:text-3xl text-sand leading-tight">
                         {item.title}
                       </h4>
-                      <div className="mt-3 pt-3 border-t border-white/15 flex items-center justify-between gap-2">
-                        <span className="font-mono text-[11px] text-sand/75">{item.tag}</span>
+                      <div className="mt-2.5 sm:mt-3 pt-2.5 sm:pt-3 border-t border-white/15 flex items-center justify-between gap-2">
+                        <span className="font-mono text-[10px] sm:text-[11px] text-sand/75 truncate">{item.tag}</span>
                         <Link
                           to="/customers"
                           onClick={(e) => e.stopPropagation()}
-                          className="w-9 h-9 rounded-full bg-sand text-ink flex items-center justify-center hover:bg-lime transition-colors shrink-0"
+                          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-sand text-ink flex items-center justify-center hover:bg-lime transition-colors shrink-0"
                           aria-label={`View ${item.title}`}
                         >
-                          <ArrowUpRight size={17} />
+                          <ArrowUpRight size={16} />
                         </Link>
                       </div>
                     </div>
@@ -1166,25 +1233,22 @@ export function TechStackAndWhyUs() {
               );
             })}
           </div>
-
-          {/* Bottom Floating Index Pills (No Progress Bar, No Box) */}
-
         </div>
       </div>
 
       {/* PART B: AWWWARDS KINETIC HOVER-CURTAIN CAPABILITIES MATRIX */}
       <div className="gutter">
-        <div className="rounded-[2.5rem] sm:rounded-[3rem] border border-white/10 bg-[#071110]/95 p-6 sm:p-12 shadow-2xl">
-          <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8 mb-4 border-b border-white/10">
+        <div className="rounded-[2rem] sm:rounded-[3rem] border border-white/10 bg-[#071110]/95 p-5 sm:p-12 shadow-2xl">
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 pb-6 sm:pb-8 mb-3 sm:mb-4 border-b border-white/10">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-lime font-bold block mb-2">
-              // INTERACTIVE CAPABILITIES INDEX
+              <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-lime font-bold block mb-2">
+                // INTERACTIVE CAPABILITIES INDEX
               </span>
-              <h3 className="font-display font-extrabold text-3xl sm:text-5xl text-sand leading-none">
+              <h3 className="font-display font-extrabold text-2xl sm:text-5xl text-sand leading-tight sm:leading-none">
                 Full-stack mastery. Zero templates.
               </h3>
             </div>
-            <span className="font-mono text-xs text-sand/50">HOVER ANY DISCIPLINE TO EXPAND</span>
+            <span className="font-mono text-[10px] sm:text-xs text-sand/50">HOVER ANY DISCIPLINE TO EXPAND</span>
           </div>
 
           <div className="relative z-10 divide-y divide-white/10">
@@ -1196,7 +1260,7 @@ export function TechStackAndWhyUs() {
                   key={row.num}
                   data-hot
                   onMouseEnter={() => setHoveredRow(i)}
-                  className="group relative block py-7 sm:py-9 px-4 sm:px-6 overflow-hidden rounded-2xl transition-colors"
+                  className="group relative block py-5 sm:py-9 px-3 sm:px-6 overflow-hidden rounded-2xl transition-colors"
                 >
                   {/* Sliding Lime Curtain Background on Hover */}
                   <motion.div
@@ -1210,27 +1274,27 @@ export function TechStackAndWhyUs() {
                     className="absolute inset-0 bg-lime pointer-events-none z-0 rounded-2xl will-change-transform"
                   />
 
-                  <div className="relative z-10 grid grid-cols-12 items-center gap-4">
-                    <span className={`col-span-2 sm:col-span-1 font-mono text-sm font-bold bg-transparent transition-colors duration-300 ${isActive ? 'text-ink' : 'text-lime'}`}>
+                  <div className="relative z-10 grid grid-cols-12 items-center gap-x-3 gap-y-2 sm:gap-4">
+                    <span className={`col-span-2 sm:col-span-1 font-mono text-xs sm:text-sm font-bold bg-transparent transition-colors duration-300 ${isActive ? 'text-ink' : 'text-lime'}`}>
                       /{row.num}
                     </span>
 
                     <div className="col-span-10 sm:col-span-6">
-                      <h4 className={`font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight transition-all duration-500 ${isActive ? 'text-ink translate-x-3' : 'text-sand'}`}>
+                      <h4 className={`font-display font-extrabold text-xl sm:text-4xl lg:text-5xl tracking-tight transition-all duration-500 ${isActive ? 'text-ink sm:translate-x-3' : 'text-sand'}`}>
                         {row.name}
                       </h4>
                     </div>
 
-                    <div className={`col-span-8 sm:col-span-3 font-mono text-xs sm:text-sm transition-colors duration-300 ${isActive ? 'text-ink/80 font-semibold' : 'text-sand/55'}`}>
+                    <div className={`col-span-9 sm:col-span-3 font-mono text-[11px] sm:text-sm transition-colors duration-300 ${isActive ? 'text-ink/80 font-semibold' : 'text-sand/55'}`}>
                       {row.detail}
                     </div>
 
-                    <div className="col-span-4 sm:col-span-2 flex justify-end items-center gap-3">
+                    <div className="col-span-3 sm:col-span-2 flex justify-end items-center gap-3">
                       <span className={`hidden xl:inline-block px-3 py-1 rounded-full font-mono text-xs font-bold border transition-colors duration-300 ${isActive ? 'bg-ink text-lime border-ink' : 'bg-white/5 text-sand/70 border-white/10'}`}>
                         {row.stat}
                       </span>
-                      <span className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${isActive ? 'bg-ink text-lime rotate-45 scale-110' : 'border border-white/20 text-sand'}`}>
-                        <ArrowUpRight size={18} />
+                      <span className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-500 ${isActive ? 'bg-ink text-lime rotate-45 scale-110' : 'border border-white/20 text-sand'}`}>
+                        <ArrowUpRight size={17} />
                       </span>
                     </div>
                   </div>

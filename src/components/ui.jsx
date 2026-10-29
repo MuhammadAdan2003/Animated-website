@@ -1,10 +1,6 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* ------------------------------------------------------------------
  * useInView — one-shot IntersectionObserver. Returns [ref, visible, extraDelay].
@@ -119,6 +115,7 @@ export function Magnetic({ children, strength = 0.3, className = '' }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (typeof window !== 'undefined' && window.matchMedia?.('(hover: none), (pointer: coarse)').matches) return;
     const xTo = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3.out' });
     const yTo = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3.out' });
     const move = (e) => {
@@ -127,8 +124,8 @@ export function Magnetic({ children, strength = 0.3, className = '' }) {
       yTo((e.clientY - (r.top + r.height / 2)) * strength);
     };
     const leave = () => { xTo(0); yTo(0); };
-    el.addEventListener('mousemove', move);
-    el.addEventListener('mouseleave', leave);
+    el.addEventListener('mousemove', move, { passive: true });
+    el.addEventListener('mouseleave', leave, { passive: true });
     return () => { el.removeEventListener('mousemove', move); el.removeEventListener('mouseleave', leave); };
   }, [strength]);
   return <div ref={ref} className={`inline-block ${className}`}>{children}</div>;
@@ -183,7 +180,7 @@ export function CardSmoke({ tone = 'dark' }) {
   return (
     <div className="pointer-events-none select-none absolute inset-0 overflow-hidden rounded-[inherit] z-0" aria-hidden="true">
       <div
-        className="absolute -inset-1/4 opacity-55 animate-[card-smoke-drift_15s_ease-in-out_infinite_alternate] will-change-transform"
+        className="absolute -inset-6 opacity-60"
         style={{
           background: isLight
             ? 'radial-gradient(ellipse 46% 38% at 24% 26%, rgba(255,255,255,0.38), rgba(77,232,207,0.14) 52%, transparent 74%), radial-gradient(ellipse 42% 36% at 78% 72%, rgba(6,16,13,0.06), rgba(200,255,77,0.15) 50%, transparent 74%)'
@@ -205,20 +202,28 @@ export function PageTransition({ children, className = '' }) {
   );
 }
 
-/* Crisp Precision Cursor — Zero blur filter, razor-sharp ring and core dot */
+/* Crisp Precision Cursor — Zero blur filter, razor-sharp ring and core dot, zero layout thrashing */
 export function CustomCursor() {
   const dot = useRef(null);
   const ring = useRef(null);
 
   useEffect(() => {
     if (!dot.current || !ring.current) return;
+    if (window.matchMedia?.('(hover: none), (pointer: coarse)').matches) return;
+
     gsap.set([dot.current, ring.current], { xPercent: -50, yPercent: -50 });
     const dx = gsap.quickTo(dot.current, 'x', { duration: 0.06, ease: 'power3.out' });
     const dy = gsap.quickTo(dot.current, 'y', { duration: 0.06, ease: 'power3.out' });
-    const rx = gsap.quickTo(ring.current, 'x', { duration: 0.28, ease: 'power3.out' });
-    const ry = gsap.quickTo(ring.current, 'y', { duration: 0.28, ease: 'power3.out' });
+    const rx = gsap.quickTo(ring.current, 'x', { duration: 0.24, ease: 'power3.out' });
+    const ry = gsap.quickTo(ring.current, 'y', { duration: 0.24, ease: 'power3.out' });
 
     let isHovering = false;
+    let activeSpot = null;
+    let activeSpotRect = null;
+
+    const invalidateRect = () => {
+      activeSpotRect = null;
+    };
 
     const move = (e) => {
       dx(e.clientX);
@@ -226,17 +231,27 @@ export function CustomCursor() {
       rx(e.clientX);
       ry(e.clientY);
 
-      const s = e.target && typeof e.target.closest === 'function' ? e.target.closest('.panel,.spot,.card-smoke,.card-smoke-light') : null;
-      if (s) {
-        const r = s.getBoundingClientRect();
-        s.style.setProperty('--mx', `${e.clientX - r.left}px`);
-        s.style.setProperty('--my', `${e.clientY - r.top}px`);
+      if (activeSpot) {
+        if (!activeSpotRect) {
+          activeSpotRect = activeSpot.getBoundingClientRect();
+        }
+        activeSpot.style.setProperty('--mx', `${e.clientX - activeSpotRect.left}px`);
+        activeSpot.style.setProperty('--my', `${e.clientY - activeSpotRect.top}px`);
       }
     };
 
     const over = (e) => {
-      const hot = e.target && typeof e.target.closest === 'function' ? e.target.closest('a,button,input,textarea,select,[data-hot]') : null;
-      if (hot && ring.current && dot.current) {
+      const target = e.target;
+      if (!target || typeof target.closest !== 'function') return;
+
+      const s = target.closest('.panel,.spot,.card-smoke,.card-smoke-light');
+      if (s !== activeSpot) {
+        activeSpot = s;
+        activeSpotRect = s ? s.getBoundingClientRect() : null;
+      }
+
+      const hot = target.closest('a,button,input,textarea,select,[data-hot]');
+      if (hot && ring.current && dot.current && !isHovering) {
         isHovering = true;
         gsap.to(ring.current, {
           scale: 1.65,
@@ -255,8 +270,21 @@ export function CustomCursor() {
     };
 
     const out = (e) => {
-      const hot = e.target && typeof e.target.closest === 'function' ? e.target.closest('a,button,input,textarea,select,[data-hot]') : null;
-      if (hot && ring.current && dot.current) {
+      const target = e.target;
+      if (!target || typeof target.closest !== 'function') return;
+
+      const nextTarget = e.relatedTarget;
+      const stillInSpot =
+        activeSpot && nextTarget && typeof nextTarget.closest === 'function' && activeSpot.contains(nextTarget);
+      if (!stillInSpot) {
+        activeSpot = null;
+        activeSpotRect = null;
+      }
+
+      const hot = target.closest('a,button,input,textarea,select,[data-hot]');
+      const stillInHot =
+        hot && nextTarget && typeof nextTarget.closest === 'function' && hot.contains(nextTarget);
+      if (hot && !stillInHot && ring.current && dot.current && isHovering) {
         isHovering = false;
         gsap.to(ring.current, {
           scale: 1,
@@ -292,13 +320,15 @@ export function CustomCursor() {
       gsap.to([dot.current, ring.current], { opacity: 1, scale: 1, duration: 0.25 });
     };
 
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseover', over);
-    window.addEventListener('mouseout', out);
-    window.addEventListener('mousedown', down);
-    window.addEventListener('mouseup', up);
-    document.addEventListener('mouseleave', leave);
-    document.addEventListener('mouseenter', enter);
+    window.addEventListener('mousemove', move, { passive: true });
+    window.addEventListener('mouseover', over, { passive: true });
+    window.addEventListener('mouseout', out, { passive: true });
+    window.addEventListener('mousedown', down, { passive: true });
+    window.addEventListener('mouseup', up, { passive: true });
+    window.addEventListener('scroll', invalidateRect, { passive: true });
+    window.addEventListener('resize', invalidateRect, { passive: true });
+    document.addEventListener('mouseleave', leave, { passive: true });
+    document.addEventListener('mouseenter', enter, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', move);
@@ -306,6 +336,8 @@ export function CustomCursor() {
       window.removeEventListener('mouseout', out);
       window.removeEventListener('mousedown', down);
       window.removeEventListener('mouseup', up);
+      window.removeEventListener('scroll', invalidateRect);
+      window.removeEventListener('resize', invalidateRect);
       document.removeEventListener('mouseleave', leave);
       document.removeEventListener('mouseenter', enter);
     };
@@ -329,16 +361,16 @@ export function CustomCursor() {
 
 
 
-/* WebGL ambient background (Monochrome Fluid Smoke) */
+/* WebGL ambient background (Monochrome Fluid Smoke — GPU Optimized) */
 const VS = `attribute vec2 position; void main(){ gl_Position = vec4(position,0.0,1.0); }`;
 const FS = `
-precision highp float;
+precision mediump float;
 uniform float u_time; uniform vec2 u_resolution; uniform vec2 u_mouse;
 mat2 rot(float a){ float s=sin(a), c=cos(a); return mat2(c,-s,s,c); }
 float hash(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
 float noise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.0-2.0*f);
   return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x), mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x), u.y); }
-float fbm(vec2 p){ float v=0.0,a=0.5; mat2 m=rot(0.5); for(int i=0;i<5;i++){ v+=a*noise(p); p=m*p*2.02; a*=0.5;} return v; }
+float fbm(vec2 p){ float v=0.0,a=0.5; mat2 m=rot(0.5); for(int i=0;i<4;i++){ v+=a*noise(p); p=m*p*2.02; a*=0.5;} return v; }
 void main(){
   vec2 st=(gl_FragCoord.xy*2.0-u_resolution)/min(u_resolution.x,u_resolution.y);
   vec2 m=(u_mouse*2.0-u_resolution)/min(u_resolution.x,u_resolution.y);
@@ -374,13 +406,11 @@ export function WebGLBackground() {
     if (!canvas) return;
 
     gsap.killTweensOf(canvas);
-    // 1. Fade out the background smoke
     gsap.to(canvas, {
       opacity: 0,
       duration: 0.28,
       ease: 'power2.in',
       onComplete: () => {
-        // 2. Fade in the background smoke on the next page
         gsap.to(canvas, {
           opacity: 1,
           duration: 0.55,
@@ -395,7 +425,13 @@ export function WebGLBackground() {
     if (!canvas) return;
     let gl;
     try {
-      gl = canvas.getContext('webgl');
+      gl = canvas.getContext('webgl', {
+        alpha: false,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        powerPreference: 'high-performance',
+      });
     } catch {
       return;
     }
@@ -411,29 +447,40 @@ export function WebGLBackground() {
     const loc = gl.getAttribLocation(prog, 'position');
     gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const uT = gl.getUniformLocation(prog, 'u_time'), uR = gl.getUniformLocation(prog, 'u_resolution'), uM = gl.getUniformLocation(prog, 'u_mouse');
-    const scale = () => Math.min(window.devicePixelRatio || 1, 1.5) * 0.75;
+    let curScale = 0.45;
+    let vh = window.innerHeight;
     const resize = () => {
       if (!ref.current) return;
-      canvas.width = window.innerWidth * scale(); canvas.height = window.innerHeight * scale();
-      gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(uR, canvas.width, canvas.height);
+      const vw = window.innerWidth;
+      vh = window.innerHeight;
+      curScale = Math.min(window.devicePixelRatio || 1, 1.25) * (vw < 768 ? 0.36 : 0.46);
+      canvas.width = Math.max(1, Math.floor(vw * curScale));
+      canvas.height = Math.max(1, Math.floor(vh * curScale));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uR, canvas.width, canvas.height);
     };
     resize();
-    window.addEventListener('resize', resize);
-    let tx = innerWidth / 2, ty = innerHeight / 2, cx = tx, cy = ty;
+    window.addEventListener('resize', resize, { passive: true });
+    let tx = window.innerWidth / 2, ty = vh / 2, cx = tx, cy = ty;
     const mv = (e) => { tx = e.clientX; ty = e.clientY; };
-    window.addEventListener('mousemove', mv);
-    let id; const t0 = performance.now();
+    window.addEventListener('mousemove', mv, { passive: true });
+    let id = 0;
+    const t0 = performance.now();
     const loop = (now) => {
-      cx += (tx - cx) * 0.05; cy += (ty - cy) * 0.05;
-      gl.uniform1f(uT, (now - t0) * 0.001);
-      gl.uniform2f(uM, cx * scale(), (innerHeight - cy) * scale());
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      if (!document.hidden) {
+        cx += (tx - cx) * 0.05;
+        cy += (ty - cy) * 0.05;
+        gl.uniform1f(uT, (now - t0) * 0.001);
+        gl.uniform2f(uM, cx * curScale, (vh - cy) * curScale);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
       id = requestAnimationFrame(loop);
     };
     id = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(id);
-      window.removeEventListener('resize', resize); window.removeEventListener('mousemove', mv);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', mv);
     };
   }, []);
   return <canvas ref={ref} className="fixed inset-0 w-full h-full pointer-events-none z-0" style={{ opacity: 1 }} />;

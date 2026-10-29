@@ -19,7 +19,7 @@ export function PageHero({ eyebrow, lines, text, children, className = '' }) {
       <Heading
         as="h1"
         lines={lines}
-        className="font-display font-extrabold text-[clamp(3.2rem,8.4vw,9.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
+        className="font-display font-extrabold text-[clamp(2.35rem,8.4vw,9.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
       />
       <div className="mt-10 sm:mt-12 flex flex-col lg:flex-row gap-8 lg:items-end justify-between">
         <Reveal delay={0.2} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
@@ -73,9 +73,9 @@ export function StatsBand({ light = false }) {
       style={{ backgroundColor: 'rgb(5 10 10 / 0.5)' }}
     >
       {stats.map((s) => (
-        <div key={s.l} className="bg-transparent">
-          <Counter to={s.to} suffix={s.s} decimals={s.d || 0} className="font-display font-extrabold text-[clamp(2.6rem,6vw,6rem)] leading-none bg-transparent" />
-          <p className={`mt-4 text-sm ${light ? 'text-ink/60' : 'text-sand/55'}`}>{s.l}</p>
+        <div key={s.l} className="bg-transparent min-w-0">
+          <Counter to={s.to} suffix={s.s} decimals={s.d || 0} className="font-display font-extrabold text-[clamp(2.15rem,6vw,6rem)] leading-none bg-transparent" />
+          <p className={`mt-3 sm:mt-4 text-xs sm:text-sm ${light ? 'text-ink/60' : 'text-sand/55'}`}>{s.l}</p>
         </div>
       ))}
     </div>
@@ -162,11 +162,11 @@ export function PricingCards({ yearly }) {
           <p className={`relative z-10 mt-3 ${p.hot ? 'text-ink/70' : 'text-sand/55'}`}>{p.d}</p>
           <div className="relative z-10 mt-8 flex items-end gap-2">
             {p.m === null ? (
-              <span className="font-display font-extrabold text-6xl">Bespoke</span>
+              <span className="font-display font-extrabold text-4xl sm:text-6xl">Bespoke</span>
             ) : (
               <>
-                <span className="font-display font-extrabold text-6xl leading-none">${(yearly ? p.y : p.m).toLocaleString()}</span>
-                <span className={`pb-2 ${p.hot ? 'text-ink/60' : 'text-sand/50'}`}>/ {p.name.includes('Sprint') ? 'sprint' : 'month'}</span>
+                <span className="font-display font-extrabold text-4xl sm:text-6xl leading-none">${(yearly ? p.y : p.m).toLocaleString()}</span>
+                <span className={`pb-1 sm:pb-2 text-sm sm:text-base ${p.hot ? 'text-ink/60' : 'text-sand/50'}`}>/ {p.name.includes('Sprint') ? 'sprint' : 'month'}</span>
               </>
             )}
           </div>
@@ -217,7 +217,7 @@ export function CTABand() {
       <div className="pointer-events-none absolute -right-10 -bottom-48 w-[30rem] h-[30rem] rounded-full border-[2rem] border-ink/5" />
       <div className="relative z-10">
         <Eyebrow className="text-ink/70 mb-8">Ready to engineer what comes next?</Eyebrow>
-        <Heading as="h2" lines={['Let’s build something', 'extraordinary together.']} className="font-display font-extrabold text-[clamp(3rem,9vw,9.5rem)] leading-[0.95]" />
+        <Heading as="h2" lines={['Let’s build something', 'extraordinary together.']} className="font-display font-extrabold text-[clamp(2.35rem,9vw,9.5rem)] leading-[0.95]" />
         <Reveal delay={0.2} className="mt-12 flex flex-wrap items-center gap-4">
           <Magnetic>
             <WaterButton to="/contact" variant="dark">

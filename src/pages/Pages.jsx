@@ -104,8 +104,8 @@ export function ProductPage() {
               </div>
               <div className="relative z-10">
                 <span className="font-mono text-xs opacity-60 block mb-2">{m.stat}</span>
-                <h3 className="font-display font-extrabold text-5xl sm:text-6xl mb-4 group-hover:translate-x-2 transition-transform duration-300">{m.t}</h3>
-                <p className="text-lg leading-relaxed max-w-md opacity-80">{m.d}</p>
+                <h3 className="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl mb-4 group-hover:translate-x-2 transition-transform duration-300">{m.t}</h3>
+                <p className="text-base sm:text-lg leading-relaxed max-w-md opacity-80">{m.d}</p>
               </div>
             </article>
           ))}
@@ -259,9 +259,9 @@ export function PricingPage() {
   return (
     <PageTransition>
       <PageHero eyebrow="Engagement Models" lines={['Bespoke tiers.', { t: 'Production-grade', c: 'text-lime' }, 'results.']} text="Collaborate through focused high-velocity sprints, dedicated multidisciplinary engineering pods, or enterprise platform transformations.">
-        <div className="glass rounded-full p-1.5 flex">
+        <div className="glass rounded-full p-1.5 flex flex-wrap sm:flex-nowrap justify-center max-w-full">
           {[['Quarterly Retainer', false], ['Annual Partnership −20%', true]].map(([l, v]) => (
-            <button key={l} id={`billing-${v ? 'yearly' : 'monthly'}`} onClick={() => setYearly(v)} className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-500 cursor-pointer ${yearly === v ? 'bg-lime text-ink' : 'text-sand/70'}`}>{l}</button>
+            <button key={l} id={`billing-${v ? 'yearly' : 'monthly'}`} onClick={() => setYearly(v)} className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-500 cursor-pointer ${yearly === v ? 'bg-lime text-ink' : 'text-sand/70'}`}>{l}</button>
           ))}
         </div>
       </PageHero>

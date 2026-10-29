@@ -153,6 +153,16 @@
   font-size: .85rem;
 }
 
+@media (max-width: 640px) {
+  .water-btn {
+    height: 3.15rem;
+    min-width: 11.25rem;
+    max-width: 100%;
+    padding: 0 1.35rem;
+    font-size: .875rem;
+  }
+}
+
 .water-btn:hover {
   translate: 0 -2px;
 }
@@ -396,42 +406,41 @@
   opacity: 1;
 }
 
-/* Ambient drifting light smoke mist inside cards (GPU transform-only, subtle) */
+/* Ambient light smoke mist inside cards (Zero continuous repaint overhead, intensifies on hover) */
 .panel::after,
 .spot::after,
 .card-smoke::after {
   content: '';
   position: absolute;
-  inset: -25%;
+  inset: -12%;
   pointer-events: none;
   z-index: 0;
-  opacity: .42;
+  opacity: .44;
   background:
     radial-gradient(ellipse 44% 36% at 22% 28%, rgba(200, 255, 77, .065), rgba(77, 232, 207, .03) 52%, transparent 74%),
     radial-gradient(ellipse 42% 38% at 78% 74%, rgba(77, 232, 207, .055), rgba(243, 238, 227, .025) 50%, transparent 74%);
-  animation: card-smoke-drift 15s ease-in-out infinite alternate;
-  will-change: transform;
-  transition: opacity .5s ease;
+  transition: opacity .5s ease, transform .8s cubic-bezier(.16, 1, .3, 1);
 }
 
 .card-smoke-light::after {
   content: '';
   position: absolute;
-  inset: -25%;
+  inset: -12%;
   pointer-events: none;
   z-index: 0;
   opacity: .55;
   background:
     radial-gradient(ellipse 46% 38% at 22% 28%, rgba(255, 255, 255, .34), rgba(77, 232, 207, .12) 52%, transparent 75%),
     radial-gradient(ellipse 42% 36% at 78% 74%, rgba(6, 16, 13, .05), rgba(77, 232, 207, .10) 50%, transparent 74%);
-  animation: card-smoke-drift 15s ease-in-out infinite alternate;
-  will-change: transform;
+  transition: opacity .5s ease, transform .8s cubic-bezier(.16, 1, .3, 1);
 }
 
 .panel:hover::after,
 .spot:hover::after,
-.card-smoke:hover::after {
-  opacity: .68;
+.card-smoke:hover::after,
+.card-smoke-light:hover::after {
+  opacity: .72;
+  transform: scale(1.06) translate3d(1.5%, -1.5%, 0);
 }
 
 /* ---------- SUPAH 3D FANNED DRAG & WHEEL CAROUSEL (codepen.io/supah/pen/xxJMbbg) ---------- */
@@ -472,6 +481,17 @@
   transform: translate3d(var(--x), var(--y), 0) rotate(var(--rot));
   transition: transform 0.8s cubic-bezier(0, 0.02, 0, 1), border-color 0.4s ease, box-shadow 0.4s ease;
   will-change: transform;
+}
+
+@media (max-width: 640px) {
+  .supah-carousel-item {
+    --width: clamp(230px, 70vw, 295px);
+    --height: clamp(315px, 90vw, 395px);
+    --x: calc(var(--active) * 520%);
+    --y: calc(var(--active) * 115%);
+    --rot: calc(var(--active) * 82deg);
+    border-radius: 1.5rem;
+  }
 }
 
 .supah-carousel-item:hover {

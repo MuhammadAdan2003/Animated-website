@@ -156,9 +156,15 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="mt-16 overflow-hidden">
-        <p className="font-display font-extrabold text-[26vw] leading-[0.8] text-transparent select-none" style={{ WebkitTextStroke: '1px rgba(243,238,227,0.12)' }}>
-          aura
+      <div className="mt-14 sm:mt-16 py-2 overflow-hidden">
+        <p className="font-display font-extrabold text-[clamp(2.75rem,8.4vw,8.5rem)] leading-[0.95] tracking-[-0.04em] select-none flex flex-wrap items-baseline gap-x-4 sm:gap-x-6">
+          <span
+            className="text-transparent"
+            style={{ WebkitTextStroke: '2px rgba(243, 238, 227, 0.42)' }}
+          >
+            aura
+          </span>
+          <span className="text-lime">studio</span>
         </p>
       </div>
       <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-sand/50 font-mono">

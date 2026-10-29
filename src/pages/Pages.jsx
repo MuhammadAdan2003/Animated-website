@@ -375,12 +375,12 @@ export function AboutPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent opacity-90" />
                 <span className="absolute top-4 left-4 glass px-3.5 py-1.5 rounded-full text-xs font-mono font-bold text-sand border border-white/15 flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-                  0{i + 1} // {v.badge}
+                  0{i + 1} · {v.badge}
                 </span>
               </div>
               <div className="relative z-10 p-8 sm:p-9">
                 <span className="font-mono text-[10px] uppercase tracking-widest text-lime font-bold block mb-2">
-                  // {v.tag}
+                  {v.tag}
                 </span>
                 <h3 className="font-display font-extrabold text-3xl sm:text-4xl mb-3 text-sand group-hover:text-lime transition-colors">
                   {v.t}
@@ -604,7 +604,7 @@ export function JournalPage() {
                 <div className="flex items-center gap-3 mt-4 text-xs font-mono text-sand/60">
                   <User size={14} className="text-lime" />
                   <span>By {activeArticle.author}</span>
-                  <span>// Aura Engineering Lab</span>
+                  <span>· Aura Engineering Lab</span>
                 </div>
 
                 {/* Modal Body */}

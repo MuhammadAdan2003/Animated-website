@@ -128,7 +128,7 @@ export default function HomePage() {
               metric: '120 FPS',
               metricSub: '0.3s LCP Edge Hydration',
               pipeline: ['REACT 19', 'WEBGL GPU', 'GO APIS'],
-              chips: ['Next.js 15', 'WebGL Shaders', 'Rust / Go', 'Design Tokens'],
+              chips: ['Next.js 15', 'WebGL Shaders', 'Rust · Go', 'Design Tokens'],
             },
             {
               n: '03',
@@ -228,7 +228,7 @@ export default function HomePage() {
               {/* Bottom Narrative & Interactive Action Footer */}
               <div className="relative z-10">
                 <span className="inline-block font-mono text-[11px] uppercase tracking-wider text-lime/80 mb-1.5">
-                  // {s.tag}
+                  {s.tag}
                 </span>
                 <h3 className="font-display font-extrabold text-3xl sm:text-4xl mb-2.5 text-sand group-hover:text-lime transition-colors duration-300">
                   {s.t}

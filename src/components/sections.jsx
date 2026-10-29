@@ -49,7 +49,7 @@ export function DashboardMock() {
 }
 
 /* ---------------- Logo cloud ---------------- */
-const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO/LAB', 'Meridian', 'ORBITAL', 'Foundry+', 'Lumière', 'TERRAFORM', 'Atlas&Co', 'Balenciaga Studio', 'Monolith'];
+const LOGOS = ['NORTHWIND', 'Halcyon®', 'KYOTO LAB', 'Meridian', 'ORBITAL', 'Foundry+', 'Lumière', 'TERRAFORM', 'Atlas&Co', 'Balenciaga Studio', 'Monolith'];
 export function LogoCloud() {
   return (
     <section className="relative py-14 border-y border-white/10 bg-transparent">
@@ -65,7 +65,7 @@ export function StatsBand({ light = false }) {
     { to: 140, s: '+', l: 'Global Web & Software Awards' },
     { to: 99.9, s: '%', l: 'Production SLA & Uptime Record', d: 1 },
     { to: 450, s: 'M', l: 'Monthly API Requests Handled' },
-    { to: 4.9, s: '/5', l: 'Client Satisfaction Rating', d: 1 },
+    { to: 4.9, s: '★', l: 'Client Satisfaction Rating', d: 1 },
   ];
   return (
     <div

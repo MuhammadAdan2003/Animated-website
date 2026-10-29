@@ -173,7 +173,7 @@ const CORE_WEB_VITALS = [
 
                   <div className="flex items-center gap-3">
                     <span className="font-mono text-xs text-sand/50 hidden md:inline">
-                      Audit Engine: Chrome 126 / Lighthouse v12.1.0
+                      Audit Engine: Chrome 126 · Lighthouse v12.1.0
                     </span>
                     <button
                       onClick={runAudit}

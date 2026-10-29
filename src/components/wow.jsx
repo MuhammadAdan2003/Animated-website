@@ -124,7 +124,7 @@ export function PulsingCircleRadar({ label = 'EDGE NETWORK ACTIVE', className = 
 const HERO_SHOWCASE_FRAMES = [
   {
     id: '01',
-    eyebrow: '01 / 04 — BESPOKE WEB FLAGSHIPS',
+    eyebrow: '01 — 04 · BESPOKE WEB FLAGSHIPS',
     titleLine1: 'Sub-second web',
     titleLine2: 'architecture.',
     accentColor: 'text-lime',
@@ -140,7 +140,7 @@ const HERO_SHOWCASE_FRAMES = [
   },
   {
     id: '02',
-    eyebrow: '02 / 04 — DISTRIBUTED CLOUD SYSTEMS',
+    eyebrow: '02 — 04 · DISTRIBUTED CLOUD SYSTEMS',
     titleLine1: 'Multi-region',
     titleLine2: 'cloud engines.',
     accentColor: 'text-aqua',
@@ -156,7 +156,7 @@ const HERO_SHOWCASE_FRAMES = [
   },
   {
     id: '03',
-    eyebrow: '03 / 04 — AUTONOMOUS AI & RAG',
+    eyebrow: '03 — 04 · AUTONOMOUS AI & RAG',
     titleLine1: 'Intelligent neural',
     titleLine2: 'workflows.',
     accentColor: 'text-lime',
@@ -172,7 +172,7 @@ const HERO_SHOWCASE_FRAMES = [
   },
   {
     id: '04',
-    eyebrow: '04 / 04 — UNIFIED DESIGN SYSTEMS',
+    eyebrow: '04 — 04 · UNIFIED DESIGN SYSTEMS',
     titleLine1: 'Precision human',
     titleLine2: 'interfaces.',
     accentColor: 'text-aqua',
@@ -207,7 +207,7 @@ function ChapterScrubberButton({ frame, index, isCurrent, onSelect }) {
           }`}
         />
         <span className="font-bold tracking-wider uppercase truncate">
-          {frame.id} // {frame.label}
+          {frame.id} · {frame.label}
         </span>
       </div>
       <span
@@ -369,7 +369,7 @@ export function HeroExpandShowcase() {
                 LIVE FLAGSHIP PORTAL
               </span>
               <span className="hidden sm:inline-block px-4 py-1.5 rounded-full bg-ink/85 border border-white/15 text-sand/80 font-mono text-xs">
-                01 — 04 // 120 FPS
+                01 — 04 · 120 FPS
               </span>
             </div>
 
@@ -402,7 +402,7 @@ export function HeroExpandShowcase() {
             <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4 border-b border-white/15 pb-3 sm:pb-4">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                 <span className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full font-mono text-[10px] sm:text-xs font-bold shrink-0 ${activeFrame.accentBg}`}>
-                  {activeFrame.id} / 04
+                  {activeFrame.id} — 04
                 </span>
                 <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.18em] text-sand/90 font-bold truncate">
                   {activeFrame.eyebrow.split('—')[1] || activeFrame.eyebrow}
@@ -514,12 +514,12 @@ export function HeroExpandShowcase() {
 const OVERLAP_SLIDES = [
   {
     id: '01',
-    tag: '01 / 04 — BESPOKE WEB FLAGSHIPS',
+    tag: '01 — 04 · BESPOKE WEB FLAGSHIPS',
     title: ['Next-Gen Web', '& 3D Flagships.'],
     subtitle: 'Category-defining websites and high-velocity web platforms engineered with fluid GSAP motion, WebGL shaders, and sub-second page loads that turn visitors into customers.',
     statVal: '0.3s',
     statLabel: 'LCP Page Load · 100/100 Lighthouse',
-    stack: ['Next.js 15', 'React 19', 'GSAP & Lenis', 'WebGL / Three.js', 'TailwindCSS'],
+    stack: ['Next.js 15', 'React 19', 'GSAP & Lenis', 'WebGL · Three.js', 'TailwindCSS'],
     bullets: [
       'Awwwards-grade kinetic typography & smooth scroll choreography',
       'Server-rendered edge architecture with zero layout shift',
@@ -537,12 +537,12 @@ const OVERLAP_SLIDES = [
   },
   {
     id: '02',
-    tag: '02 / 04 — FULL-STACK SAAS & CLOUD',
+    tag: '02 — 04 · FULL-STACK SAAS & CLOUD',
     title: ['Scalable SaaS &', 'Cloud Engines.'],
     subtitle: 'Production-grade multi-tenant SaaS applications, distributed microservices, and real-time APIs architected to handle millions of concurrent requests without breaking a sweat.',
     statVal: '99.999%',
     statLabel: 'Enterprise Uptime SLA · Multi-Region',
-    stack: ['Node.js & Go', 'PostgreSQL', 'Redis Cache', 'GraphQL / gRPC', 'Kubernetes'],
+    stack: ['Node.js & Go', 'PostgreSQL', 'Redis Cache', 'GraphQL · gRPC', 'Kubernetes'],
     bullets: [
       'Multi-tenant database isolation, SSO auth & role-based permissions',
       'Sub-10ms API response latency across 140+ global edge nodes',
@@ -560,12 +560,12 @@ const OVERLAP_SLIDES = [
   },
   {
     id: '03',
-    tag: '03 / 04 — AI SYSTEMS & AUTONOMOUS AGENTS',
+    tag: '03 — 04 · AI SYSTEMS & AUTONOMOUS AGENTS',
     title: ['Autonomous AI &', 'Neural Workflows.'],
     subtitle: 'Custom LLM pipelines, semantic vector search, and intelligent multi-agent systems embedded directly into your product to automate complex business operations 24/7.',
     statVal: '10×',
     statLabel: 'Workflow Velocity · Sub-Second RAG',
-    stack: ['OpenAI / Claude', 'Python & FastAPI', 'pgvector / Pinecone', 'LangGraph', 'Streaming UI'],
+    stack: ['OpenAI · Claude', 'Python & FastAPI', 'pgvector · Pinecone', 'LangGraph', 'Streaming UI'],
     bullets: [
       'Deterministic agentic workflows with zero-hallucination guardrails',
       'Private enterprise knowledge retrieval (RAG) with bank-grade security',
@@ -583,12 +583,12 @@ const OVERLAP_SLIDES = [
   },
   {
     id: '04',
-    tag: '04 / 04 — MOBILE APPS & DESIGN SYSTEMS',
+    tag: '04 — 04 · MOBILE APPS & DESIGN SYSTEMS',
     title: ['Fluid Mobile Apps', '& Design Systems.'],
     subtitle: 'Cross-platform iOS and Android applications with silky 120Hz native gesture physics, paired with comprehensive multi-brand design token libraries.',
     statVal: '4.9★',
     statLabel: 'App Store Rating · 120Hz Native Feel',
-    stack: ['React Native', 'Expo', 'Swift / Kotlin', 'Figma Tokens', 'Offline-First Sync'],
+    stack: ['React Native', 'Expo', 'Swift · Kotlin', 'Figma Tokens', 'Offline-First Sync'],
     bullets: [
       'Native-grade gesture animations, haptics & biometric authentication',
       'Instant offline data synchronization with background cloud workers',
@@ -630,7 +630,7 @@ function SlideVisualArt({ type }) {
         {/* Center Layered Visual Mockup */}
         <div className="relative z-10 my-auto py-4 sm:py-6">
           <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-lime mb-2">
-            // INTERACTIVE FLAGSHIP ENGINE
+            INTERACTIVE FLAGSHIP ENGINE
           </div>
           <div className="font-display font-extrabold text-2xl sm:text-5xl text-sand leading-[0.95] tracking-tight">
             Kinetic craft.<br />
@@ -644,7 +644,7 @@ function SlideVisualArt({ type }) {
                 <span>CORE VITALS</span>
                 <Zap size={13} className="text-lime shrink-0" />
               </div>
-              <div className="font-display font-extrabold text-xl sm:text-3xl text-lime">100 / 100</div>
+              <div className="font-display font-extrabold text-xl sm:text-3xl text-lime">100% SCORE</div>
               <div className="text-[10px] sm:text-[11px] text-sand/50 mt-0.5">Sub-second First Paint</div>
             </div>
             <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-3 sm:p-4 group-hover:translate-y-1 transition-transform duration-500">
@@ -676,7 +676,7 @@ function SlideVisualArt({ type }) {
         <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/10 pb-3 sm:pb-3.5">
           <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-aqua min-w-0">
             <Server size={15} className="shrink-0" />
-            <span className="truncate">CLOUD CLUSTER // MULTI-REGION MESH</span>
+            <span className="truncate">CLOUD CLUSTER · MULTI-REGION MESH</span>
           </div>
           <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-aqua/15 text-aqua font-mono text-[9px] sm:text-[10px] border border-aqua/30 shrink-0">
             HEALTHY
@@ -717,7 +717,7 @@ function SlideVisualArt({ type }) {
         <div className="relative z-10 flex items-center justify-between gap-2 border-b border-white/10 pb-3 sm:pb-3.5">
           <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-lime min-w-0">
             <Sparkles size={15} className="shrink-0" />
-            <span className="truncate">AURA NEURAL AGENT // ORCHESTRATOR</span>
+            <span className="truncate">AURA NEURAL AGENT · ORCHESTRATOR</span>
           </div>
           <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-lime text-ink font-mono text-[9px] sm:text-[10px] font-bold shrink-0">
             LIVE STREAM
@@ -727,16 +727,16 @@ function SlideVisualArt({ type }) {
         {/* Neural Pipeline Steps */}
         <div className="relative z-10 my-auto py-3 sm:py-4 space-y-2.5 sm:space-y-3 font-mono text-[11px] sm:text-xs">
           <div className="p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10">
-            <span className="text-[9px] sm:text-[10px] text-sand/40 block mb-1">01 // SEMANTIC VECTOR RETRIEVAL</span>
+            <span className="text-[9px] sm:text-[10px] text-sand/40 block mb-1">01 · SEMANTIC VECTOR RETRIEVAL</span>
             <p className="text-sand/90">Indexed 1.4M enterprise docs in <span className="text-lime font-bold">11.2ms</span></p>
           </div>
           <div className="p-3 sm:p-3.5 rounded-2xl bg-lime/10 border border-lime/30">
-            <span className="text-[9px] sm:text-[10px] text-lime block mb-1">02 // AUTONOMOUS REASONING LOOP</span>
+            <span className="text-[9px] sm:text-[10px] text-lime block mb-1">02 · AUTONOMOUS REASONING LOOP</span>
             <p className="text-sand">Executing multi-step SQL & API tool calls with deterministic verification ✓</p>
           </div>
           <div className="p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-2">
             <div className="min-w-0">
-              <span className="text-[9px] sm:text-[10px] text-sand/40 block">03 // PRODUCTION OUTPUT</span>
+              <span className="text-[9px] sm:text-[10px] text-sand/40 block">03 · PRODUCTION OUTPUT</span>
               <span className="text-aqua font-bold">Zero Hallucination Guardrails Passed</span>
             </div>
             <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-lime text-ink flex items-center justify-center font-bold shrink-0">✓</span>
@@ -744,8 +744,8 @@ function SlideVisualArt({ type }) {
         </div>
 
         <div className="relative z-10 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] sm:text-[10px] text-sand/50">
-          <span>MODEL: CUSTOM RAG + CLAUDE / GPT</span>
-          <span className="text-lime">185 TOKENS / SEC</span>
+          <span>MODEL: CUSTOM RAG + CLAUDE · GPT</span>
+          <span className="text-lime">185 TOKENS · SEC</span>
         </div>
       </div>
     );
@@ -1157,7 +1157,7 @@ export function TechStackAndWhyUs() {
                 className="font-display font-extrabold text-[19vw] leading-none text-transparent whitespace-nowrap opacity-15"
                 style={{ WebkitTextStroke: '1px rgba(200, 255, 77, 0.22)' }}
               >
-                AURA FLAGSHIPS //
+                AURA FLAGSHIPS
               </span>
             </div>
 
@@ -1242,7 +1242,7 @@ export function TechStackAndWhyUs() {
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 pb-6 sm:pb-8 mb-3 sm:mb-4 border-b border-white/10">
             <div>
               <span className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-lime font-bold block mb-2">
-                // INTERACTIVE CAPABILITIES INDEX
+                INTERACTIVE CAPABILITIES INDEX
               </span>
               <h3 className="font-display font-extrabold text-2xl sm:text-5xl text-sand leading-tight sm:leading-none">
                 Full-stack mastery. Zero templates.
@@ -1276,7 +1276,7 @@ export function TechStackAndWhyUs() {
 
                   <div className="relative z-10 grid grid-cols-12 items-center gap-x-3 gap-y-2 sm:gap-4">
                     <span className={`col-span-2 sm:col-span-1 font-mono text-xs sm:text-sm font-bold bg-transparent transition-colors duration-300 ${isActive ? 'text-ink' : 'text-lime'}`}>
-                      /{row.num}
+                      {row.num}
                     </span>
 
                     <div className="col-span-10 sm:col-span-6">

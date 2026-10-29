@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@playwright/mcp": "^0.0.83",
     "@react-three/drei": "^9.121.4",
     "@react-three/fiber": "^8.17.10",
     "@tanstack/react-router": "^1.170.46",

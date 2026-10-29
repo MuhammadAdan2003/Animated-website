@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from './navigation/Link.jsx';
-import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValueEvent, useMotionTemplate } from 'framer-motion';
 import {
   Sparkles, Zap, ArrowUpRight, ArrowLeft, ArrowRight, Server, Layers, Smartphone
 } from 'lucide-react';
@@ -238,35 +238,101 @@ export function HeroExpandShowcase() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Direct 1:1 scroll binding (Lenis already smooths window.scrollY, so zero extra spring lag!)
+  // Direct 1:1 scroll binding — starts revealing as Section 2 enters viewport (85%) and finishes at end
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 78%', 'end end'],
+    offset: ['start 85%', 'end end'],
   });
 
-  // Phase 1 (0.00 -> 0.30): 1:1 Scroll-Synced Expansion from compact Hero card to FULL SCREEN (1.0)
-  const initialScale = isMobile ? 0.88 : 0.46;
-  const initialRadius = isMobile ? 28 : 40;
-  const scale = useTransform(scrollYProgress, [0, 0.30], [initialScale, 1], { clamp: true });
-  const imgInnerScale = useTransform(scrollYProgress, [0, 0.30], [1.15, 1], { clamp: true });
-  const borderRadius = useTransform(scrollYProgress, [0, 0.30], [initialRadius, 0], { clamp: true });
-  const contentOpacity = useTransform(scrollYProgress, [0.18, 0.32], [0, 1], { clamp: true });
-  const contentY = useTransform(scrollYProgress, [0.18, 0.32], [24, 0], { clamp: true });
-  const miniBadgeOpacity = useTransform(scrollYProgress, [0, 0.16], [1, 0], { clamp: true });
-  const miniBadgeScale = useTransform(scrollYProgress, [0, 0.16], [1, 0.88], { clamp: true });
+  // Phase 1 (0.00 -> 0.42): Scroll-Controlled Scale + Opacity (0 -> 1) + Fog Parting Reveal
+  const initialScale = isMobile ? 0.86 : 0.50;
+  const initialRadius = isMobile ? 24 : 36;
+  const scale = useTransform(scrollYProgress, [0, 0.42], [initialScale, 1], { clamp: true });
+  const imgInnerScale = useTransform(
+    scrollYProgress,
+    [0, 0.42, 1],
+    [1.24, 1, 1],
+    { clamp: true }
+  );
+  const borderRadius = useTransform(scrollYProgress, [0, 0.42], [initialRadius, 0], { clamp: true });
 
-  // Phase 2 (0.30 -> 0.98): 1:1 Scroll-Synced switching across the 4 showcase frames
+  // Strict 0 -> 1 Opacity Reveal synced with Scale & Fog Clearing (retains full 100% opacity with NO fade-out on the last image)
+  const imageOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.14, 0.30, 0.42, 1],
+    [0, 0.32, 0.76, 1, 1],
+    { clamp: true }
+  );
+  const cardOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.24, 1],
+    [0, 0.55, 1, 1],
+    { clamp: true }
+  );
+
+  // Optical Fog Diffusion on the Image (Materializes from misty blur -> razor-sharp focus with no blur re-entry)
+  const imgBlurPx = useTransform(
+    scrollYProgress,
+    [0, 0.18, 0.40, 1],
+    [22, 12, 0, 0],
+    { clamp: true }
+  );
+  const imgBrightness = useTransform(
+    scrollYProgress,
+    [0, 0.22, 0.42, 1],
+    [0.68, 0.86, 1, 1],
+    { clamp: true }
+  );
+  const imageFilter = useMotionTemplate`blur(${imgBlurPx}px) brightness(${imgBrightness})`;
+
+  // Volumetric Parting Fog Curtains (Swirls in at 0, parts outward as image scales & clears)
+  const centerFogOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.10, 0.25, 0.42, 1],
+    [0, 0.92, 0.68, 0, 0],
+    { clamp: true }
+  );
+  const centerFogScale = useTransform(scrollYProgress, [0, 0.42], [0.92, 1.45], { clamp: true });
+
+  const fogCurtainOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.10, 0.28, 0.44, 1],
+    [0, 0.95, 0.80, 0.12, 0.12],
+    { clamp: true }
+  );
+  const leftFogX = useTransform(scrollYProgress, [0, 0.44, 1], ['0%', '-58%', '-58%']);
+  const rightFogX = useTransform(scrollYProgress, [0, 0.44, 1], ['0%', '58%', '58%']);
+  const groundFogY = useTransform(scrollYProgress, [0, 0.44, 1], ['0%', '46%', '46%']);
+  const ambientMistDriftX = useTransform(scrollYProgress, [0, 1], ['-6%', '8%']);
+
+  // HUD Overlays synced to appear cleanly right as the fog clears
+  const miniBadgeOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.08, 0.24, 0.34],
+    [0, 1, 0.92, 0],
+    { clamp: true }
+  );
+  const miniBadgeScale = useTransform(scrollYProgress, [0, 0.34], [0.94, 1.04], { clamp: true });
+  const contentOpacity = useTransform(
+    scrollYProgress,
+    [0.35, 0.44, 1],
+    [0, 1, 1],
+    { clamp: true }
+  );
+  const contentY = useTransform(scrollYProgress, [0.35, 0.44], [24, 0], { clamp: true });
+
+  // Phase 2 (0.42 -> 0.98): 1:1 Scroll-Synced switching across the 4 showcase frames
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (!Number.isFinite(v)) return;
-    const nextExpanded = v > 0.22;
+    const nextExpanded = v > 0.35;
     if (nextExpanded !== expandedRef.current) {
       expandedRef.current = nextExpanded;
       setIsExpanded(nextExpanded);
     }
 
     let nextIdx = 0;
-    if (v > 0.30) {
-      const norm = Math.min(0.9999, Math.max(0, (v - 0.30) / 0.68));
+    if (v > 0.42) {
+      const norm = Math.min(0.9999, Math.max(0, (v - 0.42) / 0.56));
       nextIdx = Math.min(
         HERO_SHOWCASE_FRAMES.length - 1,
         Math.max(0, Math.floor(norm * HERO_SHOWCASE_FRAMES.length) || 0)
@@ -288,9 +354,9 @@ export function HeroExpandShowcase() {
     }
     const rect = el.getBoundingClientRect();
     const absTop = window.scrollY + rect.top;
-    const totalScrollable = el.offsetHeight - window.innerHeight * 0.22;
-    const targetProgress = 0.32 + (safeTarget / HERO_SHOWCASE_FRAMES.length) * 0.65;
-    const targetY = absTop - window.innerHeight * 0.78 + targetProgress * totalScrollable;
+    const totalScrollable = el.offsetHeight - window.innerHeight * 0.15;
+    const targetProgress = 0.44 + (safeTarget / HERO_SHOWCASE_FRAMES.length) * 0.52;
+    const targetY = absTop - window.innerHeight * 0.85 + targetProgress * totalScrollable;
     if (window.__lenis) {
       window.__lenis.scrollTo(targetY, { duration: 0.85 });
     } else {
@@ -305,24 +371,32 @@ export function HeroExpandShowcase() {
   const activeFrame = HERO_SHOWCASE_FRAMES[safeIdx] || HERO_SHOWCASE_FRAMES[0];
 
   return (
-    <div ref={containerRef} className="relative h-[280vh] sm:h-[330vh] w-full">
+    <div ref={containerRef} className="relative h-[310vh] sm:h-[360vh] w-full">
       <div
         style={{ position: 'sticky', top: 0 }}
-        className="sticky top-0 h-[100dvh] w-full flex items-start justify-center overflow-hidden"
+        className="sticky top-0 h-[100dvh] h-screen w-full flex items-center justify-center overflow-hidden"
       >
         <motion.div
           style={{
             scale,
             borderRadius,
-            transformOrigin: 'top center',
+            opacity: cardOpacity,
+            transformOrigin: 'center center',
           }}
           className="relative w-full h-full overflow-hidden border-y border-white/15 bg-[#060f0e] shadow-[0_35px_100px_rgba(0,0,0,0.85)] transform-gpu will-change-transform card-smoke"
         >
-          {/* Subtle Smoke inside this Showcase Card */}
+          {/* Subtle Ambient Base Smoke inside Showcase Card */}
           <CardSmoke tone="dark" />
 
-          {/* 4 Stacked High-Resolution Images with Counter-Parallax Zoom */}
-          <motion.div style={{ scale: imgInnerScale }} className="absolute inset-0 w-full h-full will-change-transform">
+          {/* 4 Stacked High-Resolution Images with Scroll Opacity (0 -> 1), Counter-Scale & Optical Fog Diffusion */}
+          <motion.div
+            style={{
+              scale: imgInnerScale,
+              opacity: imageOpacity,
+              filter: imageFilter,
+            }}
+            className="absolute inset-0 w-full h-full will-change-[transform,opacity,filter]"
+          >
             {HERO_SHOWCASE_FRAMES.map((frame, i) => {
               const isCurrent = i === safeIdx;
               return (
@@ -346,10 +420,10 @@ export function HeroExpandShowcase() {
                   />
                   {/* Multi-Stop Editorial Readability Vignette */}
                   <div
-                    className="absolute inset-0"
+                    className="absolute inset-0 pointer-events-none"
                     style={{
                       background:
-                        'linear-gradient(180deg, rgba(5,10,10,0.42) 0%, rgba(5,10,10,0.35) 38%, rgba(5,10,10,0.82) 78%, rgba(5,10,10,0.96) 100%)',
+                        'linear-gradient(180deg, rgba(5,10,10,0.30) 0%, rgba(5,10,10,0.20) 38%, rgba(5,10,10,0.80) 78%, rgba(5,10,10,0.96) 100%)',
                     }}
                   />
                 </div>
@@ -357,7 +431,58 @@ export function HeroExpandShowcase() {
             })}
           </motion.div>
 
-          {/* COMPACT HERO PORTAL OVERLAY (Shown when small on the Hero section) */}
+          {/* SCROLL-CONTROLLED VOLUMETRIC FOG REVEAL LAYERS (Parts & Evaporates as Image Scales & Fades 0 -> 1) */}
+          <div className="pointer-events-none select-none absolute inset-0 z-10 overflow-hidden">
+            {/* 1. Central Atmospheric Diffusion Mist (Evaporates to 0 as image reaches full clarity) */}
+            <motion.div
+              style={{
+                opacity: centerFogOpacity,
+                scale: centerFogScale,
+                background:
+                  'radial-gradient(ellipse 80% 70% at 50% 48%, rgba(226,240,236,0.34) 0%, rgba(168,224,212,0.22) 34%, rgba(77,232,207,0.14) 58%, rgba(6,15,14,0.82) 88%)',
+              }}
+              className="absolute -inset-[12%] blur-[36px] will-change-[transform,opacity]"
+            />
+
+            {/* 2. Parting Fog Curtains (Left, Right & Ground Vapor Banks) */}
+            <motion.div
+              style={{ opacity: fogCurtainOpacity }}
+              className="absolute inset-0 will-change-opacity"
+            >
+              {/* Left Parting Fog Bank */}
+              <motion.div
+                style={{
+                  x: leftFogX,
+                  background:
+                    'radial-gradient(ellipse 72% 85% at 24% 50%, rgba(222,238,233,0.30) 0%, rgba(200,255,77,0.15) 38%, rgba(10,24,22,0.75) 70%, transparent 92%)',
+                }}
+                className="absolute -inset-y-[15%] -left-[20%] w-[95%] blur-[44px] will-change-transform"
+              />
+
+              {/* Right Parting Fog Bank */}
+              <motion.div
+                style={{
+                  x: rightFogX,
+                  background:
+                    'radial-gradient(ellipse 72% 85% at 76% 50%, rgba(222,238,233,0.28) 0%, rgba(77,232,207,0.18) 40%, rgba(10,24,22,0.75) 70%, transparent 92%)',
+                }}
+                className="absolute -inset-y-[15%] -right-[20%] w-[95%] blur-[44px] will-change-transform"
+              />
+
+              {/* Low-Lying Ground Vapor & Ambient Horizon Mist */}
+              <motion.div
+                style={{
+                  y: groundFogY,
+                  x: ambientMistDriftX,
+                  background:
+                    'radial-gradient(ellipse 105% 65% at 50% 88%, rgba(215,234,228,0.22) 0%, rgba(77,232,207,0.12) 36%, rgba(4,10,9,0.88) 72%, transparent 95%)',
+                }}
+                className="absolute inset-x-[-15%] -bottom-[12%] h-[78%] blur-[38px] will-change-transform"
+              />
+            </motion.div>
+          </div>
+
+          {/* COMPACT HERO PORTAL OVERLAY (Shown while emerging from fog before full-screen lock) */}
           <motion.div
             style={{ opacity: miniBadgeOpacity, scale: miniBadgeScale }}
             className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-4 sm:p-10"
@@ -380,7 +505,7 @@ export function HeroExpandShowcase() {
                 <ArrowUpRight size={22} />
               </div>
               <span className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-ink/90 border border-white/20 text-sand font-mono text-[10px] sm:text-sm font-bold uppercase tracking-[0.14em] sm:tracking-[0.2em] shadow-2xl">
-                SCROLL TO EXPAND SHOWCASE ↓
+                SCROLL TO REVEAL SHOWCASE ↓
               </span>
             </div>
 

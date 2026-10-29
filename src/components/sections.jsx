@@ -6,7 +6,7 @@ import { Heading, Reveal, WaterButton, Marquee, Magnetic, Eyebrow, Counter, Card
 /* ---------------- Page hero (inner pages) ---------------- */
 export function PageHero({ eyebrow, lines, text, children, className = '' }) {
   return (
-    <section className={`relative gutter pt-36 sm:pt-48 pb-18 sm:pb-24 overflow-hidden ${className}`}>
+    <section className={`relative gutter pt-24 sm:pt-32 pb-12 sm:pb-16 overflow-hidden ${className}`}>
       {/* Background Subtle Ambient Aura Glow (Zero-Cost Radial Gradient) */}
       <div
         className="pointer-events-none absolute top-16 left-1/4 w-[38rem] h-[24rem] rounded-full"
@@ -14,14 +14,14 @@ export function PageHero({ eyebrow, lines, text, children, className = '' }) {
       />
 
       <Reveal y={15} delay={0.08}>
-        <Eyebrow className="text-lime mb-6">{eyebrow}</Eyebrow>
+        <Eyebrow className="text-lime mb-3 sm:mb-4">{eyebrow}</Eyebrow>
       </Reveal>
       <Heading
         as="h1"
         lines={lines}
-        className="font-display font-extrabold text-[clamp(2.35rem,8.4vw,9.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
+        className="font-display font-extrabold text-[clamp(2.35rem,8.4vw,8.5rem)] leading-[0.88] sm:leading-[0.85] tracking-[-0.04em] text-sand"
       />
-      <div className="mt-10 sm:mt-12 flex flex-col lg:flex-row gap-8 lg:items-end justify-between">
+      <div className="mt-6 sm:mt-8 flex flex-col lg:flex-row gap-6 lg:items-end justify-between">
         <Reveal delay={0.2} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
           {text}
         </Reveal>

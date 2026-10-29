@@ -21,7 +21,7 @@ export function Heading({ as: Tag = 'h2', lines, children, className = '', delay
           <span key={i} className="block">
             {words.map((w, j) => (
               <React.Fragment key={j}>
-                <span className="inline-block overflow-hidden align-top pt-[0.22em] -mt-[0.22em] pb-[0.24em] -mb-[0.24em] px-[0.14em] -mx-[0.14em] mr-[0.12em]">
+                <span className="inline-block overflow-hidden align-top py-[0.05em] -my-[0.05em] px-[0.04em] -mx-[0.04em] mr-[0.14em]">
                   <span
                     className={`hw inline-block ${c}`}
                     style={{ transitionDelay: `${delay + extra + n++ * stagger}s` }}

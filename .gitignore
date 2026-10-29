@@ -46,3 +46,7 @@ vite.config.ts.timestamp-*
 ehthumbs.db
 Thumbs.db
 [Dd]esktop.ini
+
+# Playwright MCP temporary artifacts
+.playwright-mcp/
+

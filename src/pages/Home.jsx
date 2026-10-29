@@ -4,27 +4,26 @@ import { PageTransition, Heading, Reveal, WaterButton, Magnetic, CardSmoke } fro
 import { LogoCloud, StatsBand, Testimonials, SectionHead, CTABand, Newsletter } from '../components/sections.jsx';
 import { SpaceExplorer, NeuralSpatialCore, AnimatedGeometricCircles, HeroExpandShowcase } from '../components/wow.jsx';
 
-export const FEATURES = [];
-
 export default function HomePage() {
   return (
     <PageTransition>
-      {/* HERO — MONUMENTAL EDITORIAL HEADLINE + FULL-SCREEN SCROLL-EXPANDING SHOWCASE */}
-      <section className="relative pt-32 sm:pt-40 pb-0">
-        <div className="relative gutter">
-          {/* Background Ambient Aura Glow */}
-          <div
-            className="pointer-events-none absolute top-16 left-1/4 w-[42rem] h-[28rem] rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(200,255,77,0.11) 0%, transparent 70%)' }}
-          />
+      {/* 1. HERO — MONUMENTAL EDITORIAL HEADLINE (FULL SCREEN HEIGHT / DEVICE SCREEN SIZE) */}
+      <section className="relative min-h-screen min-h-[100dvh] h-screen w-full flex flex-col justify-between pt-24 sm:pt-32 pb-8 sm:pb-12 gutter overflow-hidden">
+        {/* Background Ambient Aura Glow */}
+        <div
+          className="pointer-events-none absolute top-16 left-1/4 w-[42rem] h-[28rem] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(200,255,77,0.11) 0%, transparent 70%)' }}
+        />
 
-          {/* Ambient Animated Concentric Orbital Circles */}
-          <div className="pointer-events-none absolute right-[-18%] sm:right-[2%] top-[18rem] sm:top-[22rem] -translate-y-1/2 w-[320px] sm:w-[600px] h-[320px] sm:h-[600px] flex items-center justify-center opacity-25 sm:opacity-45 scale-[0.6] sm:scale-100">
-            <AnimatedGeometricCircles size={560} />
-          </div>
+        {/* Ambient Animated Concentric Orbital Circles */}
+        <div className="pointer-events-none absolute right-[-18%] sm:right-[2%] top-[18rem] sm:top-[22rem] -translate-y-1/2 w-[320px] sm:w-[600px] h-[320px] sm:h-[600px] flex items-center justify-center opacity-25 sm:opacity-45 scale-[0.6] sm:scale-100">
+          <AnimatedGeometricCircles size={560} />
+        </div>
 
+        {/* Center / Primary Area: Eyebrow Badge + Monumental Heading */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center">
           {/* Top Eyebrow Badge */}
-          <Reveal y={15} delay={0.08} className="relative z-10 mb-6">
+          <Reveal y={15} delay={0.08} className="relative z-10 mb-4 sm:mb-5">
             <span className="glass inline-flex flex-wrap items-center gap-2 sm:gap-3 rounded-full pl-2.5 pr-4 sm:pr-5 py-2 text-xs sm:text-sm cursor-pointer hover:border-lime/40 transition-colors max-w-full" data-hot>
               <span className="px-2.5 sm:px-3 py-1 rounded-full bg-lime text-ink font-mono font-bold text-[10px] sm:text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-ink animate-ping" />
@@ -35,7 +34,7 @@ export default function HomePage() {
             </span>
           </Reveal>
 
-          {/* Monumental Impact Heading — Solid Colors */}
+          {/* Monumental Impact Heading — Solid Colors with tight, cohesive line-height */}
           <Heading
             as="h1"
             lines={[
@@ -43,33 +42,33 @@ export default function HomePage() {
               { t: 'Engineering the web.', c: 'text-lime' },
               'Scaling ventures.',
             ]}
-            className="relative z-10 font-display font-extrabold text-[clamp(2.35rem,8.8vw,10.2rem)] leading-[0.98] tracking-[-0.035em] text-sand"
+            className="relative z-10 font-display font-extrabold text-[clamp(2.35rem,8.8vw,10.2rem)] leading-[0.88] sm:leading-[0.85] tracking-[-0.04em] text-sand"
           />
-
-          {/* Editorial Narrative & Uniform Action Controls */}
-          <div className="relative z-10 mt-8 sm:mt-10 flex flex-col lg:flex-row gap-8 lg:items-end justify-between">
-            <Reveal delay={0.2} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
-              We partner with ambitious founders and global category leaders to build sub-second digital flagships, scalable multi-tenant cloud platforms, and autonomous AI systems with unmistakable digital craft.
-            </Reveal>
-            <Reveal delay={0.28} className="flex flex-wrap items-center gap-4 shrink-0">
-              <Magnetic>
-                <WaterButton to="/contact" variant="solid" className="shadow-[0_0_30px_rgba(200,255,77,0.3)]">
-                  Start a project <ArrowUpRight size={17} />
-                </WaterButton>
-              </Magnetic>
-              <Magnetic>
-                <WaterButton to="/product" variant="ghost">
-                  <Play size={15} fill="currentColor" /> Explore engineering
-                </WaterButton>
-              </Magnetic>
-            </Reveal>
-          </div>
         </div>
 
-        {/* FULL-WIDTH SCROLL-EXPANDING HERO IMAGE SHOWCASE */}
-        <div className="relative z-10 mt-10 sm:mt-12 w-full">
-          <HeroExpandShowcase />
+        {/* Bottom Area: Editorial Narrative & Uniform Action Controls */}
+        <div className="relative z-10 pt-4 flex flex-col lg:flex-row gap-6 lg:items-end justify-between border-t border-white/5">
+          <Reveal delay={0.2} className="max-w-2xl text-lg sm:text-xl text-sand/70 leading-relaxed font-normal">
+            We partner with ambitious founders and global category leaders to build sub-second digital flagships, scalable multi-tenant cloud platforms, and autonomous AI systems with unmistakable digital craft.
+          </Reveal>
+          <Reveal delay={0.28} className="flex flex-wrap items-center gap-4 shrink-0">
+            <Magnetic>
+              <WaterButton to="/contact" variant="solid" className="shadow-[0_0_30px_rgba(200,255,77,0.3)]">
+                Start a project <ArrowUpRight size={17} />
+              </WaterButton>
+            </Magnetic>
+            <Magnetic>
+              <WaterButton to="/product" variant="ghost">
+                <Play size={15} fill="currentColor" /> Explore engineering
+              </WaterButton>
+            </Magnetic>
+          </Reveal>
         </div>
+      </section>
+
+      {/* 2. SECTION NO. 2 — FULL-WIDTH SCROLL-CONTROLLED FOG, FADE (0 -> 1) & SCALE SHOWCASE */}
+      <section className="relative w-full">
+        <HeroExpandShowcase />
       </section>
 
       <LogoCloud />

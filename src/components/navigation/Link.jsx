@@ -6,9 +6,10 @@ import { Link as TanStackLink, useLocation } from '@tanstack/react-router';
  * Supports standard 'to', 'activeProps', and function children/className
  * for seamless compatibility across the design system.
  */
-export function Link({ to, className, children, ...props }) {
+export const Link = React.forwardRef(function Link({ to, className, children, ...props }, ref) {
   return (
     <TanStackLink
+      ref={ref}
       to={to}
       className={className}
       {...props}
@@ -16,13 +17,16 @@ export function Link({ to, className, children, ...props }) {
       {children}
     </TanStackLink>
   );
-}
+});
 
 /**
  * NavLink component for navigation menus with active state styling.
  * Supports ({ isActive }) => className and ({ isActive }) => children.
  */
-export function NavLink({ to, className, children, activeClassName = '', ...props }) {
+export const NavLink = React.forwardRef(function NavLink(
+  { to, className, children, activeClassName = '', ...props },
+  ref
+) {
   const location = useLocation();
   const isActive = location.pathname === to;
 
@@ -36,6 +40,7 @@ export function NavLink({ to, className, children, activeClassName = '', ...prop
 
   return (
     <TanStackLink
+      ref={ref}
       to={to}
       className={resolvedClassName}
       data-status={isActive ? 'active' : undefined}
@@ -45,7 +50,7 @@ export function NavLink({ to, className, children, activeClassName = '', ...prop
       {resolvedChildren}
     </TanStackLink>
   );
-}
+});
 
 export default Link;
 

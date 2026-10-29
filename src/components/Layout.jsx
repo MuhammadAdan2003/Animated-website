@@ -157,16 +157,49 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="mt-14 sm:mt-16 py-2 overflow-hidden">
-        <p className="font-display font-extrabold text-[clamp(2.75rem,8.4vw,8.5rem)] leading-[0.95] tracking-[-0.04em] select-none flex flex-wrap items-baseline gap-x-4 sm:gap-x-6">
-          <span
-            className="text-transparent"
-            style={{ WebkitTextStroke: '2px rgba(243, 238, 227, 0.42)' }}
-          >
-            aura
-          </span>
-          <span className="text-lime drop-shadow-[0_0_30px_rgba(200,255,77,0.45)]">studio</span>
-        </p>
+      <div className="relative mt-16 sm:mt-24 pt-6 pb-2 overflow-hidden border-t border-white/5">
+        {/* Masked Editorial Text Reveal When Reaching Footer (Container-driven intersection) */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '60px' }}
+          className="relative z-10 select-none flex flex-wrap items-baseline gap-x-4 sm:gap-x-10 w-full font-display font-extrabold text-[clamp(5rem,19.5vw,24rem)] leading-[0.80] tracking-[-0.055em]"
+        >
+          {/* Masked Clip Container for "aura" */}
+          <div className="overflow-hidden py-1">
+            <motion.span
+              variants={{
+                hidden: { y: '110%' },
+                visible: {
+                  y: '0%',
+                  transition: { duration: 1.05, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="text-transparent inline-block cursor-default select-none"
+              style={{
+                WebkitTextStroke: 'clamp(2px, 0.35vw, 4.5px) rgba(243, 238, 227, 0.55)',
+              }}
+            >
+              aura
+            </motion.span>
+          </div>
+
+          {/* Masked Clip Container for simple "studio" text */}
+          <div className="overflow-hidden py-1">
+            <motion.span
+              variants={{
+                hidden: { y: '110%' },
+                visible: {
+                  y: '0%',
+                  transition: { duration: 1.05, delay: 0.14, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="text-lime inline-block cursor-default select-none"
+            >
+              studio
+            </motion.span>
+          </div>
+        </motion.div>
       </div>
       <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs text-sand/50 font-mono">
         <span>© 2026 Aura Software Engineering & Modern Web Agency Ltd.</span>
